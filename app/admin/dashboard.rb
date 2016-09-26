@@ -31,9 +31,4 @@ ActiveAdmin.register_page "Dashboard" do
     # end
   end # content
 
-  controller do
-    def authenticate_admin_user!
-      current_user && current_user.is_admin?
-    end
-  end
 end
