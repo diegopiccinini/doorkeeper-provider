@@ -9,7 +9,9 @@ Doorkeeper.configure do
     # Put your resource owner authentication logic here.
     # Example implementation:
     #   User.find_by_id(session[:user_id]) || redirect_to(new_user_session_url)
+
     application = OauthApplication.find_by_uid params[:client_id]
+
     if application && current_user.oauth_applications.find_by_id(application.id)
       current_user
     else
