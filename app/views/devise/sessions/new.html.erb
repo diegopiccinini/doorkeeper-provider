@@ -1,34 +1,7 @@
-<div id="container">
-<header class="page-header">
-  <h1>Log in</h1>
-</header>
-<main role="main">
-
-
-<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true %>
-  </div>
-
-  <div class="field">
-    <%= f.label :password %><br />
-    <%= f.password_field :password, autocomplete: "off" %>
-  </div>
-
-  <% if devise_mapping.rememberable? -%>
-    <div class="field">
-      <%= f.check_box :remember_me %>
-      <%= f.label :remember_me %>
-    </div>
-  <% end -%>
-
-  <div class="actions">
-    <%= f.submit "Log in" %>
-  </div>
+<div class="container">
+<% if user_signed_in?  %>
+  <p>Welcome back, <a href="mailto:<%= current_user.email %>"><%= current_user.name %></a>!</p>
+<% else  %>
+  <p><%= link_to 'Login with Google+', user_google_oauth2_omniauth_authorize_path %></p>
 <% end %>
-
-<%= render "devise/shared/links" %>
-</main>
 </div>
-

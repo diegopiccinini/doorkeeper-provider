@@ -17,3 +17,7 @@
 /tmp
 *.swp
 .byebug_history
+.env
+.env.production
+.env.test
+
