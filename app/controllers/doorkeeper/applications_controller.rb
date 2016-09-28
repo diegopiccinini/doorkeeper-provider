@@ -2,7 +2,7 @@ module Doorkeeper
   class ApplicationsController < Doorkeeper::ApplicationController
     layout 'doorkeeper/admin'
 
-    before_action :authenticate_admin!
+    before_action :authenticate_admin_user!
     before_action :set_application, only: [:show, :edit, :update, :destroy]
 
     def index
@@ -49,10 +49,6 @@ module Doorkeeper
       else
         params[:doorkeeper_application].slice(:name, :redirect_uri, :scopes) rescue nil
       end
-    end
-    def authenticate_admin!
-      redirect_to '/422.html' unless current_user
-      redirect_to '/422.html' unless current_user.is_admin?
     end
   end
 end

@@ -30,5 +30,4 @@ ActiveAdmin.register_page "Dashboard" do
     #   end
     # end
   end # content
-
 end
