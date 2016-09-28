@@ -20,7 +20,6 @@ ActiveAdmin.register User do
   form do |f|
     f.inputs "Admin Details" do
       f.input :email
-      f.input :is_admin
       f.input :password
       f.input :password_confirmation
       f.input :oauth_applications, :as => :check_boxes
