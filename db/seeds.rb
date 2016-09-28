@@ -1,8 +1,7 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
-# Examples:
-#
-#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
-User.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password')AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password')
+# this user could has access to one or more applications
+user = User.create!(email: 'username@example.com', password: 'password', password_confirmation: 'password')
+# Sample application add access to the user
+user.oauth_applications.create!(name: 'Sample Application', redirect_uri: 'http://localhost:3000/users/auth/doorkeeper/callback')
+
+# this an admin user to login in active-admin
+AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password')
