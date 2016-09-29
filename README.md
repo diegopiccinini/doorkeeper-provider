@@ -22,6 +22,15 @@ First you need to clone the [repository from GitHub](https://github.com/diegopic
 ```bash
 bundler install
 ```
+### Set the Login with Google+ and the custom domain
+We use dotenv-rails to set Google Omniauth and filter by the company domain.
+So you have to edit .env as the .env.sample to setup the environment vars, (in production is .evn.production).
+
+  GOOGLE_CLIENT_ID = "your google client id"
+  GOOGLE_CLIENT_SECRET = "your google secret"
+  CUSTOM_DOMAIN_FILTER = 'yourdomain.com'
+
+If you don't have credentials visit to [Google Dev](https://console.developers.google.com) to get your credentials.
 
 ## Database creation
 
