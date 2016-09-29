@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Dkprovider</title>
+  <title><%= ENV['CUSTOM_DOMAIN_FILTER'].capitalize %> Authentication Server</title>
   <%= stylesheet_link_tag "doorkeeper/admin/application" %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
