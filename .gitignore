@@ -21,3 +21,4 @@
 .env.production
 .env.test
 
+public/assets
