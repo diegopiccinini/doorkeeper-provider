@@ -67,10 +67,54 @@ First you need to clone the [repository from GitHub](https://github.com/diegopic
 ```
 You have to set up the .env values for your app, follow the README file
 
-## Run
+## Running locally
+
 If you run the client app in port 3000, then you need change the port, and bind the hostname also to have the right uri.
 ```bash
 rails s -p 4000 -b localhost
 ```
+
+## Running in Production
+Important!: to run in production server, I added puma server to config ssl and linked the config/puma.rb file to other directory.
+
+```bash
+cd config
+ln -s ../../config/doorkeeper-provider/puma.rb puma.rb
+```
+
+In puma.rb file for production:
+
+```ruby
+threads 8,250
+preload_app!
+environment 'production'
+bind 'ssl://127.0.0.1:4443?key=/path_to_your_key/yourdoomain.key&cert=/path_to_your_cert/yourdomain.crt'
+daemonize
+```
+To run the server
+```bash
+bundle exec puma -C config/puma.rb
+```
+
+Then in your apache you could use proxypass like this:
+
+<virtualhost *:443>
+  servername yourdomain
+
+    sslengine on
+    sslprotocol -all +sslv3 +tlsv1
+    sslciphersuite rc4-sha:aes128-sha:all:!adh:!exp:!low:!md5:!sslv2:!null
+    sslcertificatefile /path_to_your_cert/yourdomain.crt
+    sslcertificatekeyfile /path_to_your_key/yourdoomain.key
+    sslcertificatechainfile  /path_to_your_cert/yourdomain_bundle.crt
+
+    sslproxyengine on
+    sslproxycheckpeercn off
+    sslproxycheckpeerexpire off
+
+    proxypreservehost on
+    proxypass / https://127.0.0.1:4443/
+    proxypassreverse / https://127.0.0.1:4443/
+</virtualhost>
 
 Enjoy!!
