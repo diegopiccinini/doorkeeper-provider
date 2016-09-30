@@ -98,6 +98,7 @@ bundle exec puma -C config/puma.rb
 
 Then in your apache you could use proxypass like this:
 
+```xml
 <virtualhost *:443>
   servername yourdomain
 
@@ -116,5 +117,6 @@ Then in your apache you could use proxypass like this:
     proxypass / https://127.0.0.1:4443/
     proxypassreverse / https://127.0.0.1:4443/
 </virtualhost>
+```
 
 Enjoy!!
