@@ -22,5 +22,7 @@ module Dkprovider
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
+    # set the hostname to send emails
+    config.action_mailer.default_url_options = { :host =>  ENV['HOSTNAME'] }
   end
 end
