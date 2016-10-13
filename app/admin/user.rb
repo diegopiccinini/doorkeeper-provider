@@ -1,14 +1,14 @@
 ActiveAdmin.register User do
-  permit_params :email, :is_admin, :password, :password_confirmation, oauth_application_ids: []
+  permit_params :email, :disabled, :password, :password_confirmation, oauth_application_ids: []
 
   index do
     selectable_column
-    id_column
     column :name
     column :email
     column :current_sign_in_at
     column :sign_in_count
     column :created_at
+    column :disabled
     actions
   end
 
@@ -24,6 +24,7 @@ ActiveAdmin.register User do
       f.input :email
       f.input :password
       f.input :password_confirmation
+      f.input :disabled
       f.input :oauth_applications, :as => :check_boxes
     end
     f.actions
