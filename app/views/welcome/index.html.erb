@@ -1,35 +1,36 @@
 <div class="navbar navbar-inverse navbar-static-top" role="navigation">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <h1> Your applications:</h1>
-    </div>
-    <ul class="nav navbar-nav navbar-right">
-      <li>
-        <%= link_to('Logout', destroy_user_session_path, method: :delete, class: 'btn btn-info') %>
-      </li>
-    </ul>
+<div class="container-fluid">
+  <div class="navbar-header">
+    <h1> Your applications: <%=text_field_tag :search,'', placeholder: 'filter by application name' %></h1>
   </div>
+  <ul class="nav navbar-nav navbar-right">
+    <li>
+      <%= link_to('Logout', destroy_user_session_path, method: :delete, class: 'btn btn-info') %>
+    </li>
+  </ul>
+</div>
 </div>
 <div class="container">
   <% @applications.each do |application| %>
-
-    <div class="row">
-      <div class="col-md-9">
-        <h2><%=  application.name %></h2>
-      </div>
-    </div>
-
-    <% application.redirect_uri.split.each do |uri| %>
-      <% uri = uri[0..-('/callback'.length + 1)] %>
+    <div class="row application">
       <div class="row">
-        <div class="col-md-9">
-          <code><%= uri %></code>
-        </div>
-        <div class="col-md-3">
-          <%= link_to 'login', uri , class: 'btn btn-success', target: '_blank' %>
+        <div class="col-md-12">
+          <h2><%=  application.name %></h2>
         </div>
       </div>
-    <% end %>
+
+      <% application.redirect_uri.split.each do |uri| %>
+        <% uri = uri[0..-('/callback'.length + 1)] %>
+        <div class="row">
+          <div class="col-md-9">
+            <code><%= uri %></code>
+          </div>
+          <div class="col-md-3">
+            <%= link_to 'login', uri , class: 'btn btn-success', target: '_blank' %>
+          </div>
+        </div>
+      <% end %>
+    </div>
   <% end %>
 </div>
 
