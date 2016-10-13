@@ -20,7 +20,9 @@ ActiveAdmin.register OauthApplication do
     end
     panel 'Users' do
       table_for oauth_application.users do
+        column :name
         column :email
+        column :disabled
       end
     end
     active_admin_comments
