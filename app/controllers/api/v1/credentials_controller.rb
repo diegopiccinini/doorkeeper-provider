@@ -12,7 +12,9 @@ module Api::V1
     end
 
     def keys
+      # secret to encrypt and decrypt data
       @secret = Base64.decode64 ENV['ENCRYPTOR_KEY']
+
       if check_signature
         data= JSON.parse decrypt
         application=OauthApplication.find_by_redirect_uri data['redirect_uri']
@@ -27,10 +29,12 @@ module Api::V1
         response_data = { data: data, iv: iv, salt: salt }
         response_data[:signature] = sign response_data
       else
+        # return empty json when the request signature is wrong
         response_data = {}
       end
       render json: response_data
     end
+
     private
     def decrypt
       iv = Base64.decode64 params[:iv]
