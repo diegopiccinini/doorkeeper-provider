@@ -18,7 +18,7 @@
 *.swp
 .byebug_history
 .env
-.env.production
+.env.development
 .env.test
 
 public/assets
