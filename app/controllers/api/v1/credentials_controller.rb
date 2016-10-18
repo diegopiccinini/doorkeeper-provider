@@ -22,7 +22,7 @@ module Api::V1
         unless application
           application = OauthApplication.new
           application.redirect_uri = data['redirect_uri']
-          application.name = data['hostname'].capitalize
+          application.name = data['name']
           application.save
         end
         data, iv, salt = encrypt application.to_json
