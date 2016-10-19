@@ -17,7 +17,7 @@ module Api::V1
 
       if check_signature
         data= JSON.parse decrypt
-        application=OauthApplication.find_by_redirect_uri data['redirect_uri']
+        application=OauthApplication.where("redirect_uri LIKE :query", query: "%#{data['hostname']}%").first
 
         unless application
           application = OauthApplication.new
