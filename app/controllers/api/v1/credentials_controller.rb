@@ -19,7 +19,9 @@ module Api::V1
         data= JSON.parse decrypt
         application=OauthApplication.where("redirect_uri LIKE :query", query: "%#{data['hostname']}%").first
 
-        unless application
+        if application
+          application.update(redirect_uri: data['redirect_uri'])
+        else
           application = OauthApplication.new
           application.redirect_uri = data['redirect_uri']
           application.name = data['name']
