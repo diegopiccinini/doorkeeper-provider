@@ -1,7 +1,9 @@
 <div class="navbar navbar-inverse navbar-static-top" role="navigation">
 <div class="container-fluid">
   <div class="navbar-header">
-    <h1> Your applications: <%=text_field_tag :search,'', placeholder: 'filter by application name' %></h1>
+    <h1>Your applications:
+      <%=text_field_tag :search,'', placeholder: 'filter by name' %>
+    </h1>
   </div>
   <ul class="nav navbar-nav navbar-right">
     <li>
@@ -11,21 +13,31 @@
 </div>
 </div>
 <div class="container">
-  <% @applications.each do |application| %>
-    <div class="row application">
-      <div class="row">
-        <div class="col-md-12">
-          <h2><%=  application.name %></h2>
-        </div>
+  <div class="row">
+    <div class="row">
+      <div class="col-md-4">
+        <h2>Environment</h2>
       </div>
-
+      <div class="col-md-6">
+        <h2>Application</h2>
+      </div>
+      <div class="col-md-2">
+        <h2>Action</h2>
+      </div>
+    </div>
+  </div>
+  <% @applications.each do |application| %>
+    <div class="row">
       <% application.redirect_uri.split.each do |uri| %>
         <% uri = uri[0..-('/callback'.length + 1)] %>
-        <div class="row">
-          <div class="col-md-9">
-            <code><%= uri %></code>
+        <div class="row callbacks">
+        <div class="col-md-4">
+          <h4 class="environment"><%=  application.name %></h4>
+        </div>
+          <div class="col-md-6">
+            <code class="app"><%= callback_name(uri) %></code>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-2">
             <%= link_to 'login', uri , class: 'btn btn-success', target: '_blank' %>
           </div>
         </div>

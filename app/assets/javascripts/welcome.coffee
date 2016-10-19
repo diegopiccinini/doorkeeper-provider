@@ -5,9 +5,9 @@ $ ->
    $('#search').keypress (e) ->
      s = $(this).val()
      if s.length < 2
-       $(".row.application").show()
+       $(".app").parent().parent().show()
+       $(".app").parent().parent().siblings().show()
      else
-       $(".row.application h2:contains('" + s + "')").parent().parent().parent().show()
-       $(".row.application h2:contains('" + s + "')").parent().parent().parent().siblings().hide()
-
+       $(".app:contains('" + s + "')").parent().parent().show()
+       $(".app:contains('" + s + "')").parent().parent().siblings(".callbacks").hide()
 
