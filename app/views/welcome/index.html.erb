@@ -13,36 +13,32 @@
 </div>
 </div>
 <div class="container">
-  <div class="row">
-    <div class="row">
-      <div class="col-md-4">
-        <h2>Environment</h2>
-      </div>
-      <div class="col-md-6">
-        <h2>Application</h2>
-      </div>
-      <div class="col-md-2">
-        <h2>Action</h2>
-      </div>
-    </div>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Application</th>
+          <th>Action</th>
+          <th>Environment</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @applications.each do |application| %>
+          <% application.redirect_uri.split.each do |uri| %>
+            <% uri = uri[0..-('/callback'.length + 1)] %>
+            <tr>
+              <td><code class="app"><%= callback_name(uri) %></code></td>
+              <td>
+                <%= link_to 'login', uri , class: 'btn btn-success', target: '_blank' %>
+              </td>
+              <td><h4><%=  application.name %></h4></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+
+    </table>
+
   </div>
-  <% @applications.each do |application| %>
-    <div class="row">
-      <% application.redirect_uri.split.each do |uri| %>
-        <% uri = uri[0..-('/callback'.length + 1)] %>
-        <div class="row callbacks">
-        <div class="col-md-4">
-          <h4 class="environment"><%=  application.name %></h4>
-        </div>
-          <div class="col-md-6">
-            <code class="app"><%= callback_name(uri) %></code>
-          </div>
-          <div class="col-md-2">
-            <%= link_to 'login', uri , class: 'btn btn-success', target: '_blank' %>
-          </div>
-        </div>
-      <% end %>
-    </div>
-  <% end %>
 </div>
 
