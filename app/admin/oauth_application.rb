@@ -19,7 +19,14 @@ ActiveAdmin.register OauthApplication do
       row :redirect_uri
     end
     panel 'Users' do
-      table_for oauth_application.users do
+      table_for oauth_application.users.where(super_login: false) do
+        column :name
+        column :email
+        column :disabled
+      end
+    end
+    panel 'Users who can login to every applications' do
+      table_for User.where(super_login: true) do
         column :name
         column :email
         column :disabled

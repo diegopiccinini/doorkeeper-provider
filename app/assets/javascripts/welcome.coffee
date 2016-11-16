@@ -9,5 +9,5 @@ $ ->
        $(".app").parent().parent().siblings().show()
      else
        $(".app:contains('" + s + "')").parent().parent().show()
-       $(".app:contains('" + s + "')").parent().parent().siblings().hide()
+       $(".app:not(:contains('" + s + "'))").parent().parent().hide()
 

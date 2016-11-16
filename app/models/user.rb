@@ -21,4 +21,13 @@ class User < ActiveRecord::Base
       user
     end
   end
+  def applications
+    if self.disabled
+      []
+    elsif self.super_login
+      OauthApplication.all
+    else
+      self.oauth_applications
+    end
+  end
 end
