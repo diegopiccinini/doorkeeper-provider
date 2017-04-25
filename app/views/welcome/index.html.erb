@@ -3,6 +3,9 @@
   <div class="navbar-header">
     <h1>Your applications:
       <%=text_field_tag :search,'', placeholder: 'filter by name' %>
+      Environment:
+      <%=select_tag 'application_environment', options_for_select(['PRODUCTION','ALL','DEV','STAGING','TEST'],'ALL') %>
+
     </h1>
   </div>
   <ul class="nav navbar-nav navbar-right">
@@ -31,7 +34,7 @@
               <td>
                 <%= link_to 'login', uri , class: 'btn btn-success', target: '_blank' %>
               </td>
-              <td><h4><%=  application.name %></h4></td>
+              <td><h4 class="env"><%=  application.name %></h4></td>
             </tr>
           <% end %>
         <% end %>
