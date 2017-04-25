@@ -12,7 +12,7 @@ Doorkeeper.configure do
 
     application = OauthApplication.find_by_uid params[:client_id]
 
-    if current_user && current_user.disabled==false && application &&
+    if current_user && current_user.disabled==false && application && application.enabled &&
       (current_user.super_login || current_user.oauth_applications.find_by_id(application.id))
       current_user
     else
