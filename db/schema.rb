@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161116152256) do
+ActiveRecord::Schema.define(version: 20170425110411) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace",     limit: 255
@@ -79,13 +79,14 @@ ActiveRecord::Schema.define(version: 20161116152256) do
   add_index "oauth_access_tokens", ["token"], name: "index_oauth_access_tokens_on_token", unique: true, using: :btree
 
   create_table "oauth_applications", force: :cascade do |t|
-    t.string   "name",         limit: 255,                null: false
-    t.string   "uid",          limit: 255,                null: false
-    t.string   "secret",       limit: 255,                null: false
-    t.text     "redirect_uri", limit: 65535,              null: false
-    t.string   "scopes",       limit: 255,   default: "", null: false
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
+    t.string   "name",         limit: 255,                   null: false
+    t.string   "uid",          limit: 255,                   null: false
+    t.string   "secret",       limit: 255,                   null: false
+    t.text     "redirect_uri", limit: 65535,                 null: false
+    t.string   "scopes",       limit: 255,   default: "",    null: false
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
+    t.boolean  "enabled",                    default: false
   end
 
   add_index "oauth_applications", ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree

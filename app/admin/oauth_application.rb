@@ -1,21 +1,24 @@
 ActiveAdmin.register OauthApplication do
-  permit_params :name, :redirect_uri, user_ids: []
+  permit_params :name, :enabled, :redirect_uri, user_ids: []
 
   index do
     selectable_column
     id_column
     column :name
     column :redirect_uri
+    column :enabled
     actions
   end
   filter :name
   filter :users
+  filter :enabled
 
   show do
     attributes_table do
       row :name
       row :uid
       row :secret
+      row :enabled
       row :redirect_uri
     end
     panel 'Users' do
@@ -38,6 +41,7 @@ ActiveAdmin.register OauthApplication do
   form do |f|
     f.inputs 'Admin Details' do
       f.input :name
+      f.input :enabled
       f.input :redirect_uri
       f.input :users, :as => :check_boxes
     end
