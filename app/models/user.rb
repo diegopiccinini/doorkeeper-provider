@@ -37,10 +37,14 @@ class User < ActiveRecord::Base
 
   def has_access_to? application
     granted =  self.disabled==false
-    granted&= self.expire_at > DateTime.now if granted
+    granted&= !self.expired? if granted
     granted&= application if granted
     granted&= application.enabled  if granted
     granted&= (self.super_login || self.oauth_applications.find_by_id(application.id)) if granted
     granted
+  end
+
+  def expired?
+    self.expire_at < DateTime.now
   end
 end
