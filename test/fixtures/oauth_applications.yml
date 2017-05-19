@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  uid: plmoknijn9iu8u7yv7vytgtt7
+  secret: 1qaz2wsx3edc4rfv5tgb
+  name: testclient test case
+  enabled: true
+  redirect_uri: https://testclient.bookingbug.com/auth/login/bookingbug
+
+two:
+  uid: plmoki776nijn9iu8u7yv7vytgtt7
+  secret: 1qaz2wddniunsx3edc4rfv5tgb
+  name: testclient test case2
+  enabled: true
+  redirect_uri: https://testclient2.bookingbug.com/auth/login/bookingbug

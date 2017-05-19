@@ -6,9 +6,12 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :oauth_applications
   has_many :oauth_access_grants, foreign_key: "resource_owner_id"
 
+  before_save { self.expire_at = DateTime.now + 180 unless self.expire_at }
+
   def to_s
     email
   end
+
   def self.from_omniauth(auth)
     if auth[:info][:email].split('@').last == ENV['CUSTOM_DOMAIN_FILTER']
       user = find_or_create_by email: auth[:info][:email]
@@ -21,6 +24,7 @@ class User < ActiveRecord::Base
       user
     end
   end
+
   def applications
     if self.disabled
       []
@@ -29,5 +33,14 @@ class User < ActiveRecord::Base
     else
       self.oauth_applications
     end
+  end
+
+  def has_access_to? application
+    granted =  self.disabled==false
+    granted&= self.expire_at > DateTime.now if granted
+    granted&= application if granted
+    granted&= application.enabled  if granted
+    granted&= (self.super_login || self.oauth_applications.find_by_id(application.id)) if granted
+    granted
   end
 end
