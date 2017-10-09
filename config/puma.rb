@@ -1,1 +1,0 @@
-../../config/doorkeeper-provider/puma.rb
