@@ -16,7 +16,7 @@ class WelcomeController < ApplicationController
      session[:search]=nil
      session[:search_env]=nil
 
-     session[:search]=params["search"] if params["search"]
+     session[:search]=params["search"].downcase if params["search"]
      session[:search_env]=params["search_env"] if params["search_env"] and params["search_env"]!='ALL'
 
      redirect_to root_path

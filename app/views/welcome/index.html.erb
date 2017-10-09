@@ -19,7 +19,7 @@
       <%= link_to 'All', 'welcome/search', class: 'btn btn-lg btn-warning btn-block' %>
 
     <% end %>
-    <h1>(<%= @applications.count %>) found with your filter </h1>
+    <h1>(<%= @applications.count %>) applications found with your filter </h1>
     <hr />
   <div class="table-responsive">
     <table class="table">
@@ -33,14 +33,16 @@
       <tbody>
         <% @applications.each do |application| %>
           <% application.redirect_uri.split.each do |uri| %>
-            <% uri = uri[0..-('/callback'.length + 1)] %>
-            <tr>
-              <td><code class="app"><%= callback_name(uri) %></code></td>
-              <td>
-                <%= link_to 'login', uri , class: 'btn btn-success', target: '_blank' %>
-              </td>
-              <td><h4 class="env"><%=  application.name %></h4></td>
-            </tr>
+            <% if session[:search].nil? or uri.include?session[:search] %>
+              <% uri = uri[0..-('/callback'.length + 1)] %>
+              <tr>
+                <td><code class="app"><%= callback_name(uri) %></code></td>
+                <td>
+                  <%= link_to 'login', uri , class: 'btn btn-success', target: '_blank' %>
+                </td>
+                <td><h4 class="env"><%=  application.name %></h4></td>
+              </tr>
+            <% end %>
           <% end %>
         <% end %>
       </tbody>
