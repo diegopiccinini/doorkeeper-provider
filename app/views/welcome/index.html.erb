@@ -9,18 +9,18 @@
 </div>
 <div class="container">
 
-   <%= form_tag welcome_search_path, method: :get, class: 'form-signin' do %>
-      <label for="search" class="sr-only">Application name</label>
-      <%=text_field_tag :search, session[:search] || '', placeholder: 'filter by name', class: 'form-control' %>
+  <%= form_tag welcome_search_path, method: :get, class: 'form-signin' do %>
+    <label for="search" class="sr-only">Application name</label>
+    <%=text_field_tag :search, session[:search] || '', placeholder: 'filter by name', class: 'form-control' %>
 
-      <label for="search_env" class="sr-only">Environment</label>
-      <%=select_tag 'search_env', options_for_select(['PRODUCTION','ALL','DEV','STAGING','TEST'],session[:search_env] || 'ALL'), class: 'form-control' %>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Search</button>
-      <%= link_to 'All', 'welcome/search', class: 'btn btn-lg btn-warning btn-block' %>
+    <label for="search_env" class="sr-only">Environment</label>
+    <%=select_tag 'search_env', options_for_select(['PRODUCTION','ALL','DEV','STAGING','TEST'],session[:search_env] || 'ALL'), class: 'form-control' %>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Search</button>
+    <%= link_to 'All', 'welcome/search', class: 'btn btn-lg btn-warning btn-block' %>
 
-    <% end %>
-    <h1>(<%= @applications.count %>) applications found with your filter </h1>
-    <hr />
+  <% end %>
+  <h1>(<%= @applications.count %>)  found with your filter </h1>
+  <hr />
   <div class="table-responsive">
     <table class="table">
       <thead>
@@ -32,18 +32,13 @@
       </thead>
       <tbody>
         <% @applications.each do |application| %>
-          <% application.redirect_uri.split.each do |uri| %>
-            <% if session[:search].nil? or uri.split('.').first.include?session[:search] %>
-              <% uri = uri[0..-('/callback'.length + 1)] %>
-              <tr>
-                <td><code class="app"><%= callback_name(uri) %></code></td>
-                <td>
-                  <%= link_to 'login', uri , class: 'btn btn-success', target: '_blank' %>
-                </td>
-                <td><h4 class="env"><%=  application.name %></h4></td>
-              </tr>
-            <% end %>
-          <% end %>
+          <tr>
+            <td><code class="app"><%= application[:name] %></code></td>
+            <td>
+              <%= link_to 'login', application[:uri] , class: 'btn btn-success', target: '_blank' %>
+            </td>
+            <td><h4 class="env"><%=  application[:environment] %></h4></td>
+          </tr>
         <% end %>
       </tbody>
 

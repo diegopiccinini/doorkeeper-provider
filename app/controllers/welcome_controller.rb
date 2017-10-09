@@ -2,15 +2,25 @@ class WelcomeController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @applications = current_user.applications.where(enabled: true)
+    applications = current_user.applications.where(enabled: true)
     if session[:search]
-      @applications= @applications.name_contains(session[:search])
+      applications= applications.name_contains(session[:search])
     end
     if session[:search_env]
       if session[:search_env]=='PRODUCTION'
-        @applications= @applications.name_ends_or('PRODUCTION','WEB')
+        applications= applications.name_ends_or('PRODUCTION','WEB')
       else
-        @applications= @applications.name_ends(session[:search_env])
+        applications= applications.name_ends(session[:search_env])
+      end
+    end
+
+    @applications = []
+    applications.each do |a|
+      a.redirect_uri.split.each do |uri|
+        if session[:search].nil? or uri.split('.').first.include?session[:search]
+          uri = uri[0..-('/callback'.length + 1)]
+          @applications << { uri: uri, name: callback_name(uri), environment: a.name }
+        end
       end
     end
 
@@ -25,5 +35,12 @@ class WelcomeController < ApplicationController
 
      redirect_to root_path
 
+  end
+
+  private
+
+  def callback_name(uri)
+    name = URI(uri).host
+    name.include?('.') ? name.split('.').first : name
   end
 end
