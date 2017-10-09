@@ -1,13 +1,5 @@
 <div class="navbar navbar-inverse navbar-static-top" role="navigation">
 <div class="container-fluid">
-  <div class="navbar-header">
-    <h1>Your applications:
-      <%=text_field_tag :search,'', placeholder: 'filter by name' %>
-      Environment:
-      <%=select_tag 'application_environment', options_for_select(['PRODUCTION','ALL','DEV','STAGING','TEST'],'ALL') %>
-
-    </h1>
-  </div>
   <ul class="nav navbar-nav navbar-right">
     <li>
       <%= link_to('Logout', destroy_user_session_path, method: :delete, class: 'btn btn-info') %>
@@ -16,6 +8,19 @@
 </div>
 </div>
 <div class="container">
+
+   <%= form_tag welcome_search_path, method: :get, class: 'form-signin' do %>
+      <label for="search" class="sr-only">Application name</label>
+      <%=text_field_tag :search, session[:search] || '', placeholder: 'filter by name', class: 'form-control' %>
+
+      <label for="search_env" class="sr-only">Environment</label>
+      <%=select_tag 'search_env', options_for_select(['PRODUCTION','ALL','DEV','STAGING','TEST'],session[:search_env] || 'ALL'), class: 'form-control' %>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Search</button>
+      <%= link_to 'All', 'welcome/search', class: 'btn btn-lg btn-warning btn-block' %>
+
+    <% end %>
+    <h1>(<%= @applications.count %>) found with your filter </h1>
+    <hr />
   <div class="table-responsive">
     <table class="table">
       <thead>

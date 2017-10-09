@@ -5,6 +5,8 @@ Rails.application.routes.draw do
   use_doorkeeper
 
   root 'welcome#index'
+  get '/welcome/search' => "welcome#search"
+
   namespace :api do
     namespace :v1 do
       get '/me' => "credentials#me"
