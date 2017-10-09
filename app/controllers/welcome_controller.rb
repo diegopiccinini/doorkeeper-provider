@@ -7,7 +7,11 @@ class WelcomeController < ApplicationController
       @applications= @applications.name_contains(session[:search])
     end
     if session[:search_env]
-      @applications= @applications.name_ends(session[:search_env])
+      if session[:search_env]=='PRODUCTION'
+        @applications= @applications.name_ends_or('PRODUCTION','WEB')
+      else
+        @applications= @applications.name_ends(session[:search_env])
+      end
     end
 
   end
