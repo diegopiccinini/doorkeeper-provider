@@ -23,3 +23,5 @@
 .env.production
 
 public/assets
+/config/database.yml
+/config/puma.rb
