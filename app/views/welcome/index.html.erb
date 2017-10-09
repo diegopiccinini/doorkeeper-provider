@@ -33,7 +33,7 @@
       <tbody>
         <% @applications.each do |application| %>
           <% application.redirect_uri.split.each do |uri| %>
-            <% if session[:search].nil? or uri.include?session[:search] %>
+            <% if session[:search].nil? or uri.split('.').first.include?session[:search] %>
               <% uri = uri[0..-('/callback'.length + 1)] %>
               <tr>
                 <td><code class="app"><%= callback_name(uri) %></code></td>
