@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       get '/me' => "credentials#me"
       post '/keys' => "credentials#keys"
+      get '/enabled' => "oauth_applications#index"
     end
   end
 
