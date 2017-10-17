@@ -283,6 +283,7 @@ DEPENDENCIES
   doorkeeper
   dotenv-rails
   encryptor
+  faraday
   jbuilder (~> 2.0)
   jquery-rails
   mysql2

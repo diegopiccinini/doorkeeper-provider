@@ -30,6 +30,7 @@ gem 'omniauth-google-oauth2'
 gem 'dotenv-rails'
 
 gem 'encryptor'
+gem 'faraday'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
