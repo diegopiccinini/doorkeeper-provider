@@ -163,4 +163,12 @@ namespace :sites do
     end
   end
 
+  desc "exports sites with errors"
+  task export: :environment do
+   puts %w(host status ip server).join(',')
+   Site.order(:status,:url).each do |s|
+      puts [s.host,s.status,s.ip,s.apps].join(',')
+   end
+  end
+
 end

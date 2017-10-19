@@ -1,19 +1,16 @@
 class Api::V1::OauthApplicationsController < ApplicationController
+  before_action :authorized
   respond_to :json
 
   def index
 
-    response_data = {}
-
-    if authorized
-      sites= OauthApplication.enabled.map do |a|
-        a.redirect_uri.split.map { |site| [ site, a.name ] }
-      end
-
-      sites.flatten!(1)
-      response_data = { type: :sites_enabled_list , count: sites.count, sites:  sites }
-
+    sites= OauthApplication.enabled.map do |a|
+      a.redirect_uri.split.map { |site| [ site, a.name ] }
     end
+
+    sites.flatten!(1)
+    response_data = { type: :sites_enabled_list , count: sites.count, sites:  sites }
+
     render json: response_data
 
   end
@@ -26,9 +23,11 @@ class Api::V1::OauthApplicationsController < ApplicationController
       seed=request.headers['Seed']
       time=request.headers['Time']
       calculated_auth=Digest::SHA1.hexdigest([key,seed,time].join(','))
-      auth==calculated_auth and (Time.now.to_i - time.to_i)<600
+      unless auth==calculated_auth and (Time.now.to_i - time.to_i)<600
+        raise 'unauthorized'
+      end
     rescue
-      false
+      render json: {}, status: 403
     end
   end
 end
