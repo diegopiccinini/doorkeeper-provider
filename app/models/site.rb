@@ -18,4 +18,8 @@ class Site < ActiveRecord::Base
     uri.host
   end
 
+  def apps
+    oauth_applications.each.map { |x| x.name }.join(' | ')
+  end
+
 end

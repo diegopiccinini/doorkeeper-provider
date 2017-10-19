@@ -4,7 +4,8 @@ class User < ActiveRecord::Base
   devise :database_authenticatable,
     :recoverable, :rememberable, :trackable, :validatable, :omniauthable, omniauth_providers: [:google_oauth2]
   has_and_belongs_to_many :oauth_applications
-  has_many :oauth_access_grants, foreign_key: "resource_owner_id"
+  has_many :oauth_access_grants, foreign_key: "resource_owner_id", dependent: :delete_all
+  has_many :oauth_access_tokens, foreign_key: "resource_owner_id", dependent: :delete_all
 
   before_save { self.expire_at = DateTime.now + 180 unless self.expire_at }
 
@@ -15,11 +16,13 @@ class User < ActiveRecord::Base
   def self.from_omniauth(auth)
     if auth[:info][:email].split('@').last == ENV['CUSTOM_DOMAIN_FILTER']
       user = find_or_create_by email: auth[:info][:email]
+
       user.provider = auth[:provider]
       user.uid = auth[:uid]
       user.name = auth[:info][:name]
       user.first_name = auth[:info][:first_name]
       user.last_name = auth[:info][:last_name]
+      user.super_login = true unless user.persisted?
       user.save(validate: false)
       user
     end
