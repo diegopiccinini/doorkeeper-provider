@@ -1,4 +1,5 @@
 class Api::V1::OauthApplicationsController < ApplicationController
+  skip_before_action :verify_authenticity_token
   before_action :authorized
   respond_to :json
 
@@ -13,6 +14,17 @@ class Api::V1::OauthApplicationsController < ApplicationController
 
     render json: response_data
 
+  end
+
+  def variable
+    variable=Variable.find_by name: params[:variable_name]
+    render json: { data: variable.data }
+  end
+
+  def save_variable
+    variable=Variable.find_or_create_by name: params[:variable_name]
+    variable.data=params[:payload][:data]
+    render json: { message: 'variable saved', data: variable.data }
   end
 
   private

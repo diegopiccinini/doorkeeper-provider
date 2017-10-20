@@ -12,6 +12,8 @@ Rails.application.routes.draw do
       get '/me' => "credentials#me"
       post '/keys' => "credentials#keys"
       get '/enabled' => "oauth_applications#index"
+      get '/variable/:variable_name' => "oauth_applications#variable"
+      post '/save_variable/:variable_name' => "oauth_applications#save_variable"
     end
   end
 

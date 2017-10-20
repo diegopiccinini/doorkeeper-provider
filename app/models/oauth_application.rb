@@ -21,4 +21,18 @@ class OauthApplication < Doorkeeper::Application
     ips.rassoc(max_value)[0]
   end
 
+  def check_sites_for_redirect_uri data
+
+    OauthApplicationsSite.where( oauth_application: self).delete_all
+
+    data.split.each do |callback_uri|
+      next if callback_uri.lenght< ('/callback'.size + 8)
+      s=Site.find_or_create_by url: callback_uri[0..-( '/callback'.size + 1)]
+      sites << s
+      oapp_site=OauthApplicationsSite.find_by site: s , oauth_application: self
+      oapp_site.update( status: 'to check')
+    end
+
+  end
+
 end
