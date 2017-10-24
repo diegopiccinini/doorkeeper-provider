@@ -1,20 +1,9 @@
-require 'faraday'
-
 namespace :sites do
   desc "check sites url status and belongs"
   task check: :environment do
     OauthApplication.all.each do |a|
       puts "Application: #{a.name}"
-      a.redirect_uri.split.each do |site|
-        puts "Site: #{site}"
-        s=Site.find_or_create_by( url: site[0..-('/callback'.length + 1)])
-        if a.sites.exists? s.id
-          puts 'already exists in this application'
-        else
-          puts 'added to app'
-          a.sites << s
-        end
-      end
+      a.check_sites_for_redirect_uri a.redirect_uri
       block_end
     end
   end
@@ -23,34 +12,7 @@ namespace :sites do
   task status: :environment do
     Site.all.each do |site|
       puts site.url
-      uri = site.uri
-      conn=Faraday.new( url: uri.scheme + '://' + uri.host )
-      step='bad response'
-      begin
-        response=conn.get do |req|
-          req.url uri.path
-          req.options.timeout=5
-          req.options.open_timeout=2
-        end
-
-        puts response.status
-
-        if response.status==302
-          if response.headers['location'].start_with?("https://#{ENV['HOST']}")
-            step='central auth redirection'
-          else
-            step='no central auth redirection'
-          end
-        end
-        site.status=response.status
-      rescue
-
-        site.status=443
-        step='site unavailable'
-      end
-
-      site.step=step
-      site.save
+      site.check
       puts "Applications #{site.oauth_applications.count}"
       puts site.step
       block_end
@@ -163,7 +125,7 @@ namespace :sites do
     end
   end
 
-  desc "exports sites with errors"
+  desc "exports sites "
   task export: :environment do
    puts %w(host status ip server).join(',')
    Site.order(:status,:url).each do |s|

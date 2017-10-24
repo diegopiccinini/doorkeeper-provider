@@ -2,9 +2,9 @@ class OauthApplication < Doorkeeper::Application
   has_and_belongs_to_many :users
   has_and_belongs_to_many :sites
 
-  scope :name_contains, -> (name) { where("name LIKE ? OR redirect_uri LIKE ?","%#{name}%","%#{name.downcase}%") }
-  scope :name_ends, -> (name) { where("name LIKE ? ","%#{name}") }
-  scope :name_ends_or, -> (name1,name2) { where("name LIKE ? OR name LIKE ? ","%#{name1}","%#{name2}") }
+  scope :name_contains, -> (name) { where("name LIKE ? OR redirect_uri LIKE ?","%#{name.upcase}%","%#{name.downcase}%") }
+  scope :name_ends, -> (name) { where("name LIKE ? ","%#{name.upcase}") }
+  scope :name_ends_or, -> (name1,name2) { where("name LIKE ? OR name LIKE ? ","%#{name1.upcase}","%#{name2.downcase}") }
   scope :enabled, -> { where(enabled: true) }
 
   def tidy_sites
@@ -26,7 +26,7 @@ class OauthApplication < Doorkeeper::Application
     OauthApplicationsSite.where( oauth_application: self).delete_all
 
     data.split.each do |callback_uri|
-      next if callback_uri.lenght< ('/callback'.size + 8)
+      next if callback_uri.size< ('/callback'.size + 8)
       s=Site.find_or_create_by url: callback_uri[0..-( '/callback'.size + 1)]
       sites << s
       oapp_site=OauthApplicationsSite.find_by site: s , oauth_application: self

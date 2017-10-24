@@ -17,7 +17,7 @@ class WelcomeController < ApplicationController
     @applications = []
     applications.each do |a|
       a.redirect_uri.split.each do |uri|
-        if session[:search].nil? or uri.split('.').first.include?session[:search]
+        if session[:search].nil? or uri.split('.').first.include?session[:search] or a.name.include?session[:search].upcase
           uri = uri[0..-('/callback'.length + 1)]
           @applications << { uri: uri, name: callback_name(uri), environment: a.name }
         end

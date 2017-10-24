@@ -5,5 +5,5 @@ one:
   data: MyString
 
 two:
-  name: MyString
-  data: MyString
+  name: MyString2
+  data: MyString2

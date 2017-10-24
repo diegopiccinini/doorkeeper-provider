@@ -18,14 +18,13 @@ module Api::V1
       if check_signature
         data= JSON.parse decrypt
         application=OauthApplication.find_by_name data['name']
-        if application
-          application.update(redirect_uri: data['redirect_uri'])
-        else
+        unless application
           application = OauthApplication.new
           application.redirect_uri = data['redirect_uri']
           application.name = data['name']
           application.save
         end
+        application.check_sites_for_redirect_uri data['redirect_uri']
         data, iv, salt = encrypt application.to_json
         response_data = { data: data, iv: iv, salt: salt }
         response_data[:signature] = sign response_data
