@@ -24,6 +24,7 @@ class Api::V1::OauthApplicationsController < ApplicationController
   def save_variable
     variable=Variable.find_or_create_by name: params[:variable_name]
     variable.data=params[:payload][:data]
+    variable.save
     render json: { message: 'variable saved', data: variable.data }
   end
 

@@ -22,7 +22,7 @@ class User < ActiveRecord::Base
       user.name = auth[:info][:name]
       user.first_name = auth[:info][:first_name]
       user.last_name = auth[:info][:last_name]
-      user.super_login = true unless user.persisted?
+#     user.super_login = true unless user.persisted?
       user.save(validate: false)
       user
     end
