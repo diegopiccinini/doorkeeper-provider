@@ -8,23 +8,39 @@ namespace :sites do
     end
   end
 
+  def status site
+    puts site.url
+    site.check
+    puts "Applications #{site.oauth_applications.count}"
+    puts site.step
+    block_end
+  end
+
+  def site_ip s
+    s.ip=ip(s.host)
+    puts "Site: #{s.host}, ip: #{s.ip}"
+    s.save
+  end
+
   desc "get response status"
   task status: :environment do
     Site.all.each do |site|
-      puts site.url
-      site.check
-      puts "Applications #{site.oauth_applications.count}"
-      puts site.step
-      block_end
+      status site
     end
   end
 
   desc "set ip to sites"
   task ip: :environment do
     Site.all.each do |s|
-      s.ip=ip(s.host)
-      puts "Site: #{s.host}, ip: #{s.ip}"
-      s.save
+      site_ip s
+    end
+  end
+
+  desc "to check only the new sites"
+  task new: :environment do
+    Site.where(ip: nil).each do |site|
+      status site
+      site_ip site
     end
   end
 
@@ -50,7 +66,7 @@ namespace :sites do
         puts "---> #{a.name} is the right"
 
         join_table=OauthApplicationsSite.find_by(site: s,oauth_application: a)
-        join_table.update(status: 'correct')
+        join_table.update(status: 'correct') if join_table
         OauthApplicationsSite.where(site: s).where.not(oauth_application: a).each do |incorrect|
           incorrect.update(status: 'incorrect')
         end
@@ -74,7 +90,7 @@ namespace :sites do
     # set correct site for not duplicated apps
     Site.central_auth_redirection.where(total_oauth_applications: 1).each do |s|
       join_table=OauthApplicationsSite.find_by site: s
-      join_table.update( status: 'correct')
+      join_table.update( status: 'correct') if join_table
     end
 
   end
@@ -127,10 +143,10 @@ namespace :sites do
 
   desc "exports sites "
   task export: :environment do
-   puts %w(host status ip server).join(',')
-   Site.order(:status,:url).each do |s|
+    puts %w(host status ip server).join(',')
+    Site.order(:status,:url).each do |s|
       puts [s.host,s.status,s.ip,s.apps].join(',')
-   end
+    end
   end
 
 end
