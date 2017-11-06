@@ -66,7 +66,7 @@ namespace :sites do
         puts "---> #{a.name} is the right"
 
         join_table=OauthApplicationsSite.find_by(site: s,oauth_application: a)
-        join_table.update(status: 'correct') if join_table
+        join_table.update(status: 'correct') if join_table and join_table.status!='disabled'
         OauthApplicationsSite.where(site: s).where.not(oauth_application: a).each do |incorrect|
           incorrect.update(status: 'incorrect')
         end
@@ -115,10 +115,9 @@ namespace :sites do
     puts '*' * 50
   end
 
-
   desc "clean redirect_uri sites"
   task clean: :environment do
-    OauthApplication.all.each do |a|
+    OauthApplication.where(enabled: false).all.each do |a|
       puts a.name
 
       if a.tidy_sites!=''
@@ -141,7 +140,7 @@ namespace :sites do
     end
   end
 
-  desc "exports sites "
+  desc "exports sites"
   task export: :environment do
     puts %w(host status ip server).join(',')
     Site.order(:status,:url).each do |s|
@@ -149,4 +148,56 @@ namespace :sites do
     end
   end
 
+  desc "exclude to the automatic enabling"
+  task :exclude, [:site] => :environment do |t,args|
+
+    sites=Site.where("url like ?","%#{args.site}%").all
+    ids=[]
+    s_ids=[]
+    sites.each do |site|
+      puts "#{site.url}, #{site.step}"
+      site.oauth_applications.each do |a|
+        join_table=OauthApplicationsSite.find_by site: site, oauth_application: a
+        ids<< join_table.id
+        puts "\t#{join_table.id}, #{a.name}, #{join_table.status}"
+      end
+    end
+
+    if !ids.empty?
+      puts "Write:"
+      puts "\t'd' and the list of apps ids with space separation to disable, sample: d 432 342"
+      puts "\t'c' and the list of apps ids to set as correct (will be enabled in the clean process), sample: c 33 41"
+      puts "\t'da' for disable all"
+      puts "\t'ea' for enable all"
+      puts "\t'x' exit without changes"
+
+      selected = STDIN.gets.chomp
+
+      selected=selected.split
+      s_ids=selected[1..-1].map { |x| x.to_i } if selected.size>1
+      diff_ids = s_ids - ids
+
+      case selected.first
+      when 'da'
+        app_site_update status: 'disabled', ids: ids
+      when 'ea'
+        app_site_update status: 'correct', ids: ids
+      when 'd'
+        raise "The #{diff_ids.to_s} are not in the list" if !diff_ids.empty?
+        app_site_update status: 'disabled', ids: s_ids
+      when 'c'
+        raise "The #{diff_ids.to_s} are not in the list" if !diff_ids.empty?
+        app_site_update status: 'correct', ids: s_ids
+      when 'x'
+        puts "No changes will be applied"
+      else
+        puts "Invalid option no changes will be applied"
+      end
+    end
+  end
+
+  def app_site_update status: , ids:
+    OauthApplicationsSite.where( id: ids).each { |oa| oa.update(status: status) }
+    puts "#{ids.to_s} updated to #{status}"
+  end
 end
