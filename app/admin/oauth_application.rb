@@ -10,6 +10,7 @@ ActiveAdmin.register OauthApplication do
     actions
   end
   filter :name
+  filter :uid
   filter :users
   filter :enabled
 

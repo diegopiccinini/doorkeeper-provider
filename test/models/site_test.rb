@@ -5,12 +5,12 @@ class SiteTest < ActiveSupport::TestCase
   def request_mock url, status=443, headers={}
 
     stub_request(:get , @one.url ).
-      with( headers: {
+      with(  headers: {
       'Accept'=>'*/*',
       'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-      'User-Agent'=>'Faraday v0.9.2'
-      }).
-      to_return(status: status, headers: headers)
+      'User-Agent'=>'Faraday v0.12.2'
+    }).
+    to_return(status: 443, body: "", headers: {})
 
   end
 
