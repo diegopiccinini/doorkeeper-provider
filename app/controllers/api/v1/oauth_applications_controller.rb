@@ -49,7 +49,7 @@ class Api::V1::OauthApplicationsController < ApplicationController
       @oauth_application = OauthApplication.create redirect_uri: body['redirect_uri'], name: body['name'], external_id: body['external_id']
 
       if body.has_key?('application_environment')
-        ae=ApplicationEnvironment.find_by_name body['application_environment']
+        ae=ApplicationEnvironment.find_or_create_by name: body['application_environment']
         @oauth_application.application_environment = ae
       end
 
