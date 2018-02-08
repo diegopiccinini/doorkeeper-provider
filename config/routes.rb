@@ -12,6 +12,9 @@ Rails.application.routes.draw do
       get '/me' => "credentials#me"
       post '/keys' => "credentials#keys"
       get '/enabled' => "oauth_applications#index"
+      get '/show/:uid' => "oauth_applications#show"
+      put '/update/:uid' => "oauth_applications#update"
+      post '/create' => "oauth_applications#create"
       get '/variable/:variable_name' => "oauth_applications#variable"
       post '/save_variable/:variable_name' => "oauth_applications#save_variable"
     end

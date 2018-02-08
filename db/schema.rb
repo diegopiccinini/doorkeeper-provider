@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171020143023) do
+ActiveRecord::Schema.define(version: 20180206144726) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace",     limit: 255
@@ -46,6 +46,12 @@ ActiveRecord::Schema.define(version: 20171020143023) do
   add_index "admin_users", ["email"], name: "index_admin_users_on_email", unique: true, using: :btree
   add_index "admin_users", ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true, using: :btree
 
+  create_table "application_environments", force: :cascade do |t|
+    t.string "name", limit: 20
+  end
+
+  add_index "application_environments", ["name"], name: "index_application_environments_on_name", unique: true, using: :btree
+
   create_table "oauth_access_grants", force: :cascade do |t|
     t.integer  "resource_owner_id", limit: 4,     null: false
     t.integer  "application_id",    limit: 4,     null: false
@@ -79,16 +85,19 @@ ActiveRecord::Schema.define(version: 20171020143023) do
   add_index "oauth_access_tokens", ["token"], name: "index_oauth_access_tokens_on_token", unique: true, using: :btree
 
   create_table "oauth_applications", force: :cascade do |t|
-    t.string   "name",         limit: 255,                   null: false
-    t.string   "uid",          limit: 255,                   null: false
-    t.string   "secret",       limit: 255,                   null: false
-    t.text     "redirect_uri", limit: 65535,                 null: false
-    t.string   "scopes",       limit: 255,   default: "",    null: false
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
-    t.boolean  "enabled",                    default: false
+    t.string   "name",                       limit: 255,                   null: false
+    t.string   "uid",                        limit: 255,                   null: false
+    t.string   "secret",                     limit: 255,                   null: false
+    t.text     "redirect_uri",               limit: 65535,                 null: false
+    t.string   "scopes",                     limit: 255,   default: "",    null: false
+    t.datetime "created_at",                                               null: false
+    t.datetime "updated_at",                                               null: false
+    t.boolean  "enabled",                                  default: false
+    t.string   "external_id",                limit: 255
+    t.integer  "application_environment_id", limit: 4,     default: 5
   end
 
+  add_index "oauth_applications", ["application_environment_id"], name: "index_oauth_applications_on_application_environment_id", using: :btree
   add_index "oauth_applications", ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
 
   create_table "oauth_applications_sites", force: :cascade do |t|
@@ -163,6 +172,7 @@ ActiveRecord::Schema.define(version: 20171020143023) do
   add_foreign_key "oauth_access_grants", "users", column: "resource_owner_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "users", column: "resource_owner_id"
+  add_foreign_key "oauth_applications", "application_environments"
   add_foreign_key "oauth_applications_sites", "oauth_applications"
   add_foreign_key "oauth_applications_sites", "sites"
   add_foreign_key "oauth_applications_users", "oauth_applications"

@@ -1,6 +1,7 @@
 class OauthApplication < Doorkeeper::Application
   has_and_belongs_to_many :users
   has_and_belongs_to_many :sites
+  belongs_to :application_environment
 
   scope :name_contains, -> (name) { where("name LIKE ? OR redirect_uri LIKE ?","%#{name.upcase}%","%#{name.downcase}%") }
   scope :name_ends, -> (name) { where("name LIKE ? ","%#{name.upcase}") }
@@ -33,6 +34,19 @@ class OauthApplication < Doorkeeper::Application
       oapp_site.update( status: 'to check')
     end
 
+  end
+
+  def serialize
+    { type: :oauth_application,
+      attributes: {
+      name: name,
+      uid: uid,
+      redirect_uri: redirect_uri,
+      external_id: external_id,
+      application_environment: application_environment.name,
+      enabled: enabled
+      }
+    }
   end
 
 end

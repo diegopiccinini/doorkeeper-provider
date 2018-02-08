@@ -15,33 +15,31 @@ module Api::V1
       # secret to encrypt and decrypt data
       @secret = Base64.decode64 ENV['ENCRYPTOR_KEY']
 
+      status = 200
+      response_data = {}
       if check_signature
         data= JSON.parse decrypt
-        application=OauthApplication.find_by_name data['name']
-        unless application
-          application = OauthApplication.new
-          application.redirect_uri = data['redirect_uri']
-          application.name = data['name']
-          application.save
+        application=OauthApplication.find_by_uid data['uid']
+        if application
+          data, iv, salt = encrypt application.to_json
+          response_data = { data: data, iv: iv, salt: salt }
+          response_data[:signature] = sign response_data
+        else
+          status = 404
         end
-        application.check_sites_for_redirect_uri data['redirect_uri']
-        data, iv, salt = encrypt application.to_json
-        response_data = { data: data, iv: iv, salt: salt }
-        response_data[:signature] = sign response_data
-      else
-        # return empty json when the request signature is wrong
-        response_data = {}
       end
-      render json: response_data
+      render json: response_data, status: status
     end
 
     private
+
     def decrypt
       iv = Base64.decode64 params[:iv]
       salt = Base64.decode64 params[:salt]
       data = Base64.decode64 params[:data]
       Encryptor.decrypt(value: data, key: @secret, iv: iv, salt: salt)
     end
+
     def encrypt data
       cipher = OpenSSL::Cipher.new('aes-256-gcm')
       cipher.encrypt

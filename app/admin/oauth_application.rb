@@ -1,5 +1,5 @@
 ActiveAdmin.register OauthApplication do
-  permit_params :name, :enabled, :redirect_uri, user_ids: []
+  permit_params :name, :enabled, :redirect_uri, :external_id, :application_environment_id, user_ids: []
 
   index do
     selectable_column
@@ -7,12 +7,16 @@ ActiveAdmin.register OauthApplication do
     column :name
     column :redirect_uri
     column :enabled
+    column :external_id
+    column :application_environment
     actions
   end
   filter :name
   filter :uid
   filter :users
   filter :enabled
+  filter :external_id
+  filter :application_environment
 
   show do
     attributes_table do
@@ -21,6 +25,8 @@ ActiveAdmin.register OauthApplication do
       row :secret
       row :enabled
       row :redirect_uri
+      row :external_id
+      row :application_environment
     end
     panel 'Users' do
       table_for oauth_application.users.where(super_login: false) do
@@ -44,6 +50,8 @@ ActiveAdmin.register OauthApplication do
       f.input :name
       f.input :enabled
       f.input :redirect_uri
+      f.input :external_id
+      f.input :application_environment
       f.input :users, :as => :check_boxes
     end
     f.actions
