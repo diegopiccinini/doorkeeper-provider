@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       post '/keys' => "credentials#keys"
       get '/enabled' => "oauth_applications#index"
       get '/show/:uid' => "oauth_applications#show"
+      get '/find_by_external_id/:external_id' => "oauth_applications#find_by_external_id"
       put '/update/:uid' => "oauth_applications#update"
       post '/create' => "oauth_applications#create"
       get '/variable/:variable_name' => "oauth_applications#variable"

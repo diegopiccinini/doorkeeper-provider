@@ -22,6 +22,20 @@ class Api::V1::OauthApplicationsController < ApplicationController
     render json: @oauth_application.serialize
   end
 
+  def find_by_external_id
+    status=404
+    json_response= { error: "Not found with external_id #{params[:eternal_id]}" }
+
+    @oauth_application=OauthApplication.find_by_external_id params[:external_id]
+    if @oauth_application
+      json_response= @oauth_application.serialize
+      status=200
+    end
+
+    render json: json_response, status: status
+
+  end
+
   def update
     begin
       body=JSON.parse params[:body]
