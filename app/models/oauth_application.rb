@@ -38,6 +38,18 @@ class OauthApplication < Doorkeeper::Application
 
   end
 
+  def create_sites
+
+    redirect_uri.split.each do |callback_uri|
+      next if callback_uri.size< ('/callback'.size + 8)
+      s=Site.find_or_create_by url: callback_uri[0..-( '/callback'.size + 1)]
+      sites << s
+      oapp_site=OauthApplicationsSite.find_by site: s , oauth_application: self
+      oapp_site.update( status: 'to check')
+    end
+
+  end
+
   def serialize
     { type: :oauth_application,
       attributes: {

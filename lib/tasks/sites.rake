@@ -1,4 +1,29 @@
 namespace :sites do
+
+  desc "delete all sites and create new list"
+  task reset_all: :environment do
+
+    OauthApplicationsSite.all.each { |x| x.delete }
+    Site.all { |s| s.delete }
+
+    OauthApplication.all.each do |a|
+      a.create_sites
+    end
+
+    puts "Sites created: #{Site.count}"
+
+    if OauthApplicationsSite.count>Site.count
+      puts "Sites applications: #{OauthApplicationsSite.count}"
+      list_duplicated_sites
+    end
+
+  end
+
+  desc "List duplicated sites"
+  task list_duplicated: :environment do
+    list_duplicated_sites
+  end
+
   desc "check sites url status and belongs"
   task check: :environment do
     OauthApplication.all.each do |a|
@@ -6,6 +31,18 @@ namespace :sites do
       a.check_sites_for_redirect_uri a.redirect_uri
       block_end
     end
+  end
+
+  def list_duplicated_sites
+
+      puts "Sites duplicated:"
+      duplicated=OauthApplicationsSite.select("site_id, oauth_application_id").group(:site_id).having("count(oauth_application_id)>1")
+      duplicated.each do |os|
+        puts "Site: #{os.site.url}"
+        apps=os.site.oauth_applications.map { |a| a.external_id }
+        puts "Aplications: #{apps.join(' ')}"
+        puts
+      end
   end
 
   def status site

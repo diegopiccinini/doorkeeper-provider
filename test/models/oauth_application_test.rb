@@ -7,4 +7,10 @@ class OauthApplicationTest < ActiveSupport::TestCase
     one.check_sites_for_redirect_uri hosts.join(' ')
     assert_equal OauthApplicationsSite.where( oauth_application: one, status: 'to check').count, hosts.count
   end
+
+  test "#create_sites" do
+    two= oauth_applications(:two)
+    two.create_sites
+    assert two.sites.count, 3
+  end
 end
