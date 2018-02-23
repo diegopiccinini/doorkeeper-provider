@@ -26,10 +26,10 @@ namespace :sites do
       os_app=OauthApplicationsSite.where(site_id: os.site_id , oauth_application_id: os.oauth_application_id).first
       os_app.status="Duplicated"
       os_app.save
-      os.site.check
       puts "Site: #{os.site.url}"
       apps=os.site.oauth_applications.map { |a| a.external_id }
       puts "Aplications: #{apps.join(' ')}"
+      os.site.check
       puts
     end
   end
