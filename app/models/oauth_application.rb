@@ -38,6 +38,20 @@ class OauthApplication < Doorkeeper::Application
 
   end
 
+  def delete_redirect_uri site
+
+    redirect_uris=redirect_uri.split.reject { |x| x.include?(site.url) }
+
+    if redirect_uris.count<1
+      update( enabled: false )
+      puts "\t--> Bad url #{site.url} disabled application #{external_id}"
+    else
+      update( redirect_uri: redirect_uris.join(' ') )
+      puts "\t--> #{site.url} deleted in #{external_id}"
+    end
+
+  end
+
   def create_sites
 
     redirect_uri.split.each do |callback_uri|
