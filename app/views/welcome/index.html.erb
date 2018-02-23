@@ -14,7 +14,7 @@
     <%=text_field_tag :search, session[:search] || '', placeholder: 'filter by name', class: 'form-control' %>
 
     <label for="search_env" class="sr-only">Environment</label>
-    <%=select_tag 'search_env', options_for_select(['PRODUCTION','ALL','DEV','STAGING','TEST'],session[:search_env] || 'ALL'), class: 'form-control' %>
+    <%=select_tag 'search_env', options_for_select(@app_environments,session[:search_env] || 'ALL'), class: 'form-control' %>
     <button class="btn btn-lg btn-primary btn-block" type="submit">Search</button>
     <%= link_to 'All', 'welcome/search', class: 'btn btn-lg btn-warning btn-block' %>
 
