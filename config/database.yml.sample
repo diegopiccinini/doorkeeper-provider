@@ -1,0 +1,6 @@
+development:
+  adapter: your_adapter
+  database: your_database_name
+  username: your_username
+  password: your_secret_password
+

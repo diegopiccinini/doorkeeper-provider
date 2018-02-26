@@ -35,11 +35,12 @@ So you have to edit .env as the .env.sample to setup the environment vars, (in p
 If you don't have credentials visit to [Google Dev](https://console.developers.google.com) to get your credentials.
 
 ## Database creation
-The database.yml is linked to external directory
+Copy the database.yml.sample
+```bach
+cp config/database.yml.sample config/database.yml
+```
 
-  ln -s ../../config/doorkeeper-provider/database.yml database.yml
-
-Change the file with yours connections set up.
+Then change the file with yours connections set up.
 
 ```bash
 rake db:create
