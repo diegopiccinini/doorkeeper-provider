@@ -2,7 +2,7 @@ class WelcomeController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    applications = current_user.applications.where(enabled: true)
+    applications = current_user.enabled_applications
     @app_environments= applications.map { |a| a.application_environment.name }
     @app_environments=@app_environments.uniq
     @app_environments << 'ALL'

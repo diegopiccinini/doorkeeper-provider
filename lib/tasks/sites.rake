@@ -3,6 +3,8 @@ namespace :sites do
   desc "delete all sites and create new list"
   task reset_all: :environment do
 
+    ApplicationEnvironment.update_application_stage_type_tags
+
     OauthApplicationsSite.all.each { |x| x.delete }
     Site.all { |s| s.delete }
 
