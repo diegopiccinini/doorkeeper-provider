@@ -1,4 +1,7 @@
 class OauthApplication < Doorkeeper::Application
+
+  acts_as_taggable
+
   has_and_belongs_to_many :users
   has_and_belongs_to_many :sites
   belongs_to :application_environment
