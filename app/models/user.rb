@@ -12,6 +12,16 @@ class User < ActiveRecord::Base
 
   before_save { self.expire_at = DateTime.now + 180 unless self.expire_at }
 
+  scope :access_with_tag, -> (oauth_application) { tagged_with(oauth_application.full_tags, any: true).where(disabled: false) }
+
+  def self.with_access_to oauth_application
+    uids= where( super_login: true, disabled: false ).all.ids
+    uids+= access_with_tag(oauth_application).all.ids
+    uids+= oauth_application.users.all.ids
+    where( id: uids).all
+  end
+
+
   def to_s
     email
   end

@@ -80,4 +80,8 @@ class OauthApplication < Doorkeeper::Application
     }
   end
 
+  def full_tags
+    tag_list + [ application_environment.name ]
+  end
+
 end

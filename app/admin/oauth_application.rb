@@ -28,18 +28,10 @@ ActiveAdmin.register OauthApplication do
       row :external_id
       row :application_environment
     end
-    panel 'Users' do
-      table_for oauth_application.users.where(super_login: false) do
+    panel 'Users with access (super login, tagged, or added to the application)' do
+      table_for User.with_access_to(oauth_application) do
         column :name
         column :email
-        column :disabled
-      end
-    end
-    panel 'Users who can login to every applications' do
-      table_for User.where(super_login: true) do
-        column :name
-        column :email
-        column :disabled
       end
     end
     active_admin_comments
