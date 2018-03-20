@@ -24,6 +24,7 @@ class SiteTest < ActiveSupport::TestCase
 
   test "#check" do
     assert @one.check
+    @one.reload
     assert_equal 443, @one.status
   end
 

@@ -1,6 +1,7 @@
 require 'test_helper'
 
 class OauthApplicationTest < ActiveSupport::TestCase
+
   test "#check_sites_for_redirect_uri" do
     one= oauth_applications(:one)
     hosts=('a'..'g').to_a.map { |x| "https://site_#{x}.test/path/uri/to/callback" }

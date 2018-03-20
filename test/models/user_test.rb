@@ -5,11 +5,10 @@ class UserTest < ActiveSupport::TestCase
   attr_accessor :user, :application, :app_granted, :superuser
   setup do
     @user=users(:one)
-    @application=oauth_applications(:one)
+    @application=oauth_applications(:two)
     @application.save
-    @app_granted=oauth_applications(:two)
+    @app_granted=oauth_applications(:one)
     @app_granted.save
-    @user.oauth_applications << @app_granted
     @user.save
     @superuser=users(:superuser)
     @superuser.save
@@ -62,5 +61,15 @@ class UserTest < ActiveSupport::TestCase
     assert !user.has_access_to?(app_granted)
     assert !superuser.has_access_to?(app_granted)
     app_granted.update enabled: true
+  end
+
+  test "tag user" do
+    ApplicationEnvironment.update_application_stage_type_tags
+    user.tag_list.add 'Dev'
+    user.save
+    assert user.has_access_to?(application)
+    user.tag_list.remove 'Dev'
+    user.save
+    assert !user.has_access_to?(application)
   end
 end

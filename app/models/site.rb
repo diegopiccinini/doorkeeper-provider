@@ -35,7 +35,7 @@ class Site < ActiveRecord::Base
 
   def check
 
-    step='bad response'
+    self.step='bad response'
     begin
       response=conn.get do |req|
         req.url uri.path
@@ -44,22 +44,22 @@ class Site < ActiveRecord::Base
       end
 
       if response.status==302
-        step='no central auth redirection'
+        self.step='no central auth redirection'
         if response.headers['location'].start_with?("https://#{ENV['HOST']}")
-          step='central auth redirection'
+          self.step='central auth redirection'
           clean_duplication response.headers['location']
         else
           delete_in_apps
         end
       end
-      status=response.status
+      self.status=response.status
     rescue
-      status=443
-      step='site unavailable'
+      self.status=443
+      self.step='site unavailable'
       delete_in_apps
     end
 
-    save
+    self.save
   end
 
   def delete_in_apps
