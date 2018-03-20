@@ -80,8 +80,27 @@ class OauthApplication < Doorkeeper::Application
     }
   end
 
-  def full_tags
-    tag_list + [ application_environment.name ]
+  def default_tag
+    application_environment.name
   end
+
+  def full_tags
+    tag_list + [ default_tag ]
+  end
+
+  def available_tags
+    custom_tags.reject { |t| tag_list.include?t[:name] }
+  end
+
+  def custom_tags
+    tags=ActsAsTaggableOn::Tag.all.reject { |t| default_tags.include?t.name }
+    tags.map { |t| { id: t.id , name: t.name } }
+  end
+
+  def default_tags
+    @@default_tags||=ApplicationEnvironment.all.map { |ae| ae.name }
+    @@default_tags
+  end
+
 
 end

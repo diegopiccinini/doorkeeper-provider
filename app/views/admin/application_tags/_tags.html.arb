@@ -1,0 +1,10 @@
+table_for applications do
+  column "Name", :name
+  column "Default Tag", :default_tag
+  column "Own Tags", :tag_list
+  column "Available Tags" do |a|
+     a.available_tags.map do |l|
+       link_to l[:name], admin_application_tags_path
+     end.join(' ').html_safe
+  end
+end
