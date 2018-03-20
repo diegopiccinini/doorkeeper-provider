@@ -4,7 +4,7 @@ table_for applications do
   column "Own Tags", :tag_list
   column "Available Tags" do |a|
      a.available_tags.map do |l|
-       link_to l[:name], admin_application_tags_path
+       link_to l[:name], admin_application_tags_add_tag_path + "?app_id=#{a.id}&tag_id=#{l[:id]}",  method: :get
      end.join(' ').html_safe
   end
 end

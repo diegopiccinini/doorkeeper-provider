@@ -1,6 +1,5 @@
 ActiveAdmin.register OauthApplication do
   permit_params :name, :enabled, :redirect_uri, :external_id, :application_environment_id, user_ids: []
-
   index do
     selectable_column
     id_column
