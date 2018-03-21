@@ -26,6 +26,7 @@ ActiveAdmin.register OauthApplication do
       row :redirect_uri
       row :external_id
       row :application_environment
+      row :tag_list
     end
     panel 'Users with access (super login, tagged, or added to the application)' do
       table_for User.with_access_to(oauth_application) do
