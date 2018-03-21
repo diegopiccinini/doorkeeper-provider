@@ -1,8 +1,10 @@
 ActiveAdmin.register User do
+
+  config.batch_actions = false
+
   permit_params :email, :disabled, :super_login, :password, :password_confirmation, :expire_at, oauth_application_ids: [], tag_ids: []
 
   index do
-    selectable_column
     column :name
     column :email
     column :current_sign_in_at

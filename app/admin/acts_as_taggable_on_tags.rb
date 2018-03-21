@@ -4,6 +4,8 @@ ActiveAdmin.register ActsAsTaggableOn::Tag, as: "Tags" do
   #
   permit_params :name
 
+  config.batch_actions = false
+
   controller do
     def scoped_collection
       tags=OauthApplication.first.default_tags

@@ -1,8 +1,8 @@
-ActiveAdmin.register OauthAccessGrant do
+ActiveAdmin.register OauthAccessGrant, as: "Logs" do
+
+  config.batch_actions = false
 
   index do
-    selectable_column
-    id_column
     column :redirect_uri
     column :created_at
     column :expires_in

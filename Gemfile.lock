@@ -37,6 +37,8 @@ GEM
       erubis (~> 2.7.0)
       rails-dom-testing (~> 1.0, >= 1.0.5)
       rails-html-sanitizer (~> 1.0, >= 1.0.2)
+    activeadmin_blaze_theme (0.2.0)
+      activeadmin
     activejob (4.2.7.1)
       activesupport (= 4.2.7.1)
       globalid (>= 0.3.0)
@@ -301,6 +303,7 @@ PLATFORMS
 
 DEPENDENCIES
   activeadmin!
+  activeadmin_blaze_theme
   acts-as-taggable-on (~> 4.0)
   byebug
   capistrano
@@ -330,4 +333,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.15.4
+   1.16.1

@@ -1,15 +1,18 @@
-ActiveAdmin.register OauthApplication do
+ActiveAdmin.register OauthApplication, as: "Applications" do
+
+  config.batch_actions = false
+
   permit_params :name, :enabled, :redirect_uri, :external_id, :application_environment_id, user_ids: []
+
   index do
-    selectable_column
-    id_column
     column :name
-    column :redirect_uri
     column :enabled
     column :external_id
     column :application_environment
+    column :updated_at
     actions
   end
+
   filter :name
   filter :uid
   filter :users

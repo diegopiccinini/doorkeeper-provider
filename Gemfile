@@ -15,6 +15,7 @@ gem 'coffee-rails', '~> 4.1.0'
 gem 'therubyracer', platforms: :ruby
 
 gem 'activeadmin', github: 'activeadmin'
+gem 'activeadmin_blaze_theme'
 gem 'puma'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
