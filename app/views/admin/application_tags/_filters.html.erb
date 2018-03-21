@@ -1,0 +1,5 @@
+<%= form_tag admin_application_tags_filter_path, method: :post do %>
+  <%= label_tag 'Application Name' %>
+  <%= text_field_tag :application_name, session[:app_name_filter] %>
+  <p><%= submit_tag :filter %> Limit list: 30 applications</p>
+<% end %>

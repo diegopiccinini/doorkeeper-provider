@@ -16,7 +16,25 @@ ActiveAdmin.register_page "Application Tags" do
     redirect_to admin_application_tags_path, notice: "Tag #{tag.name} was removed to #{app.name}"
   end
 
-  content do
-    render partial: 'tags', locals: { applications: OauthApplication.order(:name).all }
+  page_action :filter, method: :post do
+
+    if params[:application_name].size>0
+      session[:app_name_filter]=params[:application_name]
+      notice_text= "Filter by application name #{params[:application_name]}"
+    else
+      session.delete(:app_name_filter)
+      notice_text="filter deleted"
+    end
+
+    redirect_to admin_application_tags_path, notice: notice_text
   end
+  content do
+    if session[:app_name_filter]
+      applications=OauthApplication.name_contains(session[:app_name_filter]).order(:name).limit(30).all
+    else
+      applications=OauthApplication.order(:name).limit(30).all
+    end
+    render partial: 'tags', locals: { applications: applications }
+  end
+  sidebar :filters, partial: 'filters'
 end
