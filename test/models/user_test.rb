@@ -69,26 +69,31 @@ class UserTest < ActiveSupport::TestCase
     user.save
     assert user.has_access_to?(application)
     assert_equal 1, User.with_access_to(application).where(id: user.id).count
+    assert_equal 1, user.full_access.where(id: application.id).count
 
     user.tag_list.remove 'Dev'
     user.save
     assert !user.has_access_to?(application)
     assert_equal 0, User.with_access_to(application).where(id: user.id).count
+    assert_equal 0, user.full_access.where(id: application.id).count
 
     application.tag_list.add 'testtag'
     application.save
     assert !user.has_access_to?(application)
     assert_equal 0, User.with_access_to(application).where(id: user.id).count
+    assert_equal 0, user.full_access.where(id: application.id).count
 
     user.tag_list.add ['testtag','Dev']
     user.save
     assert user.has_access_to?(application)
     assert_equal 1, User.with_access_to(application).where(id: user.id).count
+    assert_equal 1, user.full_access.where(id: application.id).count
 
     user.tag_list.add 'testtag2'
     user.save
     assert user.has_access_to?(application)
     assert_equal 1, User.with_access_to(application).where(id: user.id).count
+    assert_equal 1, user.full_access.where(id: application.id).count
 
     user.tag_list.remove user.tag_list
     application.tag_list.remove 'testtag'
