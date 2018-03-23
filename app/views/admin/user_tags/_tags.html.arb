@@ -1,0 +1,19 @@
+if users.count>0
+
+  table_for users, class: 'tags-table' do
+    column "Name", :name
+    column "Own Tags" do |a|
+      a.tags.map do |t|
+        link_to t.name, admin_user_tags_remove_tag_path + "?user_id=#{a.id}&tag_id=#{t.id}", method: :get, title: 'click to remove', class: 'c-button c-button--ghost-info'
+      end.join(' ').html_safe
+    end
+    column "Available Tags" do |a|
+      a.available_tags.map do |l|
+        link_to l.name, admin_user_tags_add_tag_path + "?user_id=#{a.id}&tag_id=#{l.id}", method: :get, title: 'click to add', class: 'c-button c-button--ghost-success'
+      end.join(' ').html_safe
+    end
+  end
+
+else
+  para "No results"
+end

@@ -136,4 +136,16 @@ class OauthApplication < Doorkeeper::Application
     app_ids
   end
 
+  def self.including_tags tags
+    d_tags=tags.where(name: default_tags)
+    if d_tags.empty?
+      where( id: -10000 )
+    else
+      ae_ids=ApplicationEnvironment.tagged_with(d_tags, any: true).ids
+      tag_ids=tags.ids - d_tags.ids
+      # only exclude when the app has tags not included
+      result=ActsAsTaggableOn::Tagging.where(taggable_type: 'Doorkeeper::Application').where.not(tag_id: tag_ids).group(:taggable_id).count(:tag_id)
+      where( application_environment_id: ae_ids ).where.not( id: result.keys)
+    end
+  end
 end

@@ -43,7 +43,7 @@ class User < ActiveRecord::Base
 
   def applications
     if self.disabled
-      []
+      OauthApplication.where("id < -100000")
     elsif self.super_login
       OauthApplication
     else
@@ -81,16 +81,20 @@ class User < ActiveRecord::Base
   end
 
   def full_access
-    apps_ids=self.oauth_applications.ids + tagged_access_ids
+    apps_ids=oauth_applications.ids + tagged_access_ids
     OauthApplication.where(id: apps_ids)
   end
 
   def tagged_access_ids
-    OauthApplication.with_tags(self.tags).ids
+    OauthApplication.including_tags(self.tags).ids
   end
 
   def tagged_access_to? application
     (application.full_tags - self.tag_list).count == 0
+  end
+
+  def available_tags
+    ActsAsTaggableOn::Tag.where.not(id: tags.ids)
   end
 
 end
