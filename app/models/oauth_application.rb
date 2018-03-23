@@ -76,7 +76,7 @@ class OauthApplication < Doorkeeper::Application
       external_id: external_id,
       application_environment: application_environment.name,
       enabled: enabled
-      }
+    }
     }
   end
 
@@ -93,14 +93,47 @@ class OauthApplication < Doorkeeper::Application
   end
 
   def custom_tags
-    tags=ActsAsTaggableOn::Tag.all.reject { |t| default_tags.include?t.name }
+    tags=ActsAsTaggableOn::Tag.all.reject { |t| OauthApplication.default_tags.include?(t.name) }
     tags.map { |t| { id: t.id , name: t.name } }
   end
 
-  def default_tags
-    @@default_tags||=ApplicationEnvironment.all.map { |ae| ae.name }
-    @@default_tags
+  def self.default_tags
+    ApplicationEnvironment.all.map { |ae| ae.name }
   end
 
+  def self.with_tags tags, has_all: true
+
+    tag_names=tags.map { |t| t.name }
+    c_tags = tag_names - default_tags
+    default_tag_names = tag_names - c_tags
+
+    ae_ids=ApplicationEnvironment.tagged_with(default_tag_names, any: true).ids
+
+    if has_all
+      apps_ids=tagged_with_ids(c_tags, match_all: true)
+      where(id: apps_ids).where(application_environment_id: ae_ids)
+    else
+      apps_ids=tagged_with_ids(c_tags, any: true)
+      if ae_ids.empty?
+        where(id: apps_ids)
+      elsif apps_ids.empty?
+        where(application_environment_id: ae_ids)
+      else
+        where(id: apps_ids).where(application_environment_id: ae_ids)
+      end
+    end
+
+  end
+
+  def self.tagged_with_ids names, match_all: false, any: false
+    tag_ids=ActsAsTaggableOn::Tag.where(name: names).ids
+    app_ids=[]
+    result=ActsAsTaggableOn::Tagging.where(taggable_type: 'Doorkeeper::Application').where(tag_id: tag_ids).group(:taggable_id).count(:tag_id)
+    if match_all
+      app_ids=result.select { |k,v| v==tag_ids.size }.keys
+    end
+    app_ids=result.keys if any
+    app_ids
+  end
 
 end

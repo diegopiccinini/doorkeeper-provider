@@ -66,10 +66,14 @@ class UserTest < ActiveSupport::TestCase
   test "tag user" do
     ApplicationEnvironment.update_application_stage_type_tags
     user.tag_list.add 'Dev'
-    user.save
     assert user.has_access_to?(application)
     user.tag_list.remove 'Dev'
-    user.save
     assert !user.has_access_to?(application)
+    application.tag_list.add 'testtag'
+    assert !user.has_access_to?(application)
+    user.tag_list.add ['testtag','Dev']
+    assert user.has_access_to?(application)
+    user.tag_list.remove ['testtag','Dev']
+    application.tag_list.remove 'testtag'
   end
 end

@@ -28,13 +28,36 @@ ActiveAdmin.register_page "Application Tags" do
 
     redirect_to admin_application_tags_path, notice: notice_text
   end
-  content do
-    if session[:app_name_filter]
-      applications=OauthApplication.name_contains(session[:app_name_filter]).order(:name).limit(30).all
-    else
-      applications=OauthApplication.order(:name).limit(30).all
-    end
-    render partial: 'tags', locals: { applications: applications }
+
+  page_action :filter_add_tag, method: :get do
+    session[:filter_by_tag]<< params[:tag].to_i
+    redirect_to admin_application_tags_path
   end
+
+  page_action :filter_remove_tag, method: :get do
+    session[:filter_by_tag].delete(params[:tag].to_i)
+    redirect_to admin_application_tags_path
+  end
+
+  page_action :filter_clear, method: :get do
+    session[:filter_by_tag]=[]
+    session.delete(:app_name_filter)
+    redirect_to admin_application_tags_path
+  end
+
+  content do
+    session[:filter_by_tag]||=[]
+    session[:filter_by_tag]=session[:filter_by_tag].uniq
+
+    applications=OauthApplication
+    tags=ActsAsTaggableOn::Tag.where(id: session[:filter_by_tag]).all
+    applications=applications.with_tags(tags, has_all: false) unless tags.empty?
+
+    if session[:app_name_filter]
+      applications=applications.name_contains(session[:app_name_filter])
+    end
+    render partial: 'tags', locals: { applications: applications.order(:name).limit(30).all }
+  end
+
   sidebar :filters, partial: 'filters'
 end

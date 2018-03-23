@@ -47,7 +47,7 @@ class User < ActiveRecord::Base
     elsif self.super_login
       OauthApplication.all
     else
-      tagged_access
+      full_access.all
     end
   end
 
@@ -72,7 +72,7 @@ class User < ActiveRecord::Base
     granted&= !self.expired? if granted
     granted&= application if granted
     granted&= application.enabled  if granted
-    granted&= (self.super_login || self.applications.find_by_id(application.id)) if granted
+    granted&= (self.super_login || self.oauth_applications.find_by_id(application.id) || self.tagged_access_to?(application)) if granted
     granted
   end
 
@@ -80,18 +80,16 @@ class User < ActiveRecord::Base
     self.expire_at < DateTime.now
   end
 
-  def tagged_access
-    apps_ids=self.oauth_applications.ids
-    app_envs=ApplicationEnvironment.tagged_with( self.tag_list, any: true ).map { |a| a.id }
+  def full_access
+    apps_ids=self.oauth_applications.ids + tagged_access_ids
+    OauthApplication.where(id: apps_ids)
+  end
 
-    if apps_ids.empty? and app_envs.empty?
-      OauthApplication.where( id: -1 ).all
-    elsif apps_ids.empty?
-      OauthApplication.where( application_environment_id: app_envs ).all
-    elsif app_envs.empty?
-      self.oauth_applications
-    else
-      OauthApplication.where("application_environment_id IN (?)  OR id IN (?)" ,app_envs, apps_ids).all
-    end
+  def tagged_access_ids
+    OauthApplication.with_tags(self.tags).ids
+  end
+
+  def tagged_access_to? application
+    (application.full_tags - self.tag_list).count == 0
   end
 end

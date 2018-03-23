@@ -1,5 +1,33 @@
 <%= form_tag admin_application_tags_filter_path, method: :post do %>
-  <%= label_tag 'Application Name' %>
-  <%= text_field_tag :application_name, session[:app_name_filter] %>
-  <p><%= submit_tag :filter %> Limit list: 30 applications</p>
+  <div class="c-card">
+    <%= label_tag 'Application Name' %>
+    <%= text_field_tag :application_name, session[:app_name_filter] %>
+    <footer class="c-card__footer c-card__footer--block">
+      <div class="c-input-group">
+        <p class="c-button--block">(Limit: 30 applications)</p>
+        <%= submit_tag :filter, class: 'c-button c-button--info c-button--block' %>
+      </div>
+      <div class="c-input-group">
+        <br />
+      </div>
+    </footer>
+  </div>
 <% end %>
+
+<div class="c-card">
+  <header class="c-card__header">
+    <h2 class="c-heading">
+      <div class="c-heading__sub">Click on tag to filter</div>
+    </h2>
+  </header>
+  <footer class="c-card__footer c-card__footer--block">
+    <% ActsAsTaggableOn::Tag.all.each do |t| %>
+      <% if session[:filter_by_tag].include?(t.id) %>
+        <%= link_to t.name, admin_application_tags_filter_remove_tag_path + "?tag=#{t.id}", class: 'c-button c-button--block c-button--success' %>
+      <% else %>
+        <%= link_to t.name, admin_application_tags_filter_add_tag_path + "?tag=#{t.id}", class: 'c-button c-button--ghost c-button--block c-button--info' %>
+      <% end %>
+    <% end %>
+    <%= link_to 'Clear all', admin_application_tags_filter_clear_path , class: 'c-button c-button--ghost-warning c-button--block c-button--rounded' %>
+  </footer>
+</div>
