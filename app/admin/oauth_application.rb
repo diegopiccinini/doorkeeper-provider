@@ -20,7 +20,7 @@ ActiveAdmin.register OauthApplication, as: "Applications" do
   filter :external_id
   filter :application_environment
 
-  show do
+  show do |item|
     attributes_table do
       row :name
       row :uid
@@ -32,7 +32,7 @@ ActiveAdmin.register OauthApplication, as: "Applications" do
       row :tag_list
     end
     panel 'Users with access (super login, tagged, or added to the application)' do
-      table_for User.with_access_to(oauth_application) do
+      table_for User.with_access_to(item) do
         column :name
         column :email
       end
