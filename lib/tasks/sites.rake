@@ -81,7 +81,7 @@ namespace :sites do
         puts "\t--> Site added to black list #{site.url}"
         site.step='black list'
         site.save
-        app.delete_redirect_uri site
+        #app.delete_redirect_uri site
       end
       puts
     end

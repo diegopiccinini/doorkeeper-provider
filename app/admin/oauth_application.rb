@@ -18,6 +18,7 @@ ActiveAdmin.register OauthApplication, as: "Applications" do
   filter :users
   filter :enabled
   filter :external_id
+  filter :redirect_uri
   filter :application_environment
 
   show do |item|
