@@ -81,6 +81,12 @@ namespace :sites do
         puts "\t--> Site added to black list #{site.url}"
         site.step='black list'
         site.save
+        black_list=BlackList.find_or_create_by url: site.url
+        black_list.times+=1
+        black_list.log||="Init:\n"
+        black_list.log+="App: #{app.external_id} site: #{site.url}, black listed at #{site.updated_at}\n"
+        black_list.log+="Status: #{site.status}, ip #{site.ip}\n"
+        black_list.save
         #app.delete_redirect_uri site
       end
       puts
