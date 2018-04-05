@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180319133905) do
+ActiveRecord::Schema.define(version: 20180405161841) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace",     limit: 255
@@ -51,6 +51,16 @@ ActiveRecord::Schema.define(version: 20180319133905) do
   end
 
   add_index "application_environments", ["name"], name: "index_application_environments_on_name", unique: true, using: :btree
+
+  create_table "black_lists", force: :cascade do |t|
+    t.string   "url",        limit: 255
+    t.text     "log",        limit: 65535
+    t.integer  "times",      limit: 4,     default: 0
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
+  end
+
+  add_index "black_lists", ["url"], name: "index_black_lists_on_url", unique: true, using: :btree
 
   create_table "oauth_access_grants", force: :cascade do |t|
     t.integer  "resource_owner_id", limit: 4,     null: false
