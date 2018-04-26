@@ -1,11 +1,11 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  url: MyString
-  log: MyText
+  url: MyString1
+  log: MyText1
   times: 1
 
 two:
-  url: MyString
-  log: MyText
+  url: MyString2
+  log: MyText2
   times: 1
