@@ -65,6 +65,7 @@ class UserTest < ActiveSupport::TestCase
 
   test "tag user" do
     ApplicationEnvironment.update_application_stage_type_tags
+    application.tag_list.add 'TestCustomTag1'
     user.tag_list.add 'Dev'
     user.save
     assert user.has_access_to?(application)
@@ -73,6 +74,7 @@ class UserTest < ActiveSupport::TestCase
 
     user.tag_list.remove 'Dev'
     user.save
+    user.reload
     assert !user.has_access_to?(application)
     assert_equal 0, User.with_access_to(application).where(id: user.id).count
     assert_equal 0, user.full_access.where(id: application.id).count
@@ -83,7 +85,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal 0, User.with_access_to(application).where(id: user.id).count
     assert_equal 0, user.full_access.where(id: application.id).count
 
-    user.tag_list.add ['testtag','Dev']
+    user.tag_list.add ['testtag']
     user.save
     assert user.has_access_to?(application)
     assert_equal 1, User.with_access_to(application).where(id: user.id).count
@@ -98,6 +100,7 @@ class UserTest < ActiveSupport::TestCase
     user.tag_list.remove user.tag_list
     application.tag_list.remove 'testtag'
     user.save
+    application.tag_list.remove 'TestCustomTag1'
     application.save
   end
 end

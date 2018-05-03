@@ -125,6 +125,13 @@ class OauthApplication < Doorkeeper::Application
 
   end
 
+  def self.any_tag_ids tags
+    ae_ids=ApplicationEnvironment.tagged_with( tags, any: true).ids
+    result=ActsAsTaggableOn::Tagging.where(taggable_type: 'Doorkeeper::Application').where(tag_id: tags.ids).group(:taggable_id).count(:tag_id)
+    total_ids=where( application_environment_id: ae_ids ).ids + result.keys
+    total_ids.uniq
+  end
+
   def self.tagged_with_ids names, match_all: false, any: false
     tag_ids=ActsAsTaggableOn::Tag.where(name: names).ids
     app_ids=[]
