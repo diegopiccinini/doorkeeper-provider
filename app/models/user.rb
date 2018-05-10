@@ -27,7 +27,7 @@ class User < ActiveRecord::Base
   end
 
   def self.from_omniauth(auth)
-    if auth[:info][:email].split('@').last == ENV['CUSTOM_DOMAIN_FILTER']
+    if ENV['CUSTOM_DOMAIN_FILTER'].split.include?(auth[:info][:email].split('@').last)
       user = find_or_create_by email: auth[:info][:email]
 
       user.provider = auth[:provider]
