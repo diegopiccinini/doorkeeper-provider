@@ -19,8 +19,7 @@ class WelcomeController < ApplicationController
     applications.each do |a|
       a.redirect_uri.split.each do |uri|
         if session[:search].nil? or uri.split('.').first.include?session[:search] or a.name.include?session[:search].upcase
-          uri = uri[0..-('/callback'.length + 1)]
-          @applications << { uri: uri, name: callback_name(uri), environment: a.name }
+          @applications << { uri: app_uri(uri), name: callback_name(uri), environment: a.name }
         end
       end
     end
@@ -40,8 +39,27 @@ class WelcomeController < ApplicationController
 
   private
 
-  def callback_name(uri)
+  def callback_name uri
+    uri.include?('logins/auth/bookingbug') ? backend_name(uri) : frontend_name(uri)
+  end
+
+  def backend_name uri
+    uri = uri[0..-('/callback'.length + 1)]
     name = URI(uri).host
     name.include?('.') ? name.split('.').first : name
+  end
+
+  def frontend_name uri
+    Base64.strict_decode64(encoded_frontend(uri)) + ' [FRONTEND]'
+  end
+
+  def app_uri uri
+    extra_param=''
+    extra_param="/#{encoded_frontend(uri)}" unless uri.end_with?('/callback')
+    uri[0..(uri.index('/callback') - 1 )] + extra_param
+  end
+
+  def encoded_frontend uri
+    uri.split('/').last
   end
 end
