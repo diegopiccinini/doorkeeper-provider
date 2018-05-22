@@ -10,6 +10,9 @@ ActiveAdmin.register OauthApplication, as: "Applications" do
     column :external_id
     column :application_environment
     column :updated_at
+    column 'Frontend' do |app|
+      link_to 'Edit', admin_frontends_path + "?app_id=#{app.id}"
+    end
     actions
   end
 

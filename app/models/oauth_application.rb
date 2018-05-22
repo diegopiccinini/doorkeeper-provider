@@ -65,11 +65,15 @@ class OauthApplication < Doorkeeper::Application
   end
 
   def backend_uri
-    redirect_uri.split.each.reject { |x| x.include?'/logins/frontend/callback' }
+    redirect_uri.split.each.reject { |x| x.include?'/logins/auth/frontend/callback' }
   end
 
   def frontend_uri
-    redirect_uri.split.each.select { |x| x.include?'/logins/frontend/callback' }
+    redirect_uri.split.each.select { |x| x.include?'/logins/auth/frontend/callback' }
+  end
+
+  def backend_uri_host
+    backend_uri.map { |x| URI(x).host }
   end
 
   def create_sites
