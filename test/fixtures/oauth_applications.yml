@@ -5,7 +5,7 @@ one:
   secret: 1qaz2wsx3edc4rfv5tgb
   name: testclient prod
   enabled: true
-  redirect_uri: https://testclient.bookingbug.com/auth/login/bookingbug
+  redirect_uri: https://testclient.bookingbug.com/logins/auth/bookingbug/callback
   external_id: testclient_web
   application_environment: prod
 
@@ -14,6 +14,6 @@ two:
   secret: 1qaz2wddniunsx3edc4rfv5tgb
   name: testclient dev
   enabled: true
-  redirect_uri: https://testclient2.bookingbug.com/auth/login/bookingbug https://testclient3.bookingbug.com/auth/login/bookingbug https://testclient4.bookingbug.com/auth/login/bookingbug
+  redirect_uri: https://testclient2.bookingbug.com/logins/auth/bookingbug/callback https://testclient3.bookingbug.com/logins/auth/bookingbug/callback https://testclient4.bookingbug.com/logins/auth/bookingbug/callback
   external_id: testclient_dev
   application_environment: dev

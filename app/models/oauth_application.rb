@@ -55,9 +55,26 @@ class OauthApplication < Doorkeeper::Application
 
   end
 
+  def redirect_uri_keep_frontend data
+
+    hosts=data.split.map { |x| URI(x).host }
+    frontends=frontend_uri.select { |x| hosts.include?URI(x).host }
+    new_redirect_uri = data.split + frontends
+    self.redirect_uri=new_redirect_uri.sort.join(' ')
+
+  end
+
+  def backend_uri
+    redirect_uri.split.each.reject { |x| x.include?'/logins/frontend/callback' }
+  end
+
+  def frontend_uri
+    redirect_uri.split.each.select { |x| x.include?'/logins/frontend/callback' }
+  end
+
   def create_sites
 
-    redirect_uri.split.each do |callback_uri|
+   backend_uri.each do |callback_uri|
       next if callback_uri.size< ('/callback'.size + 8)
       s=Site.find_or_create_by url: callback_uri[0..-( '/callback'.size + 1)]
       sites << s

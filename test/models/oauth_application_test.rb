@@ -43,4 +43,5 @@ class OauthApplicationTest < ActiveSupport::TestCase
     tags = ActsAsTaggableOn::Tag.where( name: 'no_exist' ).all
     assert_equal  OauthApplication.with_tags(tags).count, 0
   end
+
 end

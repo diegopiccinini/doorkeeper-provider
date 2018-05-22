@@ -40,7 +40,7 @@ class Api::V1::OauthApplicationsController < ApplicationController
     begin
       body=JSON.parse params[:body]
       @oauth_application.external_id=body['external_id'] if body.has_key?('external_id')
-      @oauth_application.redirect_uri=body['redirect_uri'] if body.has_key?('redirect_uri')
+      @oauth_application.redirect_uri_keep_frontend(body['redirect_uri']) if body.has_key?('redirect_uri')
       @oauth_application.enabled=body['enabled'] if body.has_key?('enabled')
       @oauth_application.name=body['name'] if body.has_key?('name')
 
@@ -73,7 +73,6 @@ class Api::V1::OauthApplicationsController < ApplicationController
     rescue => e
       render json: { error: e.message, backtrace: e.backtrace.inspect } , status: 500
     end
-
 
   end
 
