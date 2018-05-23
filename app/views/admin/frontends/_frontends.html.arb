@@ -9,12 +9,12 @@ if application.frontend_uri.count>0
       p Base64.strict_decode64(a.split('/').last).split.first
     end
 
-    column "App-Id" do |a|
-      p Base64.strict_decode64(a.split('/').last).split[1]
-    end
-
     column "Company Id" do |a|
       p (Base64.strict_decode64(a.split('/').last).split[2] || '-')
+    end
+
+    column "Delete" do |a|
+      link_to 'X', admin_frontends_delete_path + "?app_id=#{application.id}&frontend_url=#{a}", method: :get, title: 'click to delete', class: 'c-button c-button--ghost-success'
     end
   end
 

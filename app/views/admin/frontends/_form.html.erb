@@ -8,15 +8,9 @@
         <%= select_tag :backend, options_for_select(application.backend_uri_host), class: 'c-field' %>
       </div>
 
-      <% style= flash[:errors].include?('frontend_uri') ? ' c-field--error' : '' %>
-      <div class="o-field<%= style %>">
+      <div class="o-field">
         <label class="c-label" for="frontend_uri">Fronted URI</label>
         <%= text_field_tag :frontend_uri, '', class: 'c-field' %>
-      </div>
-      <% style= flash[:errors].include?('frontend_app_id') ? ' c-field--error' : '' %>
-      <div class="o-field<%= style %>">
-        <label class="c-label" for="frontedn_app_id">App-Id</label>
-        <%= text_field_tag :frontend_app_id, '', class: 'c-field' %>
       </div>
       <div class="o-field">
         <label class="c-label" for="company_id">Company Id</label>

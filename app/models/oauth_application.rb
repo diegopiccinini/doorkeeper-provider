@@ -76,6 +76,29 @@ class OauthApplication < Doorkeeper::Application
     backend_uri.map { |x| URI(x).host }
   end
 
+  def add_frontend backend_host: , frontend_url:, company_id: nil
+    backend=backend_uri.select { |x| x.include? backend_host }.first
+
+    unless backend.nil?
+      frontend_url << " #{company_id}" unless company_id.nil?
+      front_redirect_uri= backend[0 .. backend.index('/logins/auth/bookingbug') ] + 'logins/auth/frontend/callback/' + Base64.strict_encode64(frontend_url)
+
+      unless redirect_uri.include?(front_redirect_uri)
+        uris=redirect_uri.split
+        uris << front_redirect_uri
+        self.redirect_uri=uris.sort.join(' ')
+        save
+      end
+    end
+  end
+
+  def delete_frontend frontend
+    uris=redirect_uri.split
+    uris.delete(frontend)
+    self.redirect_uri=uris.join(' ')
+    save
+  end
+
   def create_sites
 
    backend_uri.each do |callback_uri|

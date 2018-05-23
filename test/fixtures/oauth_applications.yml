@@ -14,6 +14,6 @@ two:
   secret: 1qaz2wddniunsx3edc4rfv5tgb
   name: testclient dev
   enabled: true
-  redirect_uri: https://testclient2.bookingbug.com/logins/auth/bookingbug/callback https://testclient3.bookingbug.com/logins/auth/bookingbug/callback https://testclient4.bookingbug.com/logins/auth/bookingbug/callback
+  redirect_uri: https://testclient2.bookingbug.com/logins/auth/bookingbug/callback https://testclient3.bookingbug.com/logins/auth/bookingbug/callback https://testclient4.bookingbug.com/logins/auth/bookingbug/callback https://testclient3.bookingbug.com/logins/auth/frontend/callback/aHR0cDovL2xvY2FsaG9zdDo4MDAwIDI5MjgxMDFkOGYwYTU0ZDZlYjJlNTQxMjNiN2MzNTdiMWZlNjE1Y2VlODBm https://testclient2.bookingbug.com/logins/auth/frontend/callback/aHR0cDovL2xvY2FsaG9zdDo4MDAwIDI5MjgxMDFkOGYwYTU0ZDZlYjJlNTQxMjNiN2MzNTdiMWZlNjE1Y2VlODBm
   external_id: testclient_dev
   application_environment: dev

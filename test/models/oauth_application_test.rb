@@ -44,4 +44,50 @@ class OauthApplicationTest < ActiveSupport::TestCase
     assert_equal  OauthApplication.with_tags(tags).count, 0
   end
 
+  test "#backend_uri" do
+    app=oauth_applications(:two)
+    b = app.backend_uri
+    assert b.size < app.redirect_uri.split.size
+    assert b.size > 0
+    back_count=b.count { |x| x.include?'/bookingbug/callback' }
+    front_count=b.count { |x| x.include?'/frontend/callback' }
+    assert back_count > 0
+    assert_equal front_count, 0
+  end
+
+  test "#frontend_uri" do
+    app=oauth_applications(:two)
+    b = app.frontend_uri
+    assert b.size < app.redirect_uri.split.size
+    assert b.size > 0
+    back_count=b.count { |x| x.include?'/bookingbug/callback' }
+    front_count=b.count { |x| x.include?'/frontend/callback' }
+    assert front_count > 0
+    assert_equal back_count, 0
+  end
+
+  test "#redirect_uri_keep_frontend" do
+    app=oauth_applications(:two)
+    original_frontend_uri=app.frontend_uri
+    redirect_uri='https://testclient2.bookingbug.com/logins/auth/bookingbug/callback https://testclient3.bookingbug.com/logins/auth/bookingbug/callback https://testclient4.bookingbug.com/logins/auth/bookingbug/callback'
+    app.redirect_uri_keep_frontend(redirect_uri)
+    app.save
+    app.reload
+    assert_equal app.frontend_uri, original_frontend_uri.sort
+
+    redirect_uri='https://testclient2.bookingbug.com/logins/auth/bookingbug/callback https://testclient3.bookingbug.com/logins/auth/bookingbug/callback'
+    app.redirect_uri_keep_frontend(redirect_uri)
+    app.save
+    app.reload
+    assert_equal app.frontend_uri, original_frontend_uri.sort
+
+    redirect_uri='https://testclient3.bookingbug.com/logins/auth/bookingbug/callback https://testclient4.bookingbug.com/logins/auth/bookingbug/callback'
+    app.redirect_uri_keep_frontend(redirect_uri)
+    app.save
+    app.reload
+    assert_not_equal app.frontend_uri, original_frontend_uri.sort
+    assert_no_match /testclient2/, app.frontend_uri.join(' ')
+    assert_match /testclient3/, app.frontend_uri.join(' ')
+  end
+
 end
