@@ -51,7 +51,6 @@ class WelcomeController < ApplicationController
 
   def frontend_name uri
     frontend_uri_params=Base64.strict_decode64(encoded_frontend(uri)).split
-    frontend_uri_params.delete_at(1)
     frontend_uri_params.join(' ') + ' [FRONTEND]'
   end
 
