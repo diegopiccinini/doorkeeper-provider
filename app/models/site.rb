@@ -79,8 +79,9 @@ class Site < ActiveRecord::Base
           a.update( enabled: true)
           puts "\t--> The correct one is #{a.external_id}"
           puts
-        else
-          a.delete_redirect_uri(self)
+          # else
+          # a.delete_redirect_uri(self)
+          # don't delete the application wait for puppet
         end
       end
     end
