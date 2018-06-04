@@ -48,15 +48,12 @@ class Site < ActiveRecord::Base
         if response.headers['location'].start_with?("https://#{ENV['HOST']}")
           self.step='central auth redirection'
           clean_duplication response.headers['location']
-        else
-          delete_in_apps
         end
       end
       self.status=response.status
     rescue
       self.status=443
       self.step='site unavailable'
-      delete_in_apps
     end
 
     self.save
