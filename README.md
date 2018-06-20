@@ -26,12 +26,19 @@ bundler install
 We use dotenv-rails to set Google Omniauth and filter by the company domain.
 So you have to edit .env as the .env.sample to setup the environment vars, (in production is .evn.production).
 
+```bash
+
   GOOGLE_CLIENT_ID = "your google client id"
 
   GOOGLE_CLIENT_SECRET = "your google secret"
 
   CUSTOM_DOMAIN_FILTER = 'yourdomain.com'
 
+  BACKEND_CALLBACK_URI_PATH= /backend/path/callback
+
+  FRONTEND_CALLBACK_URI_PATH= /frontend/path/callback
+
+```
 If you don't have credentials visit to [Google Dev](https://console.developers.google.com) to get your credentials.
 
 ## Database creation

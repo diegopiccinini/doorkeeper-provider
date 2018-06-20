@@ -5,9 +5,6 @@ namespace :sites do
 
     ApplicationEnvironment.update_application_stage_type_tags
 
-    OauthApplicationsSite.all.each { |x| x.delete }
-    Site.all { |s| s.delete }
-
     OauthApplication.all.each do |a|
       a.create_sites
     end
