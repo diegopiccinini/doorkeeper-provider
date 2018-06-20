@@ -38,6 +38,8 @@ So you have to edit .env as the .env.sample to setup the environment vars, (in p
 
   FRONTEND_CALLBACK_URI_PATH= /frontend/path/callback
 
+  FIRST_CALL_BACKEND_PATH=/backend/path #optional, is the path to start the oauth process in the application site
+
 ```
 If you don't have credentials visit to [Google Dev](https://console.developers.google.com) to get your credentials.
 

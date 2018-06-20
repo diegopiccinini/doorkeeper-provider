@@ -51,7 +51,7 @@ namespace :sites do
 
   desc "get response status"
   task status: :environment do
-    Site.all.each do |site|
+    Site.backend.all.each do |site|
       status site
     end
   end

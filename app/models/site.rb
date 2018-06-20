@@ -7,6 +7,7 @@ class Site < ActiveRecord::Base
   before_save :update_total_oauth_applications
 
   scope :central_auth_redirection,-> { where( step: 'central auth redirection' ) }
+  scope :backend,-> { where( 'url LIKE ?',"%#{ENV['BACKEND_CALLBACK_URI_PATH']}" ) }
 
   def update_total_oauth_applications
     self.total_oauth_applications= oauth_application_ids.count
@@ -33,12 +34,16 @@ class Site < ActiveRecord::Base
     Faraday.new( url: self.host_url )
   end
 
+  def first_call_backend_path
+    ENV['FIRST_CALL_BACKEND_PATH'] || uri.path
+  end
+
   def check
 
     self.step='bad response'
     begin
       response=conn.get do |req|
-        req.url uri.path
+        req.url first_call_backend_path
         req.options.timeout=5
         req.options.open_timeout=2
       end
