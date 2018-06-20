@@ -5,7 +5,7 @@ one:
   secret: 1qaz2wsx3edc4rfv5tgb
   name: testclient prod
   enabled: true
-  redirect_uri: https://testclient.bookingbug.com/logins/auth/bookingbug/callback
+  redirect_uri: <%= back_uri 'testclient' %>
   external_id: testclient_web
   application_environment: prod
 
@@ -14,6 +14,6 @@ two:
   secret: 1qaz2wddniunsx3edc4rfv5tgb
   name: testclient dev
   enabled: true
-  redirect_uri: https://testclient2.bookingbug.com/logins/auth/bookingbug/callback https://testclient3.bookingbug.com/logins/auth/bookingbug/callback https://testclient4.bookingbug.com/logins/auth/bookingbug/callback https://testclient3.bookingbug.com/logins/auth/frontend/callback/aHR0cDovL2xvY2FsaG9zdDo4MDAwIDI5MjgxMDFkOGYwYTU0ZDZlYjJlNTQxMjNiN2MzNTdiMWZlNjE1Y2VlODBm https://testclient2.bookingbug.com/logins/auth/frontend/callback/aHR0cDovL2xvY2FsaG9zdDo4MDAwIDI5MjgxMDFkOGYwYTU0ZDZlYjJlNTQxMjNiN2MzNTdiMWZlNjE1Y2VlODBm
+  redirect_uri: <%= %w(testclient2 testclient3 testclient).map { |x| back_uri x }.join(' ') %> <%= front_uri 'testclient3','aHR0cDovL2xvY2FsaG9zdDo4MDAwIDI5MjgxMDFkOGYwYTU0ZDZlYjJlNTQxMjNiN2MzNTdiMWZlNjE1Y2VlODBm' %> <%= front_uri 'testclient2', 'aHR0cDovL2xvY2FsaG9zdDo4MDAwIDI5MjgxMDFkOGYwYTU0ZDZlYjJlNTQxMjNiN2MzNTdiMWZlNjE1Y2VlODBm' %>
   external_id: testclient_dev
   application_environment: dev
