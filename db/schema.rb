@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180405161841) do
+ActiveRecord::Schema.define(version: 20180620151508) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace",     limit: 255
@@ -211,8 +211,8 @@ ActiveRecord::Schema.define(version: 20180405161841) do
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "users", column: "resource_owner_id"
   add_foreign_key "oauth_applications", "application_environments"
-  add_foreign_key "oauth_applications_sites", "oauth_applications"
-  add_foreign_key "oauth_applications_sites", "sites"
+  add_foreign_key "oauth_applications_sites", "oauth_applications", on_delete: :cascade
+  add_foreign_key "oauth_applications_sites", "sites", on_delete: :cascade
   add_foreign_key "oauth_applications_users", "oauth_applications"
   add_foreign_key "oauth_applications_users", "users"
 end

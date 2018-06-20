@@ -4,6 +4,8 @@ namespace :sites do
   task reset_all: :environment do
 
     ApplicationEnvironment.update_application_stage_type_tags
+    Site.where.not('url LIKE ?','%callback%').each { |s| s.delete }
+
 
     OauthApplication.all.each do |a|
       a.create_sites

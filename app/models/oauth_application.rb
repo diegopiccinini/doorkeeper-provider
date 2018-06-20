@@ -32,8 +32,7 @@ class OauthApplication < Doorkeeper::Application
     OauthApplicationsSite.where( oauth_application: self).delete_all
 
     data.split.each do |callback_uri|
-      next if callback_uri.size< ('/callback'.size + 8)
-      s=Site.find_or_create_by url: callback_uri[0..-( '/callback'.size + 1)]
+      s=Site.find_or_create_by url: callback_uri
       sites << s
       oapp_site=OauthApplicationsSite.find_by site: s , oauth_application: self
       oapp_site.update( status: 'to check')
@@ -107,10 +106,9 @@ class OauthApplication < Doorkeeper::Application
 
   def create_sites
 
-   backend_uri.each do |callback_uri|
-      next if callback_uri.size< ('/callback'.size + 8)
-      s=Site.find_or_create_by url: callback_uri[0..-( '/callback'.size + 1)]
-      sites << s
+    redirect_uri.split.each do |callback_uri|
+      s=Site.find_or_create_by url: callback_uri
+      sites << s unless sites.include?s
       oapp_site=OauthApplicationsSite.find_by site: s , oauth_application: self
       oapp_site.update( status: 'to check')
     end
