@@ -2,11 +2,18 @@ require 'faraday'
 
 class Site < ActiveRecord::Base
 
+  STEP_CENTRAL_AUTH_302 = 'central auth redirection'
+  STEP_NO_CENTRAL_AUTH_302 = 'no central auth redirection'
+  STEP_BAD_RESPONSE = 'bad response'
+  STEP_SITE_UNAVAILABLE = 'site unavailable'
+  STEP_BLACK_LIST = 'black list'
+
   has_and_belongs_to_many :oauth_applications
 
   before_save :update_total_oauth_applications
 
-  scope :central_auth_redirection,-> { where( step: 'central auth redirection' ) }
+  scope :central_auth_redirection,-> { where( step: STEP_CENTRAL_AUTH_302 ) }
+
   scope :backend,-> { where( 'url LIKE ?',"%#{ENV['BACKEND_CALLBACK_URI_PATH']}" ) }
 
   def update_total_oauth_applications
@@ -25,7 +32,6 @@ class Site < ActiveRecord::Base
     uri.scheme + '://' + uri.host
   end
 
-
   def apps
     oauth_applications.each.map { |x| x.name }.join(' | ')
   end
@@ -40,7 +46,7 @@ class Site < ActiveRecord::Base
 
   def check
 
-    self.step='bad response'
+    self.step=STEP_BAD_RESPONSE
     begin
       response=conn.get do |req|
         req.url first_call_backend_path
@@ -49,16 +55,16 @@ class Site < ActiveRecord::Base
       end
 
       if response.status==302
-        self.step='no central auth redirection'
+        self.step=STEP_NO_CENTRAL_AUTH_302
         if response.headers['location'].start_with?("https://#{ENV['HOST']}")
-          self.step='central auth redirection'
+          self.step=STEP_CENTRAL_AUTH_302
           clean_duplication response.headers['location']
         end
       end
       self.status=response.status
     rescue
       self.status=443
-      self.step='site unavailable'
+      self.step=STEP_SITE_UNAVAILABLE
     end
 
     self.save
@@ -79,12 +85,13 @@ class Site < ActiveRecord::Base
       oauth_applications.each do |a|
         if a.uid==client_id
           a.update( enabled: true)
+          a.site_status(self, OauthApplicationsSite::STATUS_DUPLICATED_CORRECT)
           puts "\t--> The correct one is #{a.external_id}"
-          puts
-          # else
-          # a.delete_redirect_uri(self)
-          # don't delete the application wait for puppet
+        else
+          a.site_status(self, OauthApplicationsSite::STATUS_DUPLICATED_INCORRECT)
+          puts "\t--> #{a.external_id} is wrong!"
         end
+          puts
       end
     end
   end

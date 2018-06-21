@@ -14,7 +14,7 @@ class OauthApplication < Doorkeeper::Application
   scope :enabled, -> { where(enabled: true) }
 
   def tidy_sites
-    sites.where( 'oauth_applications_sites.status': 'correct' ).order(:url).each.map { |s| s.url + '/callback' }.join(' ')
+    sites.where( 'oauth_applications_sites.status': OauthApplicationsSite::STATUS_CORRECT ).order(:url).each.map { |s| s.url + '/callback' }.join(' ')
   end
 
   def update_sites
@@ -35,7 +35,7 @@ class OauthApplication < Doorkeeper::Application
       s=Site.find_or_create_by url: callback_uri
       sites << s
       oapp_site=OauthApplicationsSite.find_by site: s , oauth_application: self
-      oapp_site.update( status: 'to check')
+      oapp_site.update( status: OauthApplicationsSite::STATUS_TO_CHECK )
     end
 
   end
@@ -43,7 +43,6 @@ class OauthApplication < Doorkeeper::Application
   def delete_redirect_uri site
 
     redirect_uris=redirect_uri.split.reject { |x| x.include?(site.url) }
-
     if redirect_uris.count<1
       update( enabled: false )
       puts "\t--> Bad url #{site.url} disabled application #{external_id}"
@@ -110,7 +109,7 @@ class OauthApplication < Doorkeeper::Application
       s=Site.find_or_create_by url: callback_uri
       sites << s unless sites.include?s
       oapp_site=OauthApplicationsSite.find_by site: s , oauth_application: self
-      oapp_site.update( status: 'to check')
+      oapp_site.update( status: OauthApplicationsSite::STATUS_TO_CHECK)
     end
 
   end
@@ -143,6 +142,12 @@ class OauthApplication < Doorkeeper::Application
   def custom_tags
     tags=ActsAsTaggableOn::Tag.all.reject { |t| OauthApplication.default_tags.include?(t.name) }
     tags.map { |t| { id: t.id , name: t.name } }
+  end
+
+  def site_status site, status=nil
+    oapp_site=OauthApplicationsSite.find_or_create_by site: site , oauth_application: self
+    oapp_site.update( status: status) if status
+    oapp_site.status
   end
 
   def self.default_tags
