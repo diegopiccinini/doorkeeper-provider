@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180620151508) do
+ActiveRecord::Schema.define(version: 20180621144240) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace",     limit: 255
@@ -53,14 +53,14 @@ ActiveRecord::Schema.define(version: 20180620151508) do
   add_index "application_environments", ["name"], name: "index_application_environments_on_name", unique: true, using: :btree
 
   create_table "black_lists", force: :cascade do |t|
-    t.string   "url",        limit: 255
     t.text     "log",        limit: 65535
     t.integer  "times",      limit: 4,     default: 0
     t.datetime "created_at",                           null: false
     t.datetime "updated_at",                           null: false
+    t.integer  "site_id",    limit: 4
   end
 
-  add_index "black_lists", ["url"], name: "index_black_lists_on_url", unique: true, using: :btree
+  add_index "black_lists", ["site_id"], name: "index_black_lists_on_site_id", unique: true, using: :btree
 
   create_table "oauth_access_grants", force: :cascade do |t|
     t.integer  "resource_owner_id", limit: 4,     null: false
@@ -120,6 +120,7 @@ ActiveRecord::Schema.define(version: 20180620151508) do
   add_index "oauth_applications_sites", ["oauth_application_id"], name: "index_oauth_applications_sites_on_oauth_application_id", using: :btree
   add_index "oauth_applications_sites", ["site_id", "oauth_application_id"], name: "site_application_index", unique: true, using: :btree
   add_index "oauth_applications_sites", ["site_id"], name: "index_oauth_applications_sites_on_site_id", using: :btree
+  add_index "oauth_applications_sites", ["status"], name: "index_oauth_applications_sites_on_status", using: :btree
 
   create_table "oauth_applications_users", force: :cascade do |t|
     t.integer  "user_id",              limit: 4
@@ -206,6 +207,7 @@ ActiveRecord::Schema.define(version: 20180620151508) do
 
   add_index "variables", ["name"], name: "index_variables_on_name", unique: true, using: :btree
 
+  add_foreign_key "black_lists", "sites"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_grants", "users", column: "resource_owner_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"

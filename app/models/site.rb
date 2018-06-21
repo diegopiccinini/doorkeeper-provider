@@ -8,6 +8,8 @@ class Site < ActiveRecord::Base
   STEP_SITE_UNAVAILABLE = 'site unavailable'
   STEP_BLACK_LIST = 'black list'
 
+  has_one :black_list
+
   has_and_belongs_to_many :oauth_applications
 
   before_save :update_total_oauth_applications

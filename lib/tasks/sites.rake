@@ -2,7 +2,7 @@ namespace :sites do
 
   desc "run all tasks to clean and syncro"
   task all: :environment do
-    %w(reset_all status enable black_list).each do |t|
+    %w(reset_all status enable black_list clean_duplication).each do |t|
       Rake::Task["sites:#{t}"].invoke
     end
   end
@@ -69,32 +69,74 @@ namespace :sites do
 
   desc "enable 302 and unique sites"
   task enable: :environment do
+
+    puts
+    puts "Enabling non duplicated sites with 302 redirection"
+
     OauthApplicationsSite.to_check.each do |os|
       site=os.site
       app=os.oauth_application
 
       if site.step==Site::STEP_CENTRAL_AUTH_302
-        if app.enabled
-          puts "\tApp: #{app.name} site: #{site.url}, it is ok and has been enabled before"
-        else
-          puts "\t--> Enabling app: #{app.name} site: #{site.url}"
-          app.update( enabled: true)
-        end
-        os.update( status: OauthApplicationsSite::STATUS_ENABLED )
+        enable os
       else
         puts "\t--> Site added to black list #{site.url}"
         site.step= Site::STEP_BLACK_LIST
         site.save
-        black_list=BlackList.find_or_create_by url: site.url
+        black_list=BlackList.find_or_create_by site: site
         black_list.times+=1
         black_list.log||="Init:\n"
-        black_list.log+="App: #{app.external_id} site: #{site.url}, black listed at #{site.updated_at}\n"
+        black_list.log+="App: #{app.external_id} black listed at #{site.updated_at}\n"
         black_list.log+="Status: #{site.status}, ip #{site.ip}\n"
         black_list.save
-        os.update( status: STATUS_BLACK_LIST )
-        #app.delete_redirect_uri site
+        os.update( status: OauthApplicationsSite::STATUS_BLACK_LIST )
       end
       puts
+    end
+  end
+
+  def enable os
+    app=os.oauth_application
+    if app.enabled
+      puts "\tApp: #{app.name} site: #{os.site.url}, it is ok and has been enabled before"
+    else
+      puts "\t--> Enabling app: #{app.name} site: #{os.site.url}"
+      app.update( enabled: true)
+    end
+    os.site.black_list.delete unless os.site.black_list.nil?
+    os.update( status: OauthApplicationsSite::STATUS_ENABLED )
+  end
+
+  def disabling_duplicated_incorrect os
+
+    if os.count_duplicated_incorrect>0
+      OauthApplicationsSite.duplicated_incorrect.where( site: os.site).each do |o_incorrect|
+        app=o_incorrect.oauth_application
+        puts "Disabling duplicated site #{os.site.url} in #{app.external_id}"
+        app.delete_redirect_uri os.site
+        o_incorrect.update( status: OauthApplicationsSite::STATUS_DISABLED_DUCPLICATED_INCORRECT )
+      end
+    else
+      puts "Incorrect applications not found for site #{os.site.url}"
+    end
+
+  end
+
+  desc "clean duplication"
+  task clean_duplication: :environment do
+    puts "Cleaning duplication"
+
+    OauthApplicationsSite.duplicated_correct.each do |os|
+      if os.count_correct_by_site==1
+        enable os
+        disabling_duplicated_incorrect os
+      end
+    end
+    stats= OauthApplicationsSite.group(:status).count()
+    puts
+    puts "Stats:"
+    stats.each_pair do |k,v|
+      puts "\t#{k}:\t#{v}"
     end
   end
 
@@ -106,7 +148,7 @@ namespace :sites do
     OauthApplicationsSite.black_list.each do |os|
       next if os.site.url.include?('unknown404')
       next if os.site.url.include?('localhost')
-      puts site.url
+      puts os.site.url
       puts "\tApplication: #{os.oauth_application.external_id}"
       puts
       i+=1
@@ -126,5 +168,4 @@ namespace :sites do
     puts '-' * 50
     puts
   end
-
 end

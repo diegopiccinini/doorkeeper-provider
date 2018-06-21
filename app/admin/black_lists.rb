@@ -5,7 +5,7 @@ ActiveAdmin.register BlackList do
   index as: :blog do
 
     title do |bl|
-      span bl.url, class: 'c-button c-button--ghost'
+      span bl.site.url, class: 'c-button c-button--ghost'
     end
 
     body do |bl|
