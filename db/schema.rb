@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180621144240) do
+ActiveRecord::Schema.define(version: 20180621145700) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace",     limit: 255
@@ -104,7 +104,7 @@ ActiveRecord::Schema.define(version: 20180621144240) do
     t.datetime "updated_at",                                               null: false
     t.boolean  "enabled",                                  default: false
     t.string   "external_id",                limit: 255
-    t.integer  "application_environment_id", limit: 4,     default: 5
+    t.integer  "application_environment_id", limit: 4,     default: 1
   end
 
   add_index "oauth_applications", ["application_environment_id"], name: "index_oauth_applications_on_application_environment_id", using: :btree
