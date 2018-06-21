@@ -1,11 +1,11 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  url: https://test1.com/path/to/login/callback
+  url: <%= back_uri 'test1' %>
   status: 1
   step: MyString
 
 two:
-  url: https://test2.com/path/to/login/callback
+  url: <%= back_uri 'test2' %>
   status: 1
   step: MyString

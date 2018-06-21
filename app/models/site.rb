@@ -22,7 +22,7 @@ class Site < ActiveRecord::Base
   end
 
   def host_url
-    self.uri.scheme + '://' + self.uri.host
+    uri.scheme + '://' + uri.host
   end
 
 
@@ -31,7 +31,7 @@ class Site < ActiveRecord::Base
   end
 
   def conn
-    Faraday.new( url: self.host_url )
+    Faraday.new( url: host_url )
   end
 
   def first_call_backend_path

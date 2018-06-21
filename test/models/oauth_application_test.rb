@@ -49,8 +49,8 @@ class OauthApplicationTest < ActiveSupport::TestCase
     b = app.backend_uri
     assert b.size < app.redirect_uri.split.size
     assert b.size > 0
-    back_count=b.count { |x| x.include?'/bookingbug/callback' }
-    front_count=b.count { |x| x.include?'/frontend/callback' }
+    back_count=b.count { |x| x.include? ENV['BACKEND_CALLBACK_URI_PATH'] }
+    front_count=b.count { |x| x.include? ENV['FRONTEND_CALLBACK_URI_PATH'] }
     assert back_count > 0
     assert_equal front_count, 0
   end
@@ -58,10 +58,10 @@ class OauthApplicationTest < ActiveSupport::TestCase
   test "#frontend_uri" do
     app=oauth_applications(:two)
     b = app.frontend_uri
+    back_count=b.count { |x| x.include? ENV['BACKEND_CALLBACK_URI_PATH'] }
+    front_count=b.count { |x| x.include? ENV['FRONTEND_CALLBACK_URI_PATH'] }
     assert b.size < app.redirect_uri.split.size
     assert b.size > 0
-    back_count=b.count { |x| x.include?'/bookingbug/callback' }
-    front_count=b.count { |x| x.include?'/frontend/callback' }
     assert front_count > 0
     assert_equal back_count, 0
   end

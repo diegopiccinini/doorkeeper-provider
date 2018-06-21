@@ -4,7 +4,7 @@ class SiteTest < ActiveSupport::TestCase
 
   def request_mock url, status=443, headers={}
 
-    stub_request(:get , @one.url ).
+    stub_request(:get , url ).
       with(  headers: {
       'Accept'=>'*/*',
       'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
@@ -18,7 +18,7 @@ class SiteTest < ActiveSupport::TestCase
   setup do
 
     @one=sites(:one)
-    request_mock @one.url
+    request_mock @one.host_url + @one.first_call_backend_path
 
   end
 
