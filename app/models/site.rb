@@ -25,6 +25,10 @@ class Site < ActiveRecord::Base
     self.total_oauth_applications= oauth_application_ids.count
   end
 
+  def to_s
+    url
+  end
+
   def uri
     URI(url)
   end
