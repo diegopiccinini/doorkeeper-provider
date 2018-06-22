@@ -2,6 +2,8 @@ require 'faraday'
 
 class Site < ActiveRecord::Base
 
+  acts_as_taggable
+
   STEP_CENTRAL_AUTH_302 = 'central auth redirection'
   STEP_NO_CENTRAL_AUTH_302 = 'no central auth redirection'
   STEP_BAD_RESPONSE = 'bad response'
@@ -11,6 +13,7 @@ class Site < ActiveRecord::Base
   has_one :black_list
 
   has_and_belongs_to_many :oauth_applications
+  has_and_belongs_to_many :users
 
   before_save :update_total_oauth_applications
 
