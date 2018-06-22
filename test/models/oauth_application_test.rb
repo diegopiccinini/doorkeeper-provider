@@ -1,6 +1,7 @@
 require 'test_helper'
 
 class OauthApplicationTest < ActiveSupport::TestCase
+  include FixtureFileHelpers
 
   test "#check_sites_for_redirect_uri" do
     one= oauth_applications(:one)
@@ -69,19 +70,19 @@ class OauthApplicationTest < ActiveSupport::TestCase
   test "#redirect_uri_keep_frontend" do
     app=oauth_applications(:two)
     original_frontend_uri=app.frontend_uri
-    redirect_uri='https://testclient2.bookingbug.com/logins/auth/bookingbug/callback https://testclient3.bookingbug.com/logins/auth/bookingbug/callback https://testclient4.bookingbug.com/logins/auth/bookingbug/callback'
+    redirect_uri=%w(testclient2 testclient3 testclient4).map { |x| back_uri x }.join(' ')
     app.redirect_uri_keep_frontend(redirect_uri)
     app.save
     app.reload
     assert_equal app.frontend_uri, original_frontend_uri.sort
 
-    redirect_uri='https://testclient2.bookingbug.com/logins/auth/bookingbug/callback https://testclient3.bookingbug.com/logins/auth/bookingbug/callback'
+    redirect_uri=%w(testclient2 testclient3).map { |x| back_uri x }.join(' ')
     app.redirect_uri_keep_frontend(redirect_uri)
     app.save
     app.reload
     assert_equal app.frontend_uri, original_frontend_uri.sort
 
-    redirect_uri='https://testclient3.bookingbug.com/logins/auth/bookingbug/callback https://testclient4.bookingbug.com/logins/auth/bookingbug/callback'
+    redirect_uri=%w(testclient3 testclient4).map { |x| back_uri x }.join(' ')
     app.redirect_uri_keep_frontend(redirect_uri)
     app.save
     app.reload
