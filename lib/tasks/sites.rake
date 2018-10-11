@@ -14,7 +14,7 @@ namespace :sites do
 
     Site.where.not('url LIKE ?','%callback%').each { |s| s.delete }
 
-    OauthApplication.all.each do |a|
+    OauthApplication.where(sync_excluded: false).all.each do |a|
       a.create_sites
     end
 
