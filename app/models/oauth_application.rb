@@ -117,13 +117,14 @@ class OauthApplication < Doorkeeper::Application
   def serialize
     { type: :oauth_application,
       attributes: {
-      name: name,
-      uid: uid,
-      redirect_uri: redirect_uri,
-      external_id: external_id,
-      application_environment: application_environment.name,
-      enabled: enabled
-    }
+        name: name,
+        uid: uid,
+        redirect_uri: redirect_uri,
+        external_id: external_id,
+        application_environment: application_environment.name,
+        enabled: enabled,
+        sync_excluded: sync_excluded
+      }
     }
   end
 
