@@ -146,14 +146,6 @@ ActiveRecord::Schema.define(version: 20181011133255) do
 
   add_index "sites", ["url"], name: "index_sites_on_url", unique: true, using: :btree
 
-  create_table "sites_users", id: false, force: :cascade do |t|
-    t.integer "site_id", limit: 4
-    t.integer "user_id", limit: 4
-  end
-
-  add_index "sites_users", ["site_id", "user_id"], name: "index_sites_users_on_site_id_and_user_id", unique: true, using: :btree
-  add_index "sites_users", ["user_id"], name: "fk_rails_94374d23a5", using: :btree
-
   create_table "taggings", force: :cascade do |t|
     t.integer  "tag_id",        limit: 4
     t.integer  "taggable_id",   limit: 4
@@ -226,6 +218,4 @@ ActiveRecord::Schema.define(version: 20181011133255) do
   add_foreign_key "oauth_applications_sites", "sites", on_delete: :cascade
   add_foreign_key "oauth_applications_users", "oauth_applications"
   add_foreign_key "oauth_applications_users", "users"
-  add_foreign_key "sites_users", "sites"
-  add_foreign_key "sites_users", "users"
 end
