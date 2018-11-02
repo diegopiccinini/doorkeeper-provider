@@ -8,6 +8,7 @@ ActiveAdmin.register User do
     column :name
     column :email
     column :current_sign_in_at
+    column :expire_at
     column :disabled
     column :super_login
     actions
@@ -20,6 +21,7 @@ ActiveAdmin.register User do
   filter :created_at
   filter :tags
   filter :disabled
+  filter :expire_at
   filter :super_login
 
   form do |f|
