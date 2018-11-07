@@ -3,7 +3,7 @@ namespace :change_grants_to_site do
   desc "run all tasks"
   task all: :environment do
     %w(migrate_tags).each do |t|
-      Rake::Task["sites:#{t}"].invoke
+      Rake::Task["change_grants_to_site:#{t}"].invoke
     end
   end
 
@@ -26,9 +26,10 @@ namespace :change_grants_to_site do
   desc "compare user grants application vs site"
   task compare_grants: :environment do
     puts "Compare application grants vs site grants"
-    puts
+    cols=%w(email old_sites new_sites old_new_diff new_old_diff)
+    puts cols.join("\t")
+    no_match=[]
     User.all.each do |user|
-      puts "User: #{user.email}"
       site_ids = []
       user.full_access.each do |app|
         site_ids+= app.sites.ids
@@ -37,18 +38,26 @@ namespace :change_grants_to_site do
       site_ids+=Site.ids if user.super_login
 
       user_site_with_tag_ids=Site.tagged_with(user.tag_list).ids
+      user_site_with_tag_ids+=user.oauth_applications.map { |ap| ap.sites.ids }.flatten
       user_site_with_tag_ids+=Site.ids if user.super_login
 
       site_ids=site_ids.uniq
       user_site_with_tag_ids=user_site_with_tag_ids.uniq
 
-      puts "with app not with site tags"
-      puts (site_ids - user_site_with_tag_ids).count
+      row=[user.email]
+      row<<site_ids.count
+      row<<user_site_with_tag_ids.count
+      diff1=(site_ids - user_site_with_tag_ids).count
+      row<<diff1
+      diff2=(user_site_with_tag_ids - site_ids ).count
+      row<<diff2
 
-      puts "with site tags not in apps"
-      puts (user_site_with_tag_ids - site_ids ).count
+      puts row.join("\t")
+      no_match<< user.email if (diff1+diff2)>0
 
-      puts
     end
+
+    puts "No match users"
+    puts no_match.join("\t")
   end
 end
