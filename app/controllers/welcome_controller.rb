@@ -40,7 +40,7 @@ class WelcomeController < ApplicationController
   private
 
   def callback_name uri
-    uri.include?('logins/auth/bookingbug') ? backend_name(uri) : frontend_name(uri)
+    uri.end_with?('/callback') ? backend_name(uri) : frontend_name(uri)
   end
 
   def backend_name uri

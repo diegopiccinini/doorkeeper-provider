@@ -39,6 +39,7 @@ class Api::V1::OauthApplicationsController < ApplicationController
   def update
     begin
       body=JSON.parse params[:body]
+      raise "#{@oauth_application.external_id} is excluded of synchronization" if @oauth_application.sync_excluded
       @oauth_application.external_id=body['external_id'] if body.has_key?('external_id')
       @oauth_application.redirect_uri_keep_frontend(body['redirect_uri']) if body.has_key?('redirect_uri')
       @oauth_application.enabled=body['enabled'] if body.has_key?('enabled')

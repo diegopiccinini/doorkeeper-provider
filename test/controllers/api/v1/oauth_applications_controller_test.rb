@@ -18,6 +18,7 @@ class Api::V1::OauthApplicationsControllerTest < ActionController::TestCase
     assert_equal data['type'],'oauth_application'
     assert_equal oauth_app.uid,attributes['uid']
     assert_equal oauth_app.external_id,attributes['external_id']
+    assert_equal oauth_app.sync_excluded,attributes['sync_excluded']
   end
 
   test "update" do
