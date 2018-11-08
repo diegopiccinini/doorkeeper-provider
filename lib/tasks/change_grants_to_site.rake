@@ -2,7 +2,7 @@ namespace :change_grants_to_site do
 
   desc "run all tasks"
   task all: :environment do
-    %w(migrate_tags).each do |t|
+    %w(migrate_tags add_sites_to_users compare_grants).each do |t|
       Rake::Task["change_grants_to_site:#{t}"].invoke
     end
   end
@@ -23,6 +23,21 @@ namespace :change_grants_to_site do
     end
   end
 
+  desc "add sites to users when they have directly grants to applications"
+  task add_sites_to_users: :environment do
+    puts "Add sites to users"
+    User.all.each do |user|
+      puts user.email
+      user.oauth_applications.each do |a|
+        a.sites.each do |s|
+          puts "\tadding site #{s.url}"
+          user.sites<< s unless user.sites.include?s
+        end
+      end
+      user.save
+    end
+  end
+
   desc "compare user grants application vs site"
   task compare_grants: :environment do
     puts "Compare application grants vs site grants"
@@ -37,8 +52,8 @@ namespace :change_grants_to_site do
 
       site_ids+=Site.ids if user.super_login
 
-      user_site_with_tag_ids=Site.tagged_with(user.tag_list).ids
-      user_site_with_tag_ids+=user.oauth_applications.map { |ap| ap.sites.ids }.flatten
+      user_site_with_tag_ids=Site.tagged_with(user.tag_list, any: true).ids
+      user_site_with_tag_ids+=user.sites.ids
       user_site_with_tag_ids+=Site.ids if user.super_login
 
       site_ids=site_ids.uniq

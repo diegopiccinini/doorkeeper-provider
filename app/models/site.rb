@@ -87,6 +87,10 @@ class Site < ActiveRecord::Base
 
   end
 
+  def enabled
+    oauth_applications.where(enabled: true).count>0
+  end
+
   def clean_duplication location
 
     if oauth_applications.count>1
@@ -115,5 +119,21 @@ class Site < ActiveRecord::Base
     rescue SocketError
       false
     end
+  end
+
+  def self.any_tag_ids tags
+    ae_ids=ApplicationEnvironment.tagged_with( tags, any: true).ids
+    result=tagged_with( tags, any: true)
+    app_ids=OauthApplication.where( application_environment_id: ae_ids ).ids
+    total_ids=OauthApplicationsSite.where(oauth_application_id: app_ids).map { |app_site| app_site.site_id } + result.ids
+    total_ids.uniq
+  end
+
+  def default_tag
+    oauth_applications.first.application_environment.name
+  end
+
+  def full_tags
+    tag_list + [ default_tag ]
   end
 end

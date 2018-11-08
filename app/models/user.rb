@@ -14,6 +14,7 @@ class User < ActiveRecord::Base
   before_save { self.expire_at = DateTime.now + 180 unless self.expire_at }
 
   scope :access_with_tag, -> (oauth_application) { tagged_with(oauth_application.full_tags, any: true).where(disabled: false) }
+  scope :site_access_with_tag, -> (site) { tagged_with(site.full_tags, any: true) }
 
   def self.with_access_to oauth_application
     uids= where( super_login: true, disabled: false ).ids
@@ -22,6 +23,18 @@ class User < ActiveRecord::Base
     where( id: uids )
   end
 
+  def self.with_access_to_site site
+
+    if site.enabled
+      uids= where( super_login: true, disabled: false ).ids
+      uids+= site_access_with_tag( site ).ids
+      uids+= site.users.where(disabled: false).ids
+      where( id: uids )
+    else
+      where( id: -1 )
+    end
+
+  end
 
   def to_s
     email
@@ -69,11 +82,23 @@ class User < ActiveRecord::Base
   end
 
   def has_access_to? application
-    granted =  self.disabled==false
+    granted = self.disabled==false
     granted&= !self.expired? if granted
     granted&= application if granted
     granted&= application.enabled  if granted
     granted&= (self.super_login || self.oauth_applications.find_by_id(application.id) || self.tagged_access_to?(application)) if granted
+    granted
+  end
+
+  def has_access_to_site? application: , redirect_uri:
+    granted = self.disabled==false
+    granted&= !self.expired? if granted
+    granted&= application if granted
+    granted&= application.enabled  if granted
+    if granted
+     site=application.sites.find_by_url redirect_uri
+     granted&=site and site.enabled and self.full_site_access.include?site
+    end
     granted
   end
 
@@ -86,12 +111,25 @@ class User < ActiveRecord::Base
     OauthApplication.where(id: apps_ids.uniq)
   end
 
+  def full_site_access
+    sites_ids=sites.ids + tagged_sites_access_ids
+    Site.where(id: sites_ids.uniq)
+  end
+
   def tagged_access_ids
     OauthApplication.any_tag_ids self.tags
   end
 
+  def tagged_sites_access_ids
+    Site.any_tag_ids self.tags
+  end
+
   def tagged_access_to? application
     (application.full_tags - self.tag_list).count < application.full_tags.count
+  end
+
+  def tagged_access_to_site? site
+    (site.full_tags - self.tag_list).count < site.full_tags.count
   end
 
   def available_tags

@@ -12,7 +12,7 @@ Doorkeeper.configure do
 
     application = OauthApplication.find_by_uid params[:client_id]
 
-    if current_user && current_user.has_access_to?(application)
+    if current_user && current_user.has_access_to_site?(application: application, redirect_uri: params[:redirect_uri])
       current_user
     else
       redirect_to new_user_session_url
