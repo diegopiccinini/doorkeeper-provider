@@ -19,6 +19,7 @@ class UserSitesAccessTest < ActiveSupport::TestCase
     @user=users(:one)
     user.sites<< site_one
     user.save
+    ApplicationEnvironment.update_application_stage_type_tags
   end
 
   test "by default has not access to site" do
@@ -71,46 +72,4 @@ class UserSitesAccessTest < ActiveSupport::TestCase
     app_granted.update enabled: true
   end
 
-  test "tag user" do
-    ApplicationEnvironment.update_application_stage_type_tags
-    site_one.tag_list.add 'TestCustomTag1'
-    user.tag_list.add 'Dev'
-    user.save
-    assert user.has_access_to_site?( application: app_two, redirect_uri: site_two.url )
-    assert_equal 1, User.with_access_to_site(site_two).where(id: user.id).count
-    assert_equal 1, user.full_site_access.where(id: site_two.id).count
-
-    user.tag_list.remove 'Dev'
-    user.save
-    user.reload
-
-    assert !user.has_access_to_site?( application: app_two, redirect_uri: site_two.url)
-    assert_equal 0, User.with_access_to_site(site_two).where(id: user.id).count
-    assert_equal 0, user.full_site_access.where(id: site_two.id).count
-
-    site_two.tag_list.add 'testtag'
-    site_two.save
-    assert !user.has_access_to_site?( application: app_two, redirect_uri: site_two.url)
-    assert_equal 1, User.with_access_to_site(site_two).where(id: user.id).count
-    assert_equal 1, user.full_site_access.where(id: site_two.id).count
-
-
-    user.tag_list.add ['testtag']
-    user.save
-    assert user.has_access_to_site?( application: app_two, redirect_uri: site_two.url)
-    assert_equal 1, User.with_access_to_site(site_two).where(id: user.id).count
-    assert_equal 1, user.full_site_access.where(id: site_two.id).count
-
-    user.tag_list.add 'testtag2'
-    user.save
-    assert user.has_access_to_site?( application: app_two, redirect_uri: site_two.url)
-    assert_equal 1, User.with_access_to_site(site_two).where(id: user.id).count
-    assert_equal 1, user.full_site_access.where(id: site_two.id).count
-
-    user.tag_list.remove user.tag_list
-    site_two.tag_list.remove 'testtag'
-    user.save
-    site_two.tag_list.remove 'TestCustomTag1'
-    site_two.save
-  end
 end

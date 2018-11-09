@@ -97,8 +97,10 @@ class User < ActiveRecord::Base
     granted&= application.enabled  if granted
     if granted
      site=application.sites.find_by_url redirect_uri
-     granted&=site and site.enabled and self.full_site_access.include?site
+     granted&=!site.nil?
     end
+    granted&=site.enabled if granted
+    granted&= ( self.super_login || self.full_site_access.include?(site) ) if granted
     granted
   end
 
