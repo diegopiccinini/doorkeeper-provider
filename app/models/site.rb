@@ -152,4 +152,22 @@ class Site < ActiveRecord::Base
     tags.map { |t| { id: t.id , name: t.name } }
   end
 
+  def callback_name
+    url.end_with?('/callback') ? backend_name : frontend_name
+  end
+
+  def backend_name
+    name=host
+    name.include?('.') ? name.split('.').first : name
+  end
+
+  def frontend_name
+    frontend_uri_params=Base64.strict_decode64(encoded_frontend).split
+    frontend_uri_params.join(' ') + ' [FE]'
+  end
+
+  def encoded_frontend
+    url.split('/').last
+  end
+
 end

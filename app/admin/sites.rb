@@ -1,15 +1,13 @@
 ActiveAdmin.register Site do
 
-  permit_params user_ids: [], tag_ids: []
+  permit_params :excluded, user_ids: [], tag_ids: []
 
   config.batch_actions = false
 
   index do
     column :url
     column :status
-    column :step
-    column :ip
-    column :updated_at
+    column :excluded
     actions
   end
 
@@ -17,11 +15,13 @@ ActiveAdmin.register Site do
   filter :status
   filter :step
   filter :ip
+  filter :excluded
 
   show do |item|
     attributes_table do
       row :url
       row :tag_list
+      row :excluded
     end
 
     panel 'Application(s) (the normal is to belongs to only one)' do
@@ -55,6 +55,7 @@ ActiveAdmin.register Site do
     end
 
     inputs 'Change Details' do
+      input :excluded
       input :tags, :as => :check_boxes, :multiple => true, :collection => @tags
       input :users, :as => :check_boxes
     end

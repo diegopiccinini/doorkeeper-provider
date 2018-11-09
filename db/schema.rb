@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181011133255) do
+ActiveRecord::Schema.define(version: 20181109163815) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace",     limit: 255
@@ -138,10 +138,11 @@ ActiveRecord::Schema.define(version: 20181011133255) do
     t.string   "url",                      limit: 255
     t.integer  "status",                   limit: 4
     t.string   "step",                     limit: 255
-    t.datetime "created_at",                                       null: false
-    t.datetime "updated_at",                                       null: false
+    t.datetime "created_at",                                           null: false
+    t.datetime "updated_at",                                           null: false
     t.integer  "total_oauth_applications", limit: 4,   default: 0
     t.string   "ip",                       limit: 255
+    t.boolean  "excluded",                             default: false
   end
 
   add_index "sites", ["url"], name: "index_sites_on_url", unique: true, using: :btree

@@ -56,7 +56,7 @@ ActiveAdmin.register_page "Sites Tags" do
     session[:filter_by_tag]||=[]
     session[:filter_by_tag]=session[:filter_by_tag].uniq
 
-    sites=Site
+    sites=Site.where(excluded: false)
     tags=ActsAsTaggableOn::Tag.where(id: session[:filter_by_tag]).all
     sites=sites.tagged_with(tags, has_all: false) unless tags.empty?
 

@@ -1,7 +1,7 @@
 if sites.count>0
   table_for sites, class: 'tags-table' do
     column "Application", :owner_apps
-    column "Host Name", :host
+    column "Name", :callback_name
     column "Default Tag", :default_tag
     column "Own Tags" do |s|
       s.tags.map do |t|
