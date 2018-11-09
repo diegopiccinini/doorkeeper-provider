@@ -21,6 +21,8 @@ class Site < ActiveRecord::Base
 
   scope :backend,-> { where( 'url LIKE ?',"%#{ENV['BACKEND_CALLBACK_URI_PATH']}" ) }
 
+  scope :url_contains, -> (name) { where("url LIKE ? ","https://%#{name.downcase}%/%") }
+
   def update_total_oauth_applications
     self.total_oauth_applications= oauth_application_ids.count
   end
@@ -136,4 +138,18 @@ class Site < ActiveRecord::Base
   def full_tags
     tag_list + [ default_tag ]
   end
+
+  def owner_apps
+    oauth_applications.map { |a| a.external_id }.join(" | ")
+  end
+
+  def available_tags
+    custom_tags.reject { |t| tag_list.include?t[:name] }
+  end
+
+  def custom_tags
+    tags=ActsAsTaggableOn::Tag.all.reject { |t| OauthApplication.default_tags.include?(t.name) }
+    tags.map { |t| { id: t.id , name: t.name } }
+  end
+
 end
