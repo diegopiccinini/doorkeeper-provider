@@ -2,35 +2,48 @@ class WelcomeController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    applications = current_user.enabled_applications
-    @app_environments= applications.map { |a| a.application_environment.name }
-    @app_environments=@app_environments.uniq
-    @app_environments << 'ALL'
+    sites = current_user.full_site_access
 
     if session[:search]
-      applications= applications.name_contains(session[:search])
+      sites= sites.url_contains(session[:search])
     end
+
+    applications = OauthApplicationsSite.applications_by_site_ids sites.ids
+
+    filter_sites_by_applications_filter=false
+
+    if session[:search_by_app]
+      applications= applications.name_contains(session[:search_by_app])
+      filter_sites_by_applications_filter=true
+    end
+
     if session[:search_env]
       application_environment = ApplicationEnvironment.find_by name: session[:search_env]
       applications= applications.where(application_environment: application_environment)
+      filter_sites_by_applications_filter=true
     end
 
-    @applications = []
-    applications.each do |a|
-      a.redirect_uri.split.each do |uri|
-        if session[:search].nil? or uri.split('.').first.include?session[:search] or a.name.include?session[:search].upcase
-          @applications << { uri: app_uri(uri), name: callback_name(uri), environment: a.name }
-        end
+    if filter_sites_by_applications_filter
+      sites= OauthApplicationsSite.sites_by_application_ids(applications.ids).where(id: sites.ids)
+    end
+
+    @sites=sites.map do |site|
+      site.oauth_applications.map do | application |
+        { app_name: application.name , uri: app_uri(site.url), site_name: callback_name(site.url), environment: application.name }
       end
-    end
+    end.flatten
 
+    @app_environments =ApplicationEnvironment.by_sites(sites).map { |a| a.name }
+    @app_environments << 'ALL'
   end
 
   def search
      session[:search]=nil
+     session[:search_by_app]=nil
      session[:search_env]=nil
 
      session[:search]=params["search"].downcase if params["search"]
+     session[:search_by_app]=params["search_by_app"].downcase if params["search_by_app"]
      session[:search_env]=params["search_env"] if params["search_env"] and params["search_env"]!='ALL'
 
      redirect_to root_path

@@ -22,4 +22,19 @@ class OauthApplicationsSite < ActiveRecord::Base
   def count_correct_by_site
     OauthApplicationsSite.duplicated_correct.where( site: site).count
   end
+
+  def self.applications_by_site_ids site_ids
+    app_ids=where( site_id: site_ids).map do |app_site|
+      app_site.oauth_application_id
+    end.uniq
+    OauthApplication.where(id: app_ids)
+  end
+
+  def self.sites_by_application_ids app_ids
+    site_ids=where( oauth_application_id: app_ids).map do |app_site|
+      app_site.site_id
+    end.uniq
+    Site.where(id: site_ids)
+  end
+
 end

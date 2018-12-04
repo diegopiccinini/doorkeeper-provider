@@ -21,7 +21,7 @@ class Site < ActiveRecord::Base
 
   scope :backend,-> { where( 'url LIKE ?',"%#{ENV['BACKEND_CALLBACK_URI_PATH']}" ) }
 
-  scope :url_contains, -> (name) { where("url LIKE ? ","https://%#{name.downcase}%/%") }
+  scope :url_contains, -> (name) { where("url LIKE ? ","http%://%#{name.downcase}%/%") }
 
   def update_total_oauth_applications
     self.total_oauth_applications= oauth_application_ids.count

@@ -10,8 +10,11 @@
 <div class="container">
 
   <%= form_tag welcome_search_path, method: :get, class: 'form-signin' do %>
-    <label for="search" class="sr-only">Application name</label>
-    <%=text_field_tag :search, session[:search] || '', placeholder: 'filter by name', class: 'form-control' %>
+    <label for="search" class="sr-only">Site</label>
+    <%=text_field_tag :search, session[:search] || '', placeholder: 'filter by site name', class: 'form-control' %>
+
+    <label for="search_by_app" class="sr-only">Application</label>
+    <%=text_field_tag :search_by_app, session[:search_by_app] || '', placeholder: 'filter by application name', class: 'form-control' %>
 
     <label for="search_env" class="sr-only">Environment</label>
     <%=select_tag 'search_env', options_for_select(@app_environments,session[:search_env] || 'ALL'), class: 'form-control' %>
@@ -19,25 +22,27 @@
     <%= link_to 'All', 'welcome/search', class: 'btn btn-lg btn-warning btn-block' %>
 
   <% end %>
-  <h1>(<%= @applications.count %>)  found with your filter </h1>
+  <h1>(<%= @sites.count %>)  found with your filter </h1>
   <hr />
   <div class="table-responsive">
     <table class="table">
       <thead>
         <tr>
+          <th>Site</th>
           <th>Application</th>
           <th>Action</th>
           <th>Environment</th>
         </tr>
       </thead>
       <tbody>
-        <% @applications.each do |application| %>
+        <% @sites.each do |site| %>
           <tr>
-            <td><code class="app"><%= application[:name] %></code></td>
+            <td><code class="app"><%= site[:site_name] %></code></td>
+            <td><%= site[:app_name] %></td>
             <td>
-              <%= link_to 'login', application[:uri] , class: 'btn btn-success', target: '_blank' %>
+              <%= link_to 'login', site[:uri] , class: 'btn btn-success', target: '_blank' %>
             </td>
-            <td><h4 class="env"><%=  application[:environment] %></h4></td>
+            <td><h4 class="env"><%= site[:environment] %></h4></td>
           </tr>
         <% end %>
       </tbody>

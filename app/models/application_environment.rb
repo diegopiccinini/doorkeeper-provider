@@ -11,4 +11,10 @@ class ApplicationEnvironment < ActiveRecord::Base
     end
   end
 
+  def self.by_sites sites
+    sites.map do |s|
+      s.oauth_applications.map { |app| app.application_environment }
+    end.flatten.uniq
+  end
+
 end
