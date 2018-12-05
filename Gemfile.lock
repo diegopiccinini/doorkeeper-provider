@@ -110,7 +110,7 @@ GEM
       railties (>= 4.1.0, < 5.2)
       responders
       warden (~> 1.2.3)
-    doorkeeper (4.2.6)
+    doorkeeper (4.4.0)
       railties (>= 4.2)
     dotenv (2.2.1)
     dotenv-rails (2.2.1)
@@ -313,7 +313,7 @@ DEPENDENCIES
   coffee-rails (~> 4.1.0)
   database_cleaner
   devise
-  doorkeeper
+  doorkeeper (= 4.4.0)
   dotenv-rails
   encryptor
   faraday

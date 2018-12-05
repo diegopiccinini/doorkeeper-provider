@@ -25,7 +25,7 @@ gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
-gem 'doorkeeper'
+gem 'doorkeeper', '4.4.0'
 gem 'devise'
 gem 'omniauth-google-oauth2'
 gem 'dotenv-rails'
