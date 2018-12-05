@@ -10,11 +10,11 @@
 <div class="container">
 
   <%= form_tag welcome_search_path, method: :get, class: 'form-signin' do %>
+    <label for="search_by_app" class="sr-only">Application</label>
+    <%=text_field_tag :search_by_app, session[:search_by_app] || '', placeholder: 'filter by box name', class: 'form-control' %>
+
     <label for="search" class="sr-only">Site</label>
     <%=text_field_tag :search, session[:search] || '', placeholder: 'filter by site name', class: 'form-control' %>
-
-    <label for="search_by_app" class="sr-only">Application</label>
-    <%=text_field_tag :search_by_app, session[:search_by_app] || '', placeholder: 'filter by application name', class: 'form-control' %>
 
     <label for="search_env" class="sr-only">Environment</label>
     <%=select_tag 'search_env', options_for_select(@app_environments,session[:search_env] || 'ALL'), class: 'form-control' %>
@@ -28,21 +28,21 @@
     <table class="table">
       <thead>
         <tr>
+          <th>Stage Box</th>
           <th>Site</th>
-          <th>Application</th>
           <th>Action</th>
-          <th>Environment</th>
+          <th>Stage Type</th>
         </tr>
       </thead>
       <tbody>
         <% @sites.each do |site| %>
           <tr>
-            <td><code class="app"><%= site[:site_name] %></code></td>
             <td><%= site[:app_name] %></td>
+            <td><code class="app"><%= site[:site_name] %></code></td>
             <td>
               <%= link_to 'login', site[:uri] , class: 'btn btn-success', target: '_blank' %>
             </td>
-            <td><h4 class="env"><%= site[:environment] %></h4></td>
+            <td><%= site[:environment] %></td>
           </tr>
         <% end %>
       </tbody>

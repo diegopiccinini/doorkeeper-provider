@@ -29,7 +29,7 @@ class WelcomeController < ApplicationController
 
     @sites=sites.map do |site|
       site.oauth_applications.map do | application |
-        { app_name: application.name , uri: app_uri(site.url), site_name: callback_name(site.url), environment: application.name }
+        { app_name: application.name , uri: app_uri(site.url), site_name: callback_name(site.url), environment: application.application_environment.name }
       end
     end.flatten
 
