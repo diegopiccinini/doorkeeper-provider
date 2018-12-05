@@ -51,6 +51,9 @@ class Api::V1::OauthApplicationsController < ApplicationController
       end
 
       @oauth_application.save
+      @oauth_application.create_sites
+      @oauth_application.clean_sites
+
       render json: @oauth_application.serialize, status: 200
     rescue => e
       render json: { error: e.message, backtrace: e.backtrace.inspect } , status: 500
@@ -69,6 +72,8 @@ class Api::V1::OauthApplicationsController < ApplicationController
       end
 
       @oauth_application.save
+      @oauth_application.create_sites
+
       render json: @oauth_application.serialize
 
     rescue => e

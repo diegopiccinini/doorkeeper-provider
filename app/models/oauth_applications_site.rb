@@ -6,6 +6,7 @@ class OauthApplicationsSite < ActiveRecord::Base
   scope :black_list,-> { where( status: STATUS_BLACK_LIST ) }
   scope :duplicated_correct,-> { where( status: STATUS_DUPLICATED_CORRECT ) }
   scope :duplicated_incorrect,-> { where( status: STATUS_DUPLICATED_INCORRECT ) }
+  scope :enabled,-> { where( status: STATUS_ENABLED ) }
 
   STATUS_TO_CHECK='to check'
   STATUS_DUPLICATED_CORRECT='duplicated correct'

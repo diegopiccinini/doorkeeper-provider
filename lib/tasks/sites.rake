@@ -7,7 +7,7 @@ namespace :sites do
     end
   end
 
-  desc "delete all sites and create new list"
+  desc "delete all not callback sites, create and clean relationships"
   task reset_all: :environment do
 
     ApplicationEnvironment.update_application_stage_type_tags
@@ -16,9 +16,10 @@ namespace :sites do
 
     OauthApplication.where(sync_excluded: false).all.each do |a|
       a.create_sites
+      a.clean_sites
     end
 
-    puts "Sites created: #{Site.count}"
+    puts "Total sites: #{Site.count}"
 
   end
 

@@ -13,14 +13,6 @@ class OauthApplication < Doorkeeper::Application
   scope :name_ends_or, -> (name1,name2) { where("name LIKE ? OR name LIKE ? ","%#{name1.upcase}","%#{name2.downcase}") }
   scope :enabled, -> { where(enabled: true) }
 
-  def tidy_sites
-    sites.where( 'oauth_applications_sites.status': OauthApplicationsSite::STATUS_CORRECT ).order(:url).each.map { |s| s.url + '/callback' }.join(' ')
-  end
-
-  def update_sites
-    update( redirect_uri: tidy_sites ) if tidy_sites!=''
-  end
-
   def ip
     ips=sites.select('ip').group('ip').count('sites.id')
     max_value=ips.values.max
@@ -57,8 +49,11 @@ class OauthApplication < Doorkeeper::Application
 
     hosts=data.split.map { |x| URI(x).host }
     frontends=frontend_uri.select { |x| hosts.include?URI(x).host }
-    new_redirect_uri = data.split + frontends
-    self.redirect_uri=new_redirect_uri.sort.join(' ')
+    new_redirect_uri_array = data.split + frontends
+    new_redirect_uri=new_redirect_uri_array.sort.join(' ')
+    if self.redirect_uri!=new_redirect_uri
+      self.redirect_uri=new_redirect_uri
+    end
 
   end
 
@@ -106,13 +101,24 @@ class OauthApplication < Doorkeeper::Application
   def create_sites
 
     redirect_uri.split.each do |callback_uri|
-      s=Site.find_or_create_by url: callback_uri
-      sites << s unless sites.include?s
-      oapp_site=OauthApplicationsSite.find_by site: s , oauth_application: self
-      oapp_site.update( status: OauthApplicationsSite::STATUS_TO_CHECK)
+      Site.find_or_create_by url: callback_uri
+    end
+
+    Site.where( url: redirect_uri.split ).where.not( id: sites.ids).each do |s|
+      OauthApplicationsSite.create(site: s,
+                                   oauth_application: self,
+                                   status: OauthApplicationsSite::STATUS_TO_CHECK)
     end
 
   end
+
+  def clean_sites
+    uris=redirect_uri.split
+    sites.each do |s|
+      sites.delete(s) unless uris.include?s.url
+    end
+  end
+
 
   def serialize
     { type: :oauth_application,

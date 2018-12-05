@@ -8,7 +8,7 @@ class WelcomeController < ApplicationController
       sites= sites.url_contains(session[:search])
     end
 
-    applications = OauthApplicationsSite.applications_by_site_ids sites.ids
+    applications = OauthApplicationsSite.enabled.applications_by_site_ids sites.ids
 
     filter_sites_by_applications_filter=false
 
@@ -24,7 +24,7 @@ class WelcomeController < ApplicationController
     end
 
     if filter_sites_by_applications_filter
-      sites= OauthApplicationsSite.sites_by_application_ids(applications.ids).where(id: sites.ids)
+      sites= OauthApplicationsSite.enabled.sites_by_application_ids(applications.ids).where(id: sites.ids)
     end
 
     @sites=sites.map do |site|
