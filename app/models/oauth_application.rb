@@ -107,7 +107,7 @@ class OauthApplication < Doorkeeper::Application
     Site.where( url: redirect_uri.split ).where.not( id: sites.ids).each do |s|
       OauthApplicationsSite.create(site: s,
                                    oauth_application: self,
-                                   status: OauthApplicationsSite::STATUS_TO_CHECK)
+                                   status: OauthApplicationsSite::STATUS_NEW_SITE)
     end
 
   end

@@ -7,7 +7,9 @@ class OauthApplicationsSite < ActiveRecord::Base
   scope :duplicated_correct,-> { where( status: STATUS_DUPLICATED_CORRECT ) }
   scope :duplicated_incorrect,-> { where( status: STATUS_DUPLICATED_INCORRECT ) }
   scope :enabled,-> { where( status: STATUS_ENABLED ) }
+  scope :new_site,-> { where( status: STATUS_NEW_SITE ) }
 
+  STATUS_NEW_SITE='new site'
   STATUS_TO_CHECK='to check'
   STATUS_DUPLICATED_CORRECT='duplicated correct'
   STATUS_DUPLICATED_INCORRECT='duplicated incorrect'

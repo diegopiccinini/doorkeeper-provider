@@ -68,6 +68,25 @@ namespace :sites do
     end
   end
 
+
+  desc "enable check new sites status"
+  task new_sites_status: :environment do
+
+    sites=[]
+    OauthApplicationsSite.new_site.each do |app_site|
+      sites<<app_site.site
+      app_site.update( status: OauthApplicationsSite::STATUS_TO_CHECK )
+    end
+    sites=sites.uniq
+
+    sites.each do |site|
+      status site
+      site_ip site
+    end
+
+    Rake::Task["sites:enable"].invoke
+  end
+
   desc "enable 302 and unique sites"
   task enable: :environment do
 
