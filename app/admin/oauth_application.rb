@@ -10,10 +10,9 @@ ActiveAdmin.register OauthApplication, as: "Applications" do
     column :external_id
     column :application_environment
     column :updated_at
-    column 'Frontend' do |app|
-      link_to 'Edit', admin_frontends_path + "?app_id=#{app.id}"
+    actions do |app|
+      link_to 'Frontend', admin_frontends_path + "?app_id=#{app.id}"
     end
-    actions
   end
 
   filter :name
@@ -46,10 +45,18 @@ ActiveAdmin.register OauthApplication, as: "Applications" do
     active_admin_comments
   end
 
+  member_action :update_sites, method: :put do
+    resource.create_sites
+    resource.clean_sites
+    Rake.task['sites:new_sites_status'].invoke
+
+    redirect_to resource_path, notice: "Sites Updated!"
+  end
+
   form do |f|
     f.inputs 'Admin Details' do
       f.input :name
-      f.input :tags, :as => :check_boxes, :multiple => true, :collection => ActsAsTaggableOn::Tag.where.not(name: OauthApplication.default_tags)
+#      f.input :tags, :as => :check_boxes, :multiple => true, :collection => ActsAsTaggableOn::Tag.where.not(name: OauthApplication.default_tags)
       f.input :enabled
       f.input :redirect_uri
       f.input :external_id

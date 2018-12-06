@@ -2,29 +2,26 @@
 
   <div class="c-card">
     <%= hidden_field_tag :app_id, application.id %>
+
     <div class="c-input-group">
       <div class="o-field">
         <label class="c-label" for="backend">Backend</label>
         <%= select_tag :backend, options_for_select(application.backend_uri_host), class: 'c-field' %>
       </div>
-
-      <div class="o-field">
-        <label class="c-label" for="frontend_uri">Fronted URI</label>
-        <%= text_field_tag :frontend_uri, '', class: 'c-field' %>
-      </div>
       <div class="o-field">
         <label class="c-label" for="company_id">Company Id</label>
-        <%= text_field_tag :company_id, '', class: 'c-field' %>
+        <%= text_field_tag :company_id, '', placeholder: 'company id (optional)', class: 'c-field' %>
       </div>
-    </div>
 
-    <footer class="c-card__footer c-card__footer--block">
-      <div class="c-input-group">
+      <div class="o-field">
+        <label class="c-label" for="frontend_uri">Frontend Uri</label>
+        <%= text_field_tag :frontend_uri, '', placeholder: 'frontend url*', class: 'c-field' %>
+      </div>
+      <div class="o-field">
+        <label class="c-label" for="add">Action</label>
         <%= submit_tag :add, class: 'c-button c-button--info c-button--block' %>
       </div>
-      <div class="c-input-group">
-        <br />
-      </div>
-    </footer>
+    </div>
   </div>
+
 <% end %>

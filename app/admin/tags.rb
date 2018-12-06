@@ -1,3 +1,4 @@
+=begin
 ActiveAdmin.register_page "Application Tags" do
 
   page_action :add_tag, method: :get do
@@ -61,3 +62,4 @@ ActiveAdmin.register_page "Application Tags" do
 
   sidebar :filters, partial: 'filters'
 end
+=end
