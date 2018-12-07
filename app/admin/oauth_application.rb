@@ -10,8 +10,14 @@ ActiveAdmin.register OauthApplication, as: "Applications" do
     column :external_id
     column :application_environment
     column :updated_at
-    actions do |app|
-      link_to 'Frontend', admin_frontends_path + "?app_id=#{app.id}"
+    actions defaults: false do |app|
+      item 'Frontend', admin_frontends_path + "?app_id=#{app.id}"
+      span ' | '
+      item 'View', admin_application_path(app)
+      span ' | '
+      item 'Edit', edit_admin_application_path(app)
+      span ' | '
+      item 'Update Sites', update_sites_admin_application_path(app)
     end
   end
 
@@ -36,19 +42,22 @@ ActiveAdmin.register OauthApplication, as: "Applications" do
       row :application_environment
       row :sync_excluded
     end
-    panel 'Users with access (super login, tagged, or added to the application)' do
-      table_for User.with_access_to(item) do
-        column :name
-        column :email
+    panel 'Sites' do
+      table_for item.sites do
+        column :url
+        column :step
+        column :status
+        column "Check Status" do |site|
+          span OauthApplicationsSite.find_by( site: site, oauth_application: item).status
+        end
       end
     end
     active_admin_comments
   end
 
-  member_action :update_sites, method: :put do
+  member_action :update_sites, method: :get do
     resource.create_sites
     resource.clean_sites
-    Rake.task['sites:new_sites_status'].invoke
 
     redirect_to resource_path, notice: "Sites Updated!"
   end
