@@ -1,9 +1,10 @@
 require 'test_helper'
 
 class CheckSitesStatusJobTest < ActiveSupport::TestCase
-  attr_accessor :job, :app, :site
+  attr_accessor :job, :app, :site, :association
 
   setup do
+    @job=CheckSitesStatusJob.new
     @app=oauth_applications(:one)
     @site=sites(:one)
     stub_request(:get, "https://test1.bookingbug.com/logins/auth/bookingbug").
@@ -14,17 +15,24 @@ class CheckSitesStatusJobTest < ActiveSupport::TestCase
     }).
     to_return(status: 302, body: "", headers: {})
 
-  end
-
-  test "new sites change status" do
     app.sites << site
-    association=OauthApplicationsSite.find_by site: site, oauth_application: app
+    @association=OauthApplicationsSite.find_by site: site, oauth_application: app
     assert_nil association.status
     assert site.status , 1
-    @job=CheckSitesStatusJob.perform_async app.id
+  end
+
+  test "#check_response" do
+    job.check_response app
     site.reload
     assert site.status , 302
     association.reload
     assert association.status, OauthApplicationsSite::STATUS_TO_CHECK
+  end
+
+  test "#check_status" do
+    site.update( step: Site::STEP_CENTRAL_AUTH_302, status: 302)
+    association.update( status: OauthApplicationsSite::STATUS_TO_CHECK)
+    job.check_status
+    assert association.status, OauthApplicationsSite::STATUS_ENABLED
   end
 end

@@ -1,4 +1,6 @@
 class OauthApplicationsSite < ActiveRecord::Base
+  attr_accessor :output
+
   belongs_to :site
   belongs_to :oauth_application
 
@@ -48,6 +50,41 @@ class OauthApplicationsSite < ActiveRecord::Base
 
   def application_name
     oauth_application.name
+  end
+
+  def check
+
+    @ouptut=[]
+
+    if site.step==Site::STEP_CENTRAL_AUTH_302
+      enable
+    else
+      add_to_black_list
+    end
+  end
+
+  def add_to_black_list
+    output.push "\t--> Site added to black list #{site.url}"
+    site.step= Site::STEP_BLACK_LIST
+    site.save
+    black_list=BlackList.find_or_create_by site: site
+    black_list.times+=1
+    black_list.log||="Init:\n"
+    black_list.log+="Application: #{oauth_application.external_id} black listed at #{site.updated_at}\n"
+    black_list.log+="Status: #{site.status}, ip #{site.ip}\n"
+    black_list.save
+    update( status: OauthApplicationsSite::STATUS_BLACK_LIST )
+  end
+
+  def enable
+    if oauth_application.enabled
+      output.push "\tApplication: #{oauth_application.name} site: #{os.site.url}, it is ok and has been enabled before"
+    else
+      output.push "\t--> Enabling oauth_application: #{oauth_application.name} site: #{os.site.url}"
+      oauth_application.update( enabled: true)
+    end
+    site.black_list.delete unless site.black_list.nil?
+    update( status: OauthApplicationsSite::STATUS_ENABLED )
   end
 
 end
