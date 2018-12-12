@@ -24,5 +24,7 @@ class CheckSitesStatusJobTest < ActiveSupport::TestCase
     @job=CheckSitesStatusJob.perform_async app.id
     site.reload
     assert site.status , 302
+    association.reload
+    assert association.status, OauthApplicationsSite::STATUS_TO_CHECK
   end
 end
