@@ -8,6 +8,8 @@ class OauthApplicationsSite < ActiveRecord::Base
   scope :duplicated_incorrect,-> { where( status: STATUS_DUPLICATED_INCORRECT ) }
   scope :enabled,-> { where( status: STATUS_ENABLED ) }
   scope :new_site,-> { where( status: STATUS_NEW_SITE ) }
+  scope :site_url_contains, -> (url) { joins(:site).where("url LIKE ?","%#{url}%") }
+  scope :oauth_application_name_contains, -> (name) { joins(:oauth_application).where("name LIKE ?","%#{name}%") }
 
   STATUS_NEW_SITE='new site'
   STATUS_TO_CHECK='to check'
@@ -38,6 +40,14 @@ class OauthApplicationsSite < ActiveRecord::Base
       app_site.site_id
     end.uniq
     Site.where(id: site_ids)
+  end
+
+  def site_url
+    site.url
+  end
+
+  def application_name
+    oauth_application.name
   end
 
 end
