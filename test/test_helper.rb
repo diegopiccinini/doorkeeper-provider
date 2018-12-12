@@ -3,6 +3,7 @@ require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 require 'database_cleaner'
 require 'webmock/minitest'
+require 'sucker_punch/testing/inline'
 
 class ActiveSupport::TestCase
 
