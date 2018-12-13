@@ -6,6 +6,21 @@ class Api::V1::OauthApplicationsControllerTest < ActionController::TestCase
     signature_headers.each_pair do | k, v |
       @request.headers[k]=v
     end
+    stub_request(:get, "https://testclient.bookingbug.com/logins/auth/bookingbug").
+      with(  headers: {
+      'Accept'=>'*/*',
+      'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+      'User-Agent'=>'Faraday v0.12.2'
+    }).
+    to_return(status: 302, body: "", headers: { location: "https://localhost" })
+
+    stub_request(:get, "https://testclient3.test.com/login").
+      with(  headers: {
+      'Accept'=>'*/*',
+      'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+      'User-Agent'=>'Faraday v0.12.2'
+    }).
+    to_return(status: 302, body: "", headers: { location: "https://localhost" })
   end
 
   test "show" do
@@ -37,14 +52,14 @@ class Api::V1::OauthApplicationsControllerTest < ActionController::TestCase
 
   test "create" do
 
-    body = { 'redirect_uri' => 'https://testclient3.test.com/callback', 'external_id' => 'testclient3_dev', 'application_environment' => 'Prod' }
+    body = { 'redirect_uri' => 'https://testclient3.test.com/login/callback', 'external_id' => 'testclient3_web', 'application_environment' => 'Prod' }
     post :create, { 'body' => body.to_json }
     assert_response :success
 
     data=JSON.parse @response.body
     attributes=data['attributes']
 
-    assert_equal data['type'],'oauth_application'
+    assert data['type'],'oauth_application'
     assert attributes.has_key?('uid')
     assert_equal body['external_id'],attributes['external_id']
     assert_equal body['application_environment'],attributes['application_environment']

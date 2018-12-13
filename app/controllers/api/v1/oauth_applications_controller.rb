@@ -50,9 +50,7 @@ class Api::V1::OauthApplicationsController < ApplicationController
         @oauth_application.application_environment = ae
       end
 
-      @oauth_application.save
-      @oauth_application.create_sites
-      @oauth_application.clean_sites
+      create_clean_and_check_sites
 
       render json: @oauth_application.serialize, status: 200
     rescue => e
@@ -64,15 +62,17 @@ class Api::V1::OauthApplicationsController < ApplicationController
 
     begin
       body=JSON.parse params[:body]
-      @oauth_application = OauthApplication.create redirect_uri: body['redirect_uri'], name: body['name'], external_id: body['external_id']
+      body['name']=body['external_id'].upcase.gsub('_',' ') unless body.has_key?'name'
 
-      if body.has_key?('application_environment')
-        ae=ApplicationEnvironment.find_or_create_by name: body['application_environment']
-        @oauth_application.application_environment = ae
-      end
+      body['application_environment']='Unknown' unless body.has_key?('application_environment')
+      ae=ApplicationEnvironment.find_or_create_by name: body['application_environment']
 
-      @oauth_application.save
-      @oauth_application.create_sites
+      @oauth_application = OauthApplication.create( redirect_uri: body['redirect_uri'],
+                                                   name: body['name'],
+                                                   external_id: body['external_id'],
+                                                   application_environment: ae)
+
+      create_clean_and_check_sites
 
       render json: @oauth_application.serialize
 
@@ -95,6 +95,7 @@ class Api::V1::OauthApplicationsController < ApplicationController
   end
 
   private
+
   def authorized
     begin
       key=ENV['SOFT_ENCRYPTION_KEY']
@@ -113,5 +114,14 @@ class Api::V1::OauthApplicationsController < ApplicationController
   def set_application
     @oauth_application=OauthApplication.find_by_uid params[:uid]
     render json: {}, status: 404 unless @oauth_application
+  end
+
+  def create_clean_and_check_sites
+
+    @oauth_application.save
+    @oauth_application.create_sites
+    @oauth_application.clean_sites
+
+    CheckSitesStatusJob.perform_async @oauth_application.id
   end
 end
