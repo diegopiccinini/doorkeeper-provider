@@ -52,7 +52,7 @@ class Site < ActiveRecord::Base
   end
 
   def first_call_backend_path
-    ENV['FIRST_CALL_BACKEND_PATH'] || uri.path
+    uri.path.chomp('/callback')
   end
 
   def check
