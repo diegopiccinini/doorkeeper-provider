@@ -58,7 +58,7 @@ ActiveAdmin.register OauthApplication, as: "Applications" do
   member_action :update_sites, method: :get do
     resource.create_sites
     resource.clean_sites
-
+    CheckSitesStatusJob.perform_async resource.id
     redirect_to resource_path, notice: "Sites Updated!"
   end
 

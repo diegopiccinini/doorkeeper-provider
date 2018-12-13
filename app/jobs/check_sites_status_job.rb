@@ -4,8 +4,9 @@ class CheckSitesStatusJob
   def perform oauth_application_id
     ActiveRecord::Base.connection_pool.with_connection do
       app=OauthApplication.find(oauth_application_id)
-      check_sites app
+      check_response app
     end
+    check_status
   end
 
   def check_response app

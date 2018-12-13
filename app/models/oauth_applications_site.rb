@@ -21,6 +21,7 @@ class OauthApplicationsSite < ActiveRecord::Base
   STATUS_ENABLED='enabled'
   STATUS_BLACK_LIST = 'black list'
   STATUS_DISABLED_DUCPLICATED_INCORRECT = 'duplicated incorrect disabled'
+  STATUS_DISABLED_MANUALLY='disabled manually'
 
   def count_duplicated_incorrect
     OauthApplicationsSite.duplicated_incorrect.where( site: site).count
@@ -53,9 +54,6 @@ class OauthApplicationsSite < ActiveRecord::Base
   end
 
   def check
-
-    @ouptut=[]
-
     if site.step==Site::STEP_CENTRAL_AUTH_302
       enable
     else
@@ -64,27 +62,39 @@ class OauthApplicationsSite < ActiveRecord::Base
   end
 
   def add_to_black_list
-    output.push "\t--> Site added to black list #{site.url}"
-    site.step= Site::STEP_BLACK_LIST
-    site.save
+    site.update step: Site::STEP_BLACK_LIST
+    write_black_list_log
+    update( status: OauthApplicationsSite::STATUS_BLACK_LIST )
+  end
+
+  def write_black_list_log
     black_list=BlackList.find_or_create_by site: site
     black_list.times+=1
     black_list.log||="Init:\n"
     black_list.log+="Application: #{oauth_application.external_id} black listed at #{site.updated_at}\n"
     black_list.log+="Status: #{site.status}, ip #{site.ip}\n"
     black_list.save
-    update( status: OauthApplicationsSite::STATUS_BLACK_LIST )
   end
 
   def enable
-    if oauth_application.enabled
-      output.push "\tApplication: #{oauth_application.name} site: #{os.site.url}, it is ok and has been enabled before"
-    else
-      output.push "\t--> Enabling oauth_application: #{oauth_application.name} site: #{os.site.url}"
-      oauth_application.update( enabled: true)
-    end
+    oauth_application.update( enabled: true)
     site.black_list.delete unless site.black_list.nil?
     update( status: OauthApplicationsSite::STATUS_ENABLED )
   end
+
+  def disable email: nil
+
+    black_list=BlackList.find_or_create_by site: site
+    black_list.times+=1
+    black_list.log||="Init:\n"
+    black_list.log+="Application: #{oauth_application.external_id} disabled manually.\n"
+    black_list.log+="By: #{email}.\n" unless email.nil?
+    black_list.log+="At: #{Time.now.to_s}\n"
+    black_list.save
+
+    update( status: OauthApplicationsSite::STATUS_DISABLED_MANUALLY )
+
+  end
+
 
 end

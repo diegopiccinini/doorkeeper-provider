@@ -29,10 +29,17 @@ class CheckSitesStatusJobTest < ActiveSupport::TestCase
     assert association.status, OauthApplicationsSite::STATUS_TO_CHECK
   end
 
-  test "#check_status" do
+  test "#check_status STEP_CENTRAL_AUTH_302" do
     site.update( step: Site::STEP_CENTRAL_AUTH_302, status: 302)
     association.update( status: OauthApplicationsSite::STATUS_TO_CHECK)
     job.check_status
     assert association.status, OauthApplicationsSite::STATUS_ENABLED
+  end
+
+  test "#check_status STEP_BAD_RESPONSE" do
+    site.update( step: Site::STEP_BAD_RESPONSE, status: 500)
+    association.update( status: OauthApplicationsSite::STATUS_TO_CHECK)
+    job.check_status
+    assert association.status, OauthApplicationsSite::STATUS_BLACK_LIST
   end
 end

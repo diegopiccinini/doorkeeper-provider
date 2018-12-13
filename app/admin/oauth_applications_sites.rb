@@ -12,7 +12,24 @@ ActiveAdmin.register OauthApplicationsSite do
     column :site
     column :oauth_application, as: 'Application'
     column :status
-    actions
+    actions do |app_site|
+      span ' | '
+      if app_site.status==OauthApplicationsSite::STATUS_ENABLED
+        item 'Disable', disable_admin_oauth_applications_site_path(app_site)
+      else
+        item 'Enable', enable_admin_oauth_applications_site_path(app_site)
+      end
+    end
+  end
+
+  member_action :enable, method: :get do
+    resource.enable
+    redirect_to resource_path, notice: "Site #{resource.site.url} enabled!"
+  end
+
+  member_action :disable, method: :get do
+    resource.disable email: current_admin_user.email
+    redirect_to resource_path, notice: "Site #{resource.site.url} disabled!"
   end
 
   form do |f|

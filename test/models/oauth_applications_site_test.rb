@@ -27,4 +27,13 @@ class OauthApplicationsSiteTest < ActiveSupport::TestCase
     assert OauthApplicationsSite.oauth_application_name_contains('prod').count, 1
     assert OauthApplicationsSite.oauth_application_name_contains('dev').count, 0
   end
+
+  test "#disable" do
+    app1.sites << site1
+    app_site=OauthApplicationsSite.find_by site: site1, oauth_application: site1
+    assert_not app_site.status, OauthApplicationsSite::STATUS_DISABLED_MANUALLY
+    app_site.disable
+    assert app_site.status, OauthApplicationsSite::STATUS_DISABLED_MANUALLY
+  end
+
 end
