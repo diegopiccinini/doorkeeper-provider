@@ -2,7 +2,7 @@ class WelcomeController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    sites = current_user.full_site_access
+    sites = current_user.own_sites
 
     if session[:search]
       sites= sites.url_contains(session[:search])

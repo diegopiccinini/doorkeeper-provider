@@ -65,6 +65,20 @@ class User < ActiveRecord::Base
     end
   end
 
+  def own_sites
+    if self.disabled || self.expired?
+      Site.where("id < -10")
+    elseif self.super_login
+      Site
+    else
+      full_site_access
+    end
+  end
+
+  def enabled_sites
+    own_sites.joins(:oauth_applications_sites).where(status: OauthApplicationsSite::STATUS_ENABLED)
+  end
+
   def enabled_applications
     applications.where( enabled: true )
   end
