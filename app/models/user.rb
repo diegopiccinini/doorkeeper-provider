@@ -57,7 +57,7 @@ class User < ActiveRecord::Base
 
   def applications
     if self.disabled
-      OauthApplication.where("id < -100000")
+      OauthApplication.where("false")
     elsif self.super_login
       OauthApplication
     else
@@ -67,7 +67,7 @@ class User < ActiveRecord::Base
 
   def own_sites
     if self.disabled || self.expired?
-      Site.where("id < -10")
+      Site.where("false")
     elsif self.super_login
       Site
     else

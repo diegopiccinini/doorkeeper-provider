@@ -1,0 +1,15 @@
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-10">
+      <h5>
+        Welcome, <strong><%=current_user.name %></strong> to <%= first_domain %> Central Authentication
+      </h5>
+    </div>
+    <div class="col-sm-2">
+      <p class="text-right">
+      <%= link_to('Logout', destroy_user_session_path, method: :delete, class: 'btn btn-sm btn-info') %>
+      </p>
+    </div>
+  </div>
+</div>

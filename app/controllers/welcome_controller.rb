@@ -2,6 +2,9 @@ class WelcomeController < ApplicationController
   before_action :authenticate_user!
 
   def index
+
+    @limit= ENV['SITES_LIST_LIMIT'] || 30
+
     sites = current_user.enabled_sites
 
     if session[:search]
@@ -27,7 +30,8 @@ class WelcomeController < ApplicationController
       sites= OauthApplicationsSite.enabled.where( site_id: sites.ids).sites_by_application_ids(applications.ids)
     end
 
-    @sites=sites.map do |site|
+    @total_sites=sites.count
+    @sites=sites.limit(@limit).map do |site|
       site.oauth_applications.map do | application |
         { app_name: application.name , uri: app_uri(site.url), site_name: callback_name(site.url), environment: application.application_environment.name }
       end

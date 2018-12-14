@@ -69,6 +69,8 @@ class UserSitesAccessTest < ActiveSupport::TestCase
   test "superuser expired  has not access" do
     superuser.update expire_at: ( DateTime.now - 1 )
     assert !superuser.has_access_to_site?( application: app_granted, redirect_uri: site_one.url )
+    assert superuser.own_sites.count==0
+    assert superuser.enabled_sites.count==0
     superuser.update expire_at: ( DateTime.now + 180 )
   end
 
@@ -78,7 +80,5 @@ class UserSitesAccessTest < ActiveSupport::TestCase
     assert !superuser.has_access_to_site?( application: app_granted, redirect_uri: site_one.url )
     app_granted.update enabled: true
   end
-
-
 
 end

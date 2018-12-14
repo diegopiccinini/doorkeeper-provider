@@ -1,29 +1,10 @@
-<div class="navbar navbar-inverse navbar-static-top" role="navigation">
-<div class="container-fluid">
-  <ul class="nav navbar-nav navbar-right">
-    <li>
-      <%= link_to('Logout', destroy_user_session_path, method: :delete, class: 'btn btn-info') %>
-    </li>
-  </ul>
-</div>
-</div>
 <div class="container">
-
-  <%= form_tag welcome_search_path, method: :get, class: 'form-signin' do %>
-
-    <label for="search" class="sr-only">Site</label>
-    <%=text_field_tag :search, session[:search] || '', placeholder: 'filter by site name', class: 'form-control' %>
-
-    <label for="search_by_app" class="sr-only">Application</label>
-    <%=text_field_tag :search_by_app, session[:search_by_app] || '', placeholder: 'filter by stage box name', class: 'form-control' %>
-
-    <label for="search_env" class="sr-only">Environment</label>
-    <%=select_tag 'search_env', options_for_select(@app_environments,session[:search_env] || 'ALL'), class: 'form-control' %>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Search</button>
-    <%= link_to 'All', 'welcome/search', class: 'btn btn-lg btn-warning btn-block' %>
-
+  <%= render partial: 'navbar' %>
+  <%= render partial: "form", locals: { environments: @app_environments } %>
+  <h4>( <%= @total_sites %> ) found with your filter </h4>
+  <% if @total_sites>@sites.count %>
+    <h5>The list limit is <%= @limit %>. Please use the filters to find your site. </h5>
   <% end %>
-  <h1>(<%= @sites.count %>)  found with your filter </h1>
   <hr />
   <div class="table-responsive">
     <table class="table">
@@ -39,9 +20,9 @@
         <% @sites.each do |site| %>
           <tr>
             <td><%= site[:app_name] %></td>
-            <td><code class="app"><%= site[:site_name] %></code></td>
+            <td class="app"><%= site[:site_name] %></td>
             <td>
-              <%= link_to 'login', site[:uri] , class: 'btn btn-success', target: '_blank' %>
+              <%= link_to 'login', site[:uri] , class: 'btn btn-primary', target: '_blank' %>
             </td>
             <td><%= site[:environment] %></td>
           </tr>
