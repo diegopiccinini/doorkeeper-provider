@@ -118,6 +118,10 @@ class User < ActiveRecord::Base
     granted
   end
 
+  def has_site? site
+    sites.where(id: site.id).count>0
+  end
+
   def expired?
     self.expire_at < DateTime.now
   end

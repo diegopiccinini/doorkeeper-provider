@@ -91,7 +91,8 @@ class Site < ActiveRecord::Base
   end
 
   def enabled
-    oauth_applications.where(enabled: true).count>0
+    oauth_applications.where(enabled: true).count>0 &&
+      oauth_applications_sites.where(status: OauthApplicationsSite::STATUS_ENABLED).count>0
   end
 
   def clean_duplication location

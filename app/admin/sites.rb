@@ -1,14 +1,16 @@
 ActiveAdmin.register Site do
 
+
   menu parent: 'Sites', priority: 1
 
   permit_params :excluded, user_ids: [], tag_ids: []
 
   config.batch_actions = false
+  config.sort_order = 'url_asc'
 
   index do
     column :url
-    column :status
+    column :enabled
     column :applications
     actions
   end

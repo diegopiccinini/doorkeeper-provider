@@ -3,13 +3,24 @@ ActiveAdmin.register_page "User Sites" do
   menu parent: 'Users', priority: 2
 
   page_action :edit, method: :get do
+    sites=Site
+
+    session[:site_name_filter]=params[:site_name] if params[:site_name]
+    sites=sites.url_contains(session[:site_name_filter]) if session[:site_name_filter]
+
+    sites=sites.order(:url).limit(30)
     user=User.find(params[:user_id])
-    render partial: 'edit', locals: { user: user }
+    render partial: 'edit', locals: { user: user, sites: sites }
   end
 
   page_action :filter, method: :post do
     session[:user_name_filter]=params[:user_name]
     redirect_to admin_user_sites_path
+  end
+
+  page_action :clear_edit_filter, method: :get do
+    session.delete(:site_name_filter)
+    redirect_to admin_user_sites_edit_path + "?user_id=#{params[:user_id]}"
   end
 
   page_action :clear_filter, method: :get do

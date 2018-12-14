@@ -3,7 +3,7 @@
 
   <div class="c-card">
 
-    <%= text_field_tag :user_name, '', placeholder: 'user name' %>
+    <%= text_field_tag :user_name, session[:user_name_filter], placeholder: 'user name' %>
 
     <footer class="c-card__footer c-card__footer--block">
       <div class="c-input-group">
