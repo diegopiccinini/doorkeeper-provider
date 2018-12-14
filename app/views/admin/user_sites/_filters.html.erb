@@ -1,0 +1,23 @@
+
+<%= form_tag admin_user_sites_filter_path, method: :post do %>
+
+  <div class="c-card">
+
+    <%= text_field_tag :user_name, '', placeholder: 'user name' %>
+
+    <footer class="c-card__footer c-card__footer--block">
+      <div class="c-input-group">
+        <p class="c-button--block">(Limit: 30 users)</p>
+      </div>
+      <div class="c-input-group">
+        <%= submit_tag :filter, class: 'c-button c-button--info c-button--block' %>
+        <%= link_to "Clear Filter", admin_user_sites_clear_filter_path, class: 'c-button c-button--default c-button--block' %>
+
+      </div>
+      <div class="c-input-group">
+        <br />
+      </div>
+    </footer>
+  </div>
+
+<% end %>
