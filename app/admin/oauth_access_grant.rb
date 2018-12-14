@@ -1,5 +1,7 @@
 ActiveAdmin.register OauthAccessGrant, as: "Logs" do
 
+  menu parent: 'Users', priority: 4
+
   config.batch_actions = false
 
   index as: :blog do

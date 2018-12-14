@@ -1,5 +1,7 @@
 ActiveAdmin.register_page "User Tags" do
 
+  menu parent: 'Users', priority: 3
+
   page_action :add_tag, method: :get do
     user=User.find params[:user_id]
     tag=ActsAsTaggableOn::Tag.find params[:tag_id]

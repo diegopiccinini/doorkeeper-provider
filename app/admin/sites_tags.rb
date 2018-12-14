@@ -1,5 +1,7 @@
 ActiveAdmin.register_page "Sites Tags" do
 
+  menu parent: 'Sites', priority: 2
+
   page_action :add_tag, method: :get do
     site=Site.find params[:site_id]
     tag=ActsAsTaggableOn::Tag.find params[:tag_id]

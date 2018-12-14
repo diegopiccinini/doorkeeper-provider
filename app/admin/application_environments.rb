@@ -1,5 +1,7 @@
 ActiveAdmin.register ApplicationEnvironment, as: "Stage Type" do
 
+  menu parent: 'Applications', priority: 2
+
   config.batch_actions = false
 
   member_action :lock, method: :put do

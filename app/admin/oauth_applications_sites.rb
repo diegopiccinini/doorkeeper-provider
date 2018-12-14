@@ -1,5 +1,7 @@
 ActiveAdmin.register OauthApplicationsSite do
 
+  menu parent: 'Sites', priority: 3
+
   permit_params :status
 
   config.batch_actions = false

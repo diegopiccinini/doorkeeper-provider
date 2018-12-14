@@ -1,5 +1,7 @@
 ActiveAdmin.register User do
 
+  menu parent: 'Users', priority: 1
+
   config.batch_actions = false
 
   permit_params :email, :disabled, :super_login, :password, :password_confirmation, :expire_at, tag_ids: []

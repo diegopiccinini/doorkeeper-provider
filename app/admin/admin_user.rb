@@ -1,4 +1,7 @@
 ActiveAdmin.register AdminUser do
+
+  menu parent: 'Admin', priority: 1
+
   permit_params :email, :password, :password_confirmation
 
   config.batch_actions = false

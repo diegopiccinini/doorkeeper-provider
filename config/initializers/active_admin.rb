@@ -112,7 +112,7 @@ ActiveAdmin.setup do |config|
   # roots for each namespace.
   #
   # Default:
-  # config.root_to = 'dashboard#index'
+  config.root_to = 'applications#index'
 
   # == Admin Comments
   #
@@ -223,6 +223,14 @@ ActiveAdmin.setup do |config|
   #     end
   #   end
 
+    config.namespace :admin do |admin|
+      admin.build_menu do |menu|
+        menu.add label: "Applications", priority: 0
+        menu.add label: "Sites", priority: 0
+        menu.add label: "Users", priority: 0
+        menu.add label: "Admin", priority: 0
+      end
+    end
   # == Download Links
   #
   # You can disable download links on resource listing pages,

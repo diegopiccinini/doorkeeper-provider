@@ -1,5 +1,7 @@
 ActiveAdmin.register BlackList do
 
+  menu parent: 'Sites'
+
   config.batch_actions = false
 
   index as: :blog do

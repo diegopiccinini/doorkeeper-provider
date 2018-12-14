@@ -1,5 +1,7 @@
 ActiveAdmin.register_page "Frontends" do
 
+  menu parent: 'Applications', priority: 6
+
   page_action :add, method: :post do
 
     required=[:app_id,:backend,:frontend_uri]

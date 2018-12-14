@@ -1,5 +1,7 @@
 ActiveAdmin.register Site do
 
+  menu parent: 'Sites', priority: 1
+
   permit_params :excluded, user_ids: [], tag_ids: []
 
   config.batch_actions = false

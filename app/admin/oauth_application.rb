@@ -1,5 +1,7 @@
 ActiveAdmin.register OauthApplication, as: "Applications" do
 
+  menu parent: 'Applications', priority: 1
+
   config.batch_actions = false
 
   permit_params :name, :enabled, :redirect_uri, :external_id, :sync_excluded, :application_environment_id, tag_ids: []
