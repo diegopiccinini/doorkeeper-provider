@@ -10,11 +10,12 @@
 <div class="container">
 
   <%= form_tag welcome_search_path, method: :get, class: 'form-signin' do %>
-    <label for="search_by_app" class="sr-only">Application</label>
-    <%=text_field_tag :search_by_app, session[:search_by_app] || '', placeholder: 'filter by box name', class: 'form-control' %>
 
     <label for="search" class="sr-only">Site</label>
     <%=text_field_tag :search, session[:search] || '', placeholder: 'filter by site name', class: 'form-control' %>
+
+    <label for="search_by_app" class="sr-only">Application</label>
+    <%=text_field_tag :search_by_app, session[:search_by_app] || '', placeholder: 'filter by stage box name', class: 'form-control' %>
 
     <label for="search_env" class="sr-only">Environment</label>
     <%=select_tag 'search_env', options_for_select(@app_environments,session[:search_env] || 'ALL'), class: 'form-control' %>

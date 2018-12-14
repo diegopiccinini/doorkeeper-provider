@@ -8,7 +8,7 @@ class OauthApplication < Doorkeeper::Application
 
   validates :external_id, presence: true, uniqueness: true
 
-  scope :name_contains, -> (name) { where("name LIKE ? OR redirect_uri LIKE ?","%#{name.upcase}%","%#{name.downcase}%") }
+  scope :name_contains, -> (name) { where("name LIKE ? ","%#{name.upcase}%") }
   scope :name_ends, -> (name) { where("name LIKE ? ","%#{name.upcase}") }
   scope :name_ends_or, -> (name1,name2) { where("name LIKE ? OR name LIKE ? ","%#{name1.upcase}","%#{name2.downcase}") }
   scope :enabled, -> { where(enabled: true) }

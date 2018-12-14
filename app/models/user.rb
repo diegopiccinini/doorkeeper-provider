@@ -49,7 +49,7 @@ class User < ActiveRecord::Base
       user.name = auth[:info][:name]
       user.first_name = auth[:info][:first_name]
       user.last_name = auth[:info][:last_name]
-#     user.super_login = true unless user.persisted?
+      #     user.super_login = true unless user.persisted?
       user.save(validate: false)
       user
     end
@@ -68,7 +68,7 @@ class User < ActiveRecord::Base
   def own_sites
     if self.disabled || self.expired?
       Site.where("id < -10")
-    elseif self.super_login
+    elsif self.super_login
       Site
     else
       full_site_access
@@ -76,7 +76,7 @@ class User < ActiveRecord::Base
   end
 
   def enabled_sites
-    own_sites.joins(:oauth_applications_sites).where(status: OauthApplicationsSite::STATUS_ENABLED)
+    own_sites.joins(:oauth_applications_sites).where("oauth_applications_sites.status = ? ", OauthApplicationsSite::STATUS_ENABLED)
   end
 
   def enabled_applications
@@ -110,8 +110,8 @@ class User < ActiveRecord::Base
     granted&= application if granted
     granted&= application.enabled  if granted
     if granted
-     site=application.sites.find_by_url redirect_uri
-     granted&=!site.nil?
+      site=application.sites.find_by_url redirect_uri
+      granted&=!site.nil?
     end
     granted&=site.enabled if granted
     granted&= ( self.super_login || self.full_site_access.include?(site) ) if granted

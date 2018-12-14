@@ -9,10 +9,13 @@ class UserSitesAccessTest < ActiveSupport::TestCase
     @site_two= sites(:two)
     site_two.save
     @app_granted= oauth_applications(:one)
-    app_granted.sites<< sites(:one)
+    app_granted.sites<< site_one
     app_granted.save
+    app_site=OauthApplicationsSite.find_by site: site_one, oauth_application: app_granted
+    app_site.update(status: OauthApplicationsSite::STATUS_ENABLED )
+
     @app_two=oauth_applications(:two)
-    app_two.sites<< sites(:two)
+    app_two.sites<< site_two
     app_two.save
     @superuser=users(:superuser)
     superuser.save
@@ -31,6 +34,7 @@ class UserSitesAccessTest < ActiveSupport::TestCase
   end
 
   test "granted to one application" do
+    assert user.own_sites.count>0
     assert user.has_access_to_site?( application: app_granted, redirect_uri: site_one.url )
   end
 
@@ -47,6 +51,9 @@ class UserSitesAccessTest < ActiveSupport::TestCase
   end
 
   test "has access is super login" do
+
+    assert superuser.own_sites.count>0
+    assert superuser.enabled_sites.count>0
     assert superuser.has_access_to_site?( application: app_granted, redirect_uri: site_one.url )
     assert superuser.has_access_to_site?( application: app_two, redirect_uri: site_two.url )
     assert !superuser.has_access_to_site?( application: app_granted, redirect_uri: site_two.url )
@@ -71,5 +78,7 @@ class UserSitesAccessTest < ActiveSupport::TestCase
     assert !superuser.has_access_to_site?( application: app_granted, redirect_uri: site_one.url )
     app_granted.update enabled: true
   end
+
+
 
 end

@@ -2,7 +2,7 @@ class WelcomeController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    sites = current_user.own_sites
+    sites = current_user.enabled_sites
 
     if session[:search]
       sites= sites.url_contains(session[:search])
@@ -24,7 +24,7 @@ class WelcomeController < ApplicationController
     end
 
     if filter_sites_by_applications_filter
-      sites= OauthApplicationsSite.enabled.sites_by_application_ids(applications.ids).where(id: sites.ids)
+      sites= OauthApplicationsSite.enabled.where( site_id: sites.ids).sites_by_application_ids(applications.ids)
     end
 
     @sites=sites.map do |site|
