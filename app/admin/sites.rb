@@ -7,7 +7,7 @@ ActiveAdmin.register Site do
   index do
     column :url
     column :status
-    column :excluded
+    column :applications
     actions
   end
 

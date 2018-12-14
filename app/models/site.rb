@@ -171,4 +171,8 @@ class Site < ActiveRecord::Base
     url.split('/').last
   end
 
+  def applications
+    oauth_applications.map { |a| a.external_id }.join(" | ")
+  end
+
 end

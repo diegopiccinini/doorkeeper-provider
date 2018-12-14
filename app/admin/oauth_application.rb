@@ -2,7 +2,7 @@ ActiveAdmin.register OauthApplication, as: "Applications" do
 
   config.batch_actions = false
 
-  permit_params :name, :enabled, :redirect_uri, :external_id, :sync_excluded, :application_environment_id, user_ids: [], tag_ids: []
+  permit_params :name, :enabled, :redirect_uri, :external_id, :sync_excluded, :application_environment_id, tag_ids: []
 
   index do
     column :name
@@ -71,7 +71,6 @@ ActiveAdmin.register OauthApplication, as: "Applications" do
       f.input :external_id
       f.input :sync_excluded
       f.input :application_environment
-      f.input :users, :as => :check_boxes
     end
     f.actions
   end

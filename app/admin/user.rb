@@ -2,7 +2,7 @@ ActiveAdmin.register User do
 
   config.batch_actions = false
 
-  permit_params :email, :disabled, :super_login, :password, :password_confirmation, :expire_at, oauth_application_ids: [], tag_ids: []
+  permit_params :email, :disabled, :super_login, :password, :password_confirmation, :expire_at, tag_ids: []
 
   index do
     column :name
@@ -33,7 +33,6 @@ ActiveAdmin.register User do
       f.input :disabled
       f.input :super_login
       f.input :expire_at
-      f.input :oauth_applications, :as => :check_boxes
     end
     f.actions
   end
