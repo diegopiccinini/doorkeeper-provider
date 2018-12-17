@@ -13,7 +13,10 @@ ActiveAdmin.register User do
     column :expire_at
     column :disabled
     column :super_login
-    actions
+    actions do |u|
+      span ' | '
+      item 'Sites', admin_user_sites_path + "?user_id=#{u.id}"
+    end
   end
 
   filter :name

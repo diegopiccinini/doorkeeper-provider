@@ -15,6 +15,7 @@ class User < ActiveRecord::Base
 
   scope :access_with_tag, -> (oauth_application) { tagged_with(oauth_application.full_tags, any: true).where(disabled: false) }
   scope :site_access_with_tag, -> (site) { tagged_with(site.full_tags, any: true) }
+  scope :name_contains, -> (name) { where("name LIKE ? ","%#{name}%") }
 
   def self.with_access_to oauth_application
     uids= where( super_login: true, disabled: false ).ids
@@ -110,7 +111,7 @@ class User < ActiveRecord::Base
     granted&= application if granted
     granted&= application.enabled  if granted
     if granted
-      site=application.sites.find_by_url redirect_uri
+      site=application.sites.find_by url: redirect_uri
       granted&=!site.nil?
     end
     granted&=site.enabled if granted

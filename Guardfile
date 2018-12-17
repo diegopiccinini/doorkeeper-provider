@@ -36,6 +36,7 @@ guard :minitest, spring: "spring rake test" do
   watch(%r{^test/test_helper\.rb$}) { 'test' }
 
   watch(%r{^app/models/(.*)\.rb$})      { |m| "test/models/#{m[1]}_test.rb" }
+  watch(%r{^app/models/user.rb$})      { 'test/models' }
   watch(%r{^app/jobs/(.*)\.rb$})      { |m| "test/jobs/#{m[1]}_test.rb" }
 
   # Rails < 4

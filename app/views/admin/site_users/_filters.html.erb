@@ -1,11 +1,9 @@
 
-<%= form_tag admin_user_sites_edit_path, method: :get do %>
+<%= form_tag admin_site_users_filter_path, method: :post do %>
 
   <div class="c-card">
 
-    <%= text_field_tag :site_name, session[:site_name_filter], placeholder: 'site name' %>
-
-    <%= hidden_field_tag :user_id, params[:user_id] %>
+    <%= text_field_tag :user_name, session[:user_name_filter], placeholder: 'site name' %>
 
     <footer class="c-card__footer c-card__footer--block">
       <div class="c-input-group">
@@ -13,7 +11,7 @@
       </div>
       <div class="c-input-group">
         <%= submit_tag :filter, class: 'c-button c-button--info c-button--block' %>
-        <%= link_to "Clear Filter", admin_user_sites_clear_edit_filter_path + "?user_id=#{params[:user_id]}", class: 'c-button c-button--default c-button--block' %>
+        <%= link_to "Clear Filter", admin_site_users_clear_filter_path, class: 'c-button c-button--default c-button--block' %>
 
       </div>
       <div class="c-input-group">

@@ -1,6 +1,5 @@
 ActiveAdmin.register Site do
 
-
   menu parent: 'Sites', priority: 1
 
   permit_params :excluded, user_ids: [], tag_ids: []
@@ -12,7 +11,10 @@ ActiveAdmin.register Site do
     column :url
     column :enabled
     column :applications
-    actions
+    actions do |site|
+      span ' | '
+      item 'Users', admin_site_users_path + "?site_id=#{site.id}"
+    end
   end
 
   filter :url
@@ -34,7 +36,6 @@ ActiveAdmin.register Site do
         column :external_id
         column :application_environment
         column :enabled
-
       end
     end
 
@@ -44,6 +45,7 @@ ActiveAdmin.register Site do
         column :email
         column :super_login
         column :disabled
+        column :expired?
       end
     end
   end

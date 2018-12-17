@@ -3,11 +3,11 @@
 
   <div class="c-card">
 
-    <%= text_field_tag :user_name, session[:user_name_filter], placeholder: 'user name' %>
+    <%= text_field_tag :site_name, session[:site_name_filter], placeholder: 'site name' %>
 
     <footer class="c-card__footer c-card__footer--block">
       <div class="c-input-group">
-        <p class="c-button--block">(Limit: 30 users)</p>
+        <p class="c-button--block">(Limit: 30 sites)</p>
       </div>
       <div class="c-input-group">
         <%= submit_tag :filter, class: 'c-button c-button--info c-button--block' %>

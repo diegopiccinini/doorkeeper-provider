@@ -1,0 +1,23 @@
+h2 site.url
+
+table_for site do
+  column :applications
+  column :enabled?
+end
+
+table_for users, class: 'tags-table' do
+  column :name
+  column :email
+  column :super_login
+  column :disabled
+  column :expired?
+
+  column 'Action' do |user|
+    if site.has_user? user
+      link_to 'Remove', admin_site_users_remove_path + "?user_id=#{user.id}"
+    else
+      link_to 'Add', admin_site_users_add_path + "?user_id=#{user.id}"
+    end
+  end
+
+end

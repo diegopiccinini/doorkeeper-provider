@@ -62,8 +62,7 @@ class WelcomeController < ApplicationController
 
   def backend_name uri
     uri = uri[0..-('/callback'.length + 1)]
-    name = URI(uri).host
-    name.include?('.') ? name.split('.').first : name
+    URI(uri).host
   end
 
   def frontend_name uri

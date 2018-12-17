@@ -176,4 +176,8 @@ class Site < ActiveRecord::Base
     oauth_applications.map { |a| a.external_id }.join(" | ")
   end
 
+  def has_user? user
+    users.where(id: user.id).count>0
+  end
+
 end
