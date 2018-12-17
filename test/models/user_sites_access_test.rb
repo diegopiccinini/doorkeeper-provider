@@ -17,6 +17,8 @@ class UserSitesAccessTest < ActiveSupport::TestCase
     @app_two=oauth_applications(:two)
     app_two.sites<< site_two
     app_two.save
+    as2=OauthApplicationsSite.find_by site: site_two, oauth_application: app_two
+    as2.update(status: OauthApplicationsSite::STATUS_ENABLED )
     @superuser=users(:superuser)
     superuser.save
     @user=users(:one)

@@ -8,6 +8,7 @@ class UserSitesTagAccessTest < UserSitesAccessTest
     site_one.tag_list.add 'TestCustomTag1'
     user.tag_list.add 'Dev'
     user.save
+
     assert user.has_access_to_site?( application: app_two, redirect_uri: site_two.url )
     assert_equal 1, User.with_access_to_site(site_two).where(id: user.id).count
     assert_equal 1, user.full_site_access.where(id: site_two.id).count
