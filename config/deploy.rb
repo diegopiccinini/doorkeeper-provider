@@ -39,4 +39,5 @@ set :default_env, { 'SECRET_KEY_BASE' => ENV['SECRET_KEY_BASE'], 'SUPPORT_EMAIL'
 # Default value for keep_releases is 5
 # set :keep_releases, 5
 
+set :rails_env, "production"
 set :puma_conf, "#{shared_path}/config/puma.rb"
