@@ -5,7 +5,7 @@ set :application, "auth"
 set :repo_url, "git@github.com:diegopiccinini/doorkeeper-provider.git"
 
 set :rvm_type, :system
-set :rvm_ruby_version, '2.3.1'
+set :rvm_ruby_version, '2.3.1@rails427'
 
 # Default branch is :master
 ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
