@@ -217,6 +217,12 @@ class OauthApplication < Doorkeeper::Application
   end
 
   def probably_multitenant?
-    redirect_uri.split.count > 1
+    redirect_uri.split.count { |x| x.exclude?'/frontend/' and x.exclude?'/localhost' } > 1
   end
+
+
+  def tagged_users
+    User.access_with_tag(self)
+  end
+
 end

@@ -24,6 +24,8 @@ class Site < ActiveRecord::Base
 
   scope :url_contains, -> (name) { where("url LIKE ? ","http%://%#{name.downcase}%/%") }
 
+  scope :with_app,-> { joins(:oauth_applications_sites) }
+
   def update_total_oauth_applications
     self.total_oauth_applications= oauth_application_ids.count
   end
@@ -134,7 +136,8 @@ class Site < ActiveRecord::Base
   end
 
   def default_tag
-    oauth_applications.first.application_environment.name
+    app=oauth_applications.first
+    app.nil? ? 'Unknown' : app.application_environment.name
   end
 
   def full_tags

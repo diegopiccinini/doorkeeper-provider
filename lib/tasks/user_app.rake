@@ -34,4 +34,15 @@ namespace :user_app do
     f.close
   end
 
+  desc "set probably multitenant to multitenant"
+  task multitenant: :environment do
+    OauthApplication.update_all(multitenant: false)
+    OauthApplication.all.each do |app|
+      app.update( multitenant: true) if app.probably_multitenant?
+    end
+    OauthApplication.where(multitenant: true).each do |app|
+      line=[app.name, app.external_id]
+      puts line.join("\t")
+    end
+  end
 end

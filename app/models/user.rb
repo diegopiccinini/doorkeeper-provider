@@ -37,6 +37,30 @@ class User < ActiveRecord::Base
 
   end
 
+  def self.with_access_to_site_level site
+
+    if site.enabled
+      uids= where( super_login: true, disabled: false ).ids
+      uids+= site_access_with_tag( site ).ids
+      uids+= site.users.where(disabled: false).ids
+      where( id: uids )
+    else
+      where( id: -1 )
+    end
+
+  end
+
+  def self.site_access_by_application site
+
+    uids=[]
+    site.oauth_applications.each do |app|
+      uids+= app.tagged_users.ids
+      uids+= app.users.ids
+    end
+
+    where( id: uids )
+  end
+
   def to_s
     email
   end
@@ -127,14 +151,23 @@ class User < ActiveRecord::Base
     self.expire_at < DateTime.now
   end
 
-  def full_access
-    apps_ids=oauth_applications.ids + tagged_access_ids
-    OauthApplication.where(id: apps_ids.uniq)
+  def apps_ids
+   (oauth_applications.ids + tagged_access_ids).uniq
   end
 
+  def full_access
+    OauthApplication.where(id: apps_ids)
+  end
+
+  def full_site_ids
+    (sites.with_app.ids + tagged_sites_access_ids + full_site_access_by_app.ids).uniq
+  end
   def full_site_access
-    sites_ids=sites.ids + tagged_sites_access_ids
-    Site.where(id: sites_ids.uniq)
+    Site.where(id: full_site_ids)
+  end
+
+  def full_site_access_by_app
+    Site.joins(:oauth_applications_sites).where( 'oauth_applications_sites.oauth_application_id': apps_ids )
   end
 
   def tagged_access_ids
@@ -142,7 +175,11 @@ class User < ActiveRecord::Base
   end
 
   def tagged_sites_access_ids
-    Site.any_tag_ids self.tags
+    Site.with_app.any_tag_ids self.tags
+  end
+
+  def tagged_sites
+    Site.where(id: tagged_sites_access_ids)
   end
 
   def tagged_access_to? application

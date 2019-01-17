@@ -42,7 +42,8 @@ ActiveAdmin.register User do
     f.actions
   end
 
-  show do
+  show do |item|
+
     attributes_table do
 
       row :email
@@ -63,6 +64,35 @@ ActiveAdmin.register User do
 
     end
 
+    panel 'Sites DIRECT access' do
+      table_for item.sites.with_app.uniq do
+        column :url
+        column :applications
+        column :tag_list do |site|
+          (site.full_tags ).join(" | ")
+        end
+      end
+    end
+
+    panel 'Sites access by TAG' do
+      table_for item.tagged_sites do
+        column :url
+        column :applications
+        column :tag_list do |site|
+          (site.full_tags ).join(" | ")
+        end
+      end
+    end
+
+    panel 'Sites access APPLICATION' do
+      table_for item.full_site_access_by_app.uniq do
+        column :url
+        column :applications
+        column :tag_list do |site|
+          (site.full_tags ).join(" | ")
+        end
+      end
+    end
   end
 
   controller do

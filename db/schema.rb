@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181205180849) do
+ActiveRecord::Schema.define(version: 20190117135906) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace",     limit: 255
@@ -107,6 +107,7 @@ ActiveRecord::Schema.define(version: 20181205180849) do
     t.integer  "application_environment_id", limit: 4,     default: 5
     t.boolean  "sync_excluded",                            default: false
     t.boolean  "confidential",                             default: true,  null: false
+    t.boolean  "multitenant",                              default: false
   end
 
   add_index "oauth_applications", ["application_environment_id"], name: "index_oauth_applications_on_application_environment_id", using: :btree

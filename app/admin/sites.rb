@@ -39,13 +39,43 @@ ActiveAdmin.register Site do
       end
     end
 
-    panel 'Users with access (super login, tagged, or added to the application)' do
-      table_for User.with_access_to_site(item) do
+    panel 'Users with SUPER LOGIN access ' do
+      table_for User.where(super_login: true) do
         column :name
         column :email
-        column :super_login
         column :disabled
         column :expired?
+      end
+
+    end
+    panel 'Users with APPLICATION access' do
+      table_for User.site_access_by_application(item) do
+        column :name
+        column :email
+        column :disabled
+        column :expired?
+      end
+    end
+
+
+    panel 'Users with Direct access' do
+      table_for item.users do
+        column :name
+        column :email
+        column :disabled
+        column :expired?
+      end
+    end
+
+    panel 'Users with TAG access' do
+      table_for User.site_access_with_tag(item) do
+        column :name
+        column :email
+        column :disabled
+        column :expired?
+        column :tag_list do |user|
+          (user.tag_list & item.full_tags ).join(" | ")
+        end
       end
     end
   end

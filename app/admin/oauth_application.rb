@@ -4,7 +4,7 @@ ActiveAdmin.register OauthApplication, as: "Applications" do
 
   config.batch_actions = false
 
-  permit_params :name, :enabled, :redirect_uri, :external_id, :sync_excluded, :application_environment_id, tag_ids: []
+  permit_params :name, :enabled, :redirect_uri, :external_id, :sync_excluded, :application_environment_id, :multitenant, tag_ids: [], user_ids: []
 
   index do
     column :name
@@ -31,6 +31,7 @@ ActiveAdmin.register OauthApplication, as: "Applications" do
   filter :redirect_uri
   filter :application_environment
   filter :sync_excluded
+  filter :multitenant
 
   show do |item|
     attributes_table do
@@ -43,7 +44,32 @@ ActiveAdmin.register OauthApplication, as: "Applications" do
       row :external_id
       row :application_environment
       row :sync_excluded
+      row :multitenant
     end
+
+    panel 'Users Direct Association' do
+      table_for item.users.order(name: :asc) do
+        column :name
+        column :email
+        column :expired?
+        column :disabled
+        column :super_login
+      end
+    end
+
+    panel 'Users Associated by Tag' do
+      table_for item.tagged_users.order(name: :asc) do
+        column :name
+        column :email
+        column :expired?
+        column :disabled
+        column :super_login
+        column :tag_list do |user|
+          (user.tag_list & item.full_tags ).join(" | ")
+        end
+      end
+    end
+
     panel 'Sites' do
       table_for item.sites do
         column :url
@@ -67,12 +93,14 @@ ActiveAdmin.register OauthApplication, as: "Applications" do
   form do |f|
     f.inputs 'Admin Details' do
       f.input :name
-#      f.input :tags, :as => :check_boxes, :multiple => true, :collection => ActsAsTaggableOn::Tag.where.not(name: OauthApplication.default_tags)
+      f.input :tags, :as => :check_boxes, :multiple => true, :collection => ActsAsTaggableOn::Tag.where.not(name: OauthApplication.default_tags)
       f.input :enabled
       f.input :redirect_uri
       f.input :external_id
       f.input :sync_excluded
+      f.input :multitenant
       f.input :application_environment
+      f.input :users, :as => :check_boxes, :multiple => true, :collection => User.order(name: :asc)
     end
     f.actions
   end
