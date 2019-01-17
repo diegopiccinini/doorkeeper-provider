@@ -215,4 +215,8 @@ class OauthApplication < Doorkeeper::Application
       where( application_environment_id: ae_ids ).where.not( id: result.keys)
     end
   end
+
+  def probably_multitenant?
+    redirect_uri.split.count > 1
+  end
 end
