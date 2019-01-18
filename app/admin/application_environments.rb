@@ -1,6 +1,6 @@
 ActiveAdmin.register ApplicationEnvironment, as: "Stage Type" do
 
-  menu parent: 'Applications', priority: 2
+  menu parent: 'Applications', priority: 3
 
   config.batch_actions = false
 
