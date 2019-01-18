@@ -139,7 +139,7 @@ class User < ActiveRecord::Base
       granted&=!site.nil?
     end
     granted&=site.enabled if granted
-    granted&= ( self.super_login || self.full_site_access.include?(site) ) if granted
+    granted&= ( self.super_login || self.full_site_access.where( id: site.id).exists? ) if granted
     granted
   end
 
