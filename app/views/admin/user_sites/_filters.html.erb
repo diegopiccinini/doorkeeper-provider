@@ -8,14 +8,31 @@
     <footer class="c-card__footer c-card__footer--block">
       <div class="c-input-group">
         <p class="c-button--block">(Limit: 30 sites)</p>
+        <br />
+      </div>
+      <div class="c-input-group">
+        <br />
       </div>
       <div class="c-input-group">
         <%= submit_tag :filter, class: 'c-button c-button--info c-button--block' %>
         <%= link_to "Clear Filter", admin_user_sites_clear_filter_path, class: 'c-button c-button--default c-button--block' %>
-
       </div>
       <div class="c-input-group">
         <br />
+      </div>
+    </footer>
+    <footer class="c-card__footer c-card__footer--block">
+      <div class="c-input-group">
+        <br />
+      </div>
+      <div class="c-input-group">
+
+        <%= link_to "Assigned", admin_user_sites_assigned_path, class: style_button('assigned') %>
+
+        <%= link_to "Unassigned", admin_user_sites_unassigned_path, class: style_button('unassigned') %>
+
+        <%= link_to "All", admin_user_sites_all_path, class: style_button('all') %>
+
       </div>
     </footer>
   </div>
