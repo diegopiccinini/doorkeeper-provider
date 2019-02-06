@@ -77,6 +77,12 @@ namespace :sites do
       sites<<app_site.site
       app_site.update( status: OauthApplicationsSite::STATUS_TO_CHECK )
     end
+
+    OauthApplicationsSite.black_list.where( "created_at > ?", 2.days.ago).each do |app_site|
+      sites<<app_site.site
+      app_site.update( status: OauthApplicationsSite::STATUS_TO_CHECK )
+    end
+
     sites=sites.uniq
 
     sites.each do |site|
