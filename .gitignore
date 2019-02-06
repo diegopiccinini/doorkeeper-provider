@@ -26,3 +26,4 @@ public/assets
 /config/database.yml
 /config/puma.rb
 *~
+/scripts
