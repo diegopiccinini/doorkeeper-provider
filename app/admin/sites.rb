@@ -11,6 +11,7 @@ ActiveAdmin.register Site do
     column :url
     column :enabled
     column :applications
+    column :updated_at
     actions do |site|
       span ' | '
       item 'Users', admin_site_users_path + "?site_id=#{site.id}"
@@ -22,6 +23,7 @@ ActiveAdmin.register Site do
   filter :step
   filter :ip
   filter :excluded
+  filter :updated_at
 
   show do |item|
     attributes_table do

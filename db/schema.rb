@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190117135906) do
+ActiveRecord::Schema.define(version: 20190206141055) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace",     limit: 255
@@ -115,9 +115,11 @@ ActiveRecord::Schema.define(version: 20190117135906) do
   add_index "oauth_applications", ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
 
   create_table "oauth_applications_sites", force: :cascade do |t|
-    t.integer "site_id",              limit: 4
-    t.integer "oauth_application_id", limit: 4
-    t.string  "status",               limit: 255
+    t.integer  "site_id",              limit: 4
+    t.integer  "oauth_application_id", limit: 4
+    t.string   "status",               limit: 255
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
   end
 
   add_index "oauth_applications_sites", ["oauth_application_id"], name: "index_oauth_applications_sites_on_oauth_application_id", using: :btree

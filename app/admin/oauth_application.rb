@@ -75,6 +75,9 @@ ActiveAdmin.register OauthApplication, as: "Applications" do
         column :url
         column :step
         column :status
+        column :updated_at do |site|
+          span OauthApplicationsSite.find_by( site: site, oauth_application: item).updated_at
+        end
         column "Check Status" do |site|
           span OauthApplicationsSite.find_by( site: site, oauth_application: item).status
         end

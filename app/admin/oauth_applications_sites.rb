@@ -9,11 +9,14 @@ ActiveAdmin.register OauthApplicationsSite do
   filter :status
   filter :site_url_contains
   filter :oauth_application_name_contains, label: 'Application Name Contains'
+  filter :created_at
+  filter :updated_at
 
   index do
     column :site
     column :oauth_application, as: 'Application'
     column :status
+    column :updated_at
     actions do |app_site|
       span ' | '
       if app_site.status==OauthApplicationsSite::STATUS_ENABLED
