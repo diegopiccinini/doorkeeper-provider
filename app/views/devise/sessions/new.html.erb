@@ -1,25 +1,29 @@
 <div id="container" class="container">
-<header class="page-header" role="banner">
-  <h1><%= first_domain %></h1>
-  <h3>Authentication server</h3>
-</header>
+  <header class="page-header" role="banner">
+    <h1><%= first_domain %></h1>
+    <h3>Authentication server</h3>
+  </header>
 
-<main role="main">
-<%- if flash[:error].present? %>
-  <div class="alert alert-danger">
-    <%= flash[:error] %>
-  </div>
-<% end -%>
+  <main role="main">
+    <%- if flash[:error].present? %>
+      <div class="alert alert-danger">
+        <%= flash[:error] %>
+      </div>
+    <% end -%>
 
-<%- if flash[:notice].present? %>
-  <div class="alert alert-info">
-    <%= flash[:notice] %>
-  </div>
-<% end -%>
-<% if user_signed_in?  %>
-  <p>Welcome back, <%= current_user.name %>!</p>
-<% else  %>
-  <p><%= link_to 'Login with Google+', user_google_oauth2_omniauth_authorize_path ,class: 'btn btn-danger' %></p>
-<% end %>
-</main>
+    <%- if flash[:notice].present? %>
+      <div class="alert alert-info">
+        <%= flash[:notice] %>
+      </div>
+    <% end -%>
+    <% if user_signed_in?  %>
+      <p>Welcome back, <%= current_user.name %>!</p>
+    <% else  %>
+      <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+      <div class="g-signin2" data-onsuccess="onSignIn"></div>
+
+      <p><%= link_to 'Login with Google+', user_google_oauth2_omniauth_authorize_path ,class: 'btn btn-danger' %></p>
+    <% end %>
+  </main>
 </div>

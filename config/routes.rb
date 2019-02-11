@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks" }
   use_doorkeeper
 
-  root 'welcome#index'
+  root 'welcome#login'
   get '/welcome/search' => "welcome#search"
 
   namespace :api do
