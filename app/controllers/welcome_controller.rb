@@ -33,7 +33,8 @@ class WelcomeController < ApplicationController
     @total_sites=sites.count
     @sites=sites.limit(@limit).map do |site|
       site.oauth_applications.map do | application |
-        { app_name: application.name , uri: app_uri(site.url), site_name: callback_name(site.url), environment: application.application_environment.name }
+        callback_site_url = application.sync_excluded? ? site.url : callback_name(site.url)
+        { app_name: application.name , uri: app_uri(site.url), site_name: callback_site_url, environment: application.application_environment.name }
       end
     end.flatten
 
