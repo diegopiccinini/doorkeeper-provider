@@ -27,3 +27,4 @@ public/assets
 /config/puma.rb
 *~
 /scripts
+/certs

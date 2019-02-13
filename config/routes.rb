@@ -7,6 +7,8 @@ Rails.application.routes.draw do
   root 'welcome#login'
   get '/welcome/search' => "welcome#search"
 
+  post '/tokensignin' => "google_sign_in#tokensignin"
+
   namespace :api do
     namespace :v1 do
       get '/me' => "credentials#me"

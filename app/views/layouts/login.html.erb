@@ -1,7 +1,7 @@
 <html lang="en">
   <head>
     <meta name="google-signin-scope" content="profile email">
-    <meta name="google-signin-client_id" content="529393474094-m8je0g0g5mjhme407depll8p6fv3blhu.apps.googleusercontent.com">
+    <meta name="google-signin-client_id" content="<%= ENV['GOOGLE_CLIENT_ID'] %>">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
   </head>
   <body>
@@ -20,6 +20,13 @@
         // The ID token you need to pass to your backend:
         var id_token = googleUser.getAuthResponse().id_token;
         console.log("ID Token: " + id_token);
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '<%= ENV['HOST'] %>/tokensignin');
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function() {
+          console.log('Signed in as: ' + xhr.responseText);
+        };
+        xhr.send('idtoken=' + id_token);
       }
     </script>
   </body>

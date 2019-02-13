@@ -129,6 +129,8 @@ GEM
     formtastic_i18n (0.6.0)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
+    google-id-token (1.4.2)
+      jwt (>= 1)
     guard (2.15.0)
       formatador (>= 0.2.4)
       listen (>= 2.7, < 4.0)
@@ -349,6 +351,7 @@ DEPENDENCIES
   dotenv-rails
   encryptor
   faraday
+  google-id-token (>= 1.4.0)
   guard
   guard-minitest
   jbuilder (~> 2.0)
