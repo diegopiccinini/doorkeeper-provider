@@ -13,6 +13,10 @@ module GoogleSignIn
       @payload["sub"]
     end
 
+    def iss
+      @payload["iss"]
+    end
+
     def name
       @payload["name"]
     end

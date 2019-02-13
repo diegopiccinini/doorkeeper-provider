@@ -80,6 +80,20 @@ class User < ActiveRecord::Base
     end
   end
 
+  def self.from_identity identity
+    if ENV['CUSTOM_DOMAIN_FILTER'].split.include?(identity.email_address.split('@').last)
+      user = find_or_create_by email: identity.email_address
+
+      user.provider = identity.iss
+      user.uid = identity.user_id
+      user.name = identity.name
+      user.first_name = identity.given_name
+      user.last_name = identity.family_name
+      user.save(validate: false)
+      user
+    end
+  end
+
   def applications
     if self.disabled
       OauthApplication.where("false")

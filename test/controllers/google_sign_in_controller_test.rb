@@ -30,7 +30,7 @@ class GoogleSignInControllerTest < ActionController::TestCase
   end
 
   test "tokensignin" do
-    post :tokensignin , token_id: @token
+    post :tokensignin , idtoken: @token
     assert_equal @token, assigns(:token_id)
   end
 end
