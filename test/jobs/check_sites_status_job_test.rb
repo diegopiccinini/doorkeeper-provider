@@ -3,17 +3,17 @@ require 'test_helper'
 class CheckSitesStatusJobTest < ActiveSupport::TestCase
   attr_accessor :job, :app, :site, :association
 
+  def stub_all_calls
+    stub_get_request "https://testclient.yourdomain.com/backend/path"
+    stub_get_request "https://test1.bookingbug.com/logins/auth/bookingbug"
+    stub_get_request "https://test1.yourdomain.com/backend/path"
+  end
+
   setup do
+    stub_all_calls
     @job=CheckSitesStatusJob.new
     @app=oauth_applications(:one)
     @site=sites(:one)
-    stub_request(:get, "https://test1.bookingbug.com/logins/auth/bookingbug").
-      with(  headers: {
-      'Accept'=>'*/*',
-      'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-      'User-Agent'=>'Faraday v0.12.2'
-    }).
-    to_return(status: 302, body: "", headers: {})
 
     app.sites << site
     @association=OauthApplicationsSite.find_by site: site, oauth_application: app

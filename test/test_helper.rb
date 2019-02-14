@@ -7,6 +7,18 @@ require 'sucker_punch/testing/inline'
 
 class ActiveSupport::TestCase
 
+  def stub_with_headers
+    {
+      'Accept'=>'*/*',
+      'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+      'User-Agent'=>'Faraday v0.12.2'
+    }
+  end
+
+  def stub_get_request url
+    stub_request(:get, url ).with(  headers: stub_with_headers ).to_return(status: 200, body: "", headers: {})
+  end
+
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   module FixtureFileHelpers
     def back_uri subdomain

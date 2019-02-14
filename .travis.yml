@@ -1,0 +1,10 @@
+sudo: false
+language: ruby
+rvm:
+  - 2.3.1
+before_install: gem install bundler -v 1.16.6
+services:
+  - mysql
+script:
+  - ./bin/travis_setup.sh
+

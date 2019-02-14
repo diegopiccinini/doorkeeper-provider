@@ -2,25 +2,22 @@ require 'test_helper'
 require 'helpers/authentication_helper'
 
 class Api::V1::OauthApplicationsControllerTest < ActionController::TestCase
+
+  def stub_all_calls
+    stub_get_request_302 "https://testclient.bookingbug.com/logins/auth/bookingbug"
+    stub_get_request_302 "https://testclient3.test.com/login"
+    stub_get_request "https://testclient.yourdomain.com/backend/path"
+  end
+
+  def stub_get_request_302 url
+    stub_request(:get, url ).with(  headers: stub_with_headers ).to_return(status: 302, body: "", headers: { location: "https://localhost" })
+  end
+
   setup do
+    stub_all_calls
     signature_headers.each_pair do | k, v |
       @request.headers[k]=v
     end
-    stub_request(:get, "https://testclient.bookingbug.com/logins/auth/bookingbug").
-      with(  headers: {
-      'Accept'=>'*/*',
-      'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-      'User-Agent'=>'Faraday v0.12.2'
-    }).
-    to_return(status: 302, body: "", headers: { location: "https://localhost" })
-
-    stub_request(:get, "https://testclient3.test.com/login").
-      with(  headers: {
-      'Accept'=>'*/*',
-      'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-      'User-Agent'=>'Faraday v0.12.2'
-    }).
-    to_return(status: 302, body: "", headers: { location: "https://localhost" })
   end
 
   test "show" do
