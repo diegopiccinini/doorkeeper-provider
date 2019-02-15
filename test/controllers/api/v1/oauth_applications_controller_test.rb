@@ -6,7 +6,7 @@ class Api::V1::OauthApplicationsControllerTest < ActionController::TestCase
   def stub_all_calls
     stub_get_request_302 "https://testclient.bookingbug.com/logins/auth/bookingbug"
     stub_get_request_302 "https://testclient3.test.com/login"
-    stub_get_request "https://testclient.yourdomain.com/backend/path"
+    stub_get_request "https://testclient.#{ENV['CUSTOM_DOMAIN_FILTER']}/backend/path"
   end
 
   def stub_get_request_302 url

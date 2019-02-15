@@ -28,7 +28,7 @@ module GoogleSignIn
       end
 
       def exp
-        Time.now + 10
+        Time.now + 1000
       end
     end
 

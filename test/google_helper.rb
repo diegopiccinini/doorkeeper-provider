@@ -3,12 +3,41 @@ ENV['RAILS_ENV'] ||= 'test'
 GOOGLE_CLIENT_ID = ENV['GOOGLE_CLIENT_ID']
 GOOGLE_CLIENT_SECRET = ENV['GOOGLE_CLIENT_SECRET']
 
-require 'webmock/minitest'
-require 'byebug'
+require 'google_sign_in/validator'
+require 'google_sign_in/identity'
 
 
 if GOOGLE_X509_CERTIFICATE.not_after <= Time.now
   raise "Test certificate is expired."
 end
 
+
+class ActiveSupport::TestCase
+
+  def validator
+    GoogleSignIn::Validator
+  end
+
+  def payload
+    {
+      exp: validator.exp.to_i,
+      iss: validator.iss,
+      aud: validator.aud,
+      cid: validator.client_id,
+      user_id: '12345',
+      email: "test@#{ENV['CUSTOM_DOMAIN_FILTER']}",
+      provider_id: 'google.com',
+      verified: true
+    }
+  end
+
+  def token
+    JWT.encode(payload, validator.key, 'RS256')
+  end
+
+  def identity
+    GoogleSignIn::Identity.new token
+  end
+
+end
 

@@ -1,9 +1,8 @@
 require 'google_sign_in/identity'
 
 class GoogleSignInController < ApplicationController
+
   def tokensignin
-    @token_id= params[:idtoken]
-    identity=GoogleSignIn::Identity.new @token_id
     @user = User.from_identity identity
 
     if @user && !@user.disabled && !@user.expired?
@@ -17,5 +16,11 @@ class GoogleSignInController < ApplicationController
 
   rescue => error
     @message=error.message
+  end
+
+  private
+
+  def identity
+    GoogleSignIn::Identity.new params[:idtoken]
   end
 end

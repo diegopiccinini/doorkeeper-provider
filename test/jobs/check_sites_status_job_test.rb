@@ -6,7 +6,7 @@ class CheckSitesStatusJobTest < ActiveSupport::TestCase
   def stub_all_calls
     stub_get_request "https://testclient.yourdomain.com/backend/path"
     stub_get_request "https://test1.bookingbug.com/logins/auth/bookingbug"
-    stub_get_request "https://test1.yourdomain.com/backend/path"
+    stub_get_request "https://test1.#{ENV['CUSTOM_DOMAIN_FILTER']}/backend/path"
   end
 
   setup do
