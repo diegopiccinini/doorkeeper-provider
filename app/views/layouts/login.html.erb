@@ -8,7 +8,7 @@
     <div class="g-signin2" data-onsuccess="onSignIn" data-longtitle="true" data-theme="dark"></div>
     <script>
       function onSuccess(googleUser) {
-        console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
+        onSignIn(googleUser);
       }
       function onFailure(error) {
         console.log(error);
