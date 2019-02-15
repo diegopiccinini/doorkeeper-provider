@@ -27,14 +27,25 @@
       function onSignIn(googleUser) {
         // The ID token you need to pass to your backend:
         var id_token = googleUser.getAuthResponse().id_token;
-        console.log("ID Token: " + id_token);
         var xhr = new XMLHttpRequest();
         xhr.open('POST', '<%= ENV['HOST'] %>/tokensignin');
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.send('idtoken=' + id_token);
+        xhr.onload = function() {
+          var jsonResponse = JSON.parse(xhr.responseText);
+          if xhr.status==200 {
+            window.location.replace(jsonResponse.redirect_uri);
+          }
+          if xhr.status==422 {
+            document.getElementById("error").innerHTML = jsonResponse.error;
+          }
+
+        };
+
       }
     </script>
 
+    <div id="error"></div>
     <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
 
   </body>
