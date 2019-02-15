@@ -24,10 +24,12 @@ class ActiveSupport::TestCase
       iss: validator.iss,
       aud: validator.aud,
       cid: validator.client_id,
-      user_id: '12345',
+      sub: '183838372929',
       email: "test@#{ENV['CUSTOM_DOMAIN_FILTER']}",
-      provider_id: 'google.com',
-      verified: true
+      verified: true,
+      given_name: 'Peter',
+      family_name: 'Smith',
+      name: 'Peter S'
     }
   end
 

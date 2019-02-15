@@ -9,7 +9,7 @@ module GoogleSignIn
       set_extracted_payload(token)
     end
 
-    def user_id
+    def uid
       @payload["sub"]
     end
 

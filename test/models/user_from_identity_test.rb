@@ -7,8 +7,28 @@ class UserFromIdentityTest < ActiveSupport::TestCase
     @user=User.from_identity identity
   end
 
-  test "user was created" do
-    assert_equal @user.email, payload[:email]
+  test "email match" do
+    assert_match @user.email, payload[:email]
+  end
+
+  test "provider match" do
+    assert_equal @user.provider , payload[:iss]
+  end
+
+  test "uid match" do
+    assert_equal @user.uid, payload[:sub]
+  end
+
+  test "name match" do
+    assert_equal @user.name , payload[:name]
+  end
+
+  test "first name match" do
+    assert_equal @user.first_name , payload[:given_name]
+  end
+
+  test "last name match" do
+    assert_equal @user.last_name , payload[:family_name]
   end
 
 end

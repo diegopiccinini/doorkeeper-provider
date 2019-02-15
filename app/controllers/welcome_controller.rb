@@ -59,7 +59,9 @@ class WelcomeController < ApplicationController
   end
 
   def login
+    redirect_to welcome_index_path if current_user
   end
+
   private
 
   def callback_name uri

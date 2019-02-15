@@ -2,25 +2,37 @@ require 'google_sign_in/identity'
 
 class GoogleSignInController < ApplicationController
 
+  IDTOKEN_NOT_PRESENT_ERROR="idtoken param is not present"
+  USER_DISABLED_ERROR="The user %s is disabled."
+  USER_EXPIRED_ERROR="Your user had expired at %s"
+
   def tokensignin
-    @user = User.from_identity identity
-
-    if @user && !@user.disabled && !@user.expired?
-      sign_in_and_redirect @user
-    else
-      flash[:error]= "Authentication has failed! "
-      flash[:error] << "Your user is disabled in this server" if @user && @user.disabled
-      flash[:error] << "Your user is expired, please contact the Engineering Team." if @user && @user.expired?
-      redirect_to login_path
-    end
-
+    idtoken
+    user
+    check_user
+    sign_in @user
+    render :json  => { status: 200, redirect_uri: welcome_index_path }
   rescue => error
-    @message=error.message
+    render :json => { status: 422, error: error.message }, status: 422
   end
 
   private
 
+  def idtoken
+    raise IDTOKEN_NOT_PRESENT_ERROR unless params.has_key?(:idtoken)
+  end
+
   def identity
     GoogleSignIn::Identity.new params[:idtoken]
+  end
+
+  def user
+    @user = User.from_identity identity
+  end
+
+  def check_user
+    raise "Could not create or find a user #{identity.inspect}" if @user.nil?
+    raise USER_DISABLED_ERROR % @user.email if @user.disabled
+    raise USER_EXPIRED_ERROR % @user.expire_at.to_s if @user.expired?
   end
 end

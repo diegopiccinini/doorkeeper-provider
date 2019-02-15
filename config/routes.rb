@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   use_doorkeeper
 
   root 'welcome#login'
+  get '/welcome/index' => "welcome#index"
   get '/welcome/search' => "welcome#search"
 
   post '/tokensignin' => "google_sign_in#tokensignin"
