@@ -2,6 +2,8 @@ require 'google_sign_in/identity'
 
 class GoogleSignInController < ApplicationController
 
+  skip_before_filter :verify_authenticity_token
+
   IDTOKEN_NOT_PRESENT_ERROR="idtoken param is not present"
   USER_DISABLED_ERROR="The user %s is disabled."
   USER_EXPIRED_ERROR="Your user had expired at %s"

@@ -3,13 +3,27 @@
     <meta name="google-signin-scope" content="profile email">
     <meta name="google-signin-client_id" content="<%= ENV['GOOGLE_CLIENT_ID'] %>">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <%= csrf_meta_tags %>
+<style>
+  .error {
+    margin: 2em auto 0;
+  }
+  .error p {
+    color: red;
+    font-weight: bold;
+    padding: 1em;
+    background-color: #ff120033;
+    border-radius: 5px;
+  }
+</style>
   </head>
   <body>
     <div class="g-signin2" data-onsuccess="onSignIn" data-longtitle="true" data-theme="dark"></div>
     <script>
-      function onSuccess(googleUser) {
-        onSignIn(googleUser);
-      }
+      <% if Rails.env=='production' %>
+          function onSuccess(googleUser) {
+            console.log('Name: ' + profile.getName());
+          }
 
       function onFailure(error) {
         console.log(error);
@@ -39,16 +53,41 @@
         xhr.send('idtoken=' + id_token);
         xhr.onload = function() {
           var jsonResponse = JSON.parse(xhr.responseText);
-          if ( xhr.status == 200) window.location.replace(host + jsonResponse.redirect_uri);
-          if ( xhr.status == 422) document.getElementById("error").innerHTML = jsonResponse.error;
-
+            if ( xhr.status == 200) window.location.replace(host + jsonResponse.redirect_uri);
+            if ( xhr.status == 422) document.getElementById('error').innerHTML= "<p>" + jsonResponse.error + "</p>";
         }
 
       }
 
+      <% else %>
+
+          var button=document.getElementById('Login');
+
+          function login() {
+            var id_token=document.getElementById('id_token').value;
+            var xhr = new XMLHttpRequest();
+            var host = window.location.protocol + '//<%= ENV['HOST'] %>';
+            var url = host + '/tokensignin';
+            xhr.open('POST', url);
+
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+            xhr.send('idtoken=' + id_token);
+            xhr.onload = function() {
+              var jsonResponse = JSON.parse(xhr.responseText);
+              if ( xhr.status == 200) window.location.replace(host + jsonResponse.redirect_uri);
+              if ( xhr.status == 422) document.getElementById('error').innerHTML= "<p>" + jsonResponse.error + "</p>";
+
+            }
+          }
+      <% end %>
     </script>
-    <div id="error"></div>
-    <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
+    <div class="error" id="error"></div>
+
+  <% unless Rails.env=='production' %>
+     <button onclick="login()">Login</button>
+    <%= hidden_field_tag :id_token, 'token_login' %>
+  <% end %>
 
   </body>
 </html>

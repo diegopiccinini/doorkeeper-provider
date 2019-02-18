@@ -30,6 +30,26 @@ module GoogleSignIn
       def exp
         Time.now + 1000
       end
+
+      def user_payload user
+        {
+          exp: 2.hours.from_now.to_i,
+          iss: iss,
+          aud: aud,
+          cid: client_id,
+          sub: user.uid,
+          email: user.email,
+          verified: true,
+          given_name: user.first_name,
+          family_name: user.last_name,
+          name: user.name
+        }
+      end
+
+      def user_token user
+        JWT.encode(user_payload(user), key, 'RS256')
+      end
+
     end
 
   end

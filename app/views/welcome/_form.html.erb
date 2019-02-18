@@ -10,7 +10,7 @@
     <label for="search_env" class="sr-only">Environment</label>
     <%=select_tag 'search_env', options_for_select(environments,session[:search_env] || 'ALL'), class: 'form-control' %>
     <button class="btn btn-lg btn-primary " type="submit">Search</button>
-    <%= link_to 'All (clear the form)', 'welcome/search', class: 'btn btn-lg btn-info ' %>
+    <%= link_to 'All (clear the form)', '/welcome/search', class: 'btn btn-lg btn-info ' %>
 
   <% end %>
 </div>

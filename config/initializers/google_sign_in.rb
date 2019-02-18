@@ -1,7 +1,7 @@
 require 'openssl'
 require 'json'
 
-if Rails.env=='test'
+unless Rails.env=='production'
   cert_pem=File.expand_path File.join(Rails.root,'test','certificate.pem')
   key_pem=File.expand_path File.join(Rails.root,'test','key.pem')
   GOOGLE_X509_CERTIFICATE = OpenSSL::X509::Certificate.new File.read(cert_pem)
