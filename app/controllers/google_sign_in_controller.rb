@@ -13,7 +13,7 @@ class GoogleSignInController < ApplicationController
     user
     check_user
     sign_in @user
-    render :json  => { status: 200, redirect_uri: welcome_index_path }
+    render :json  => { status: 200, redirect_uri: root_path }
   rescue => error
     render :json => { status: 422, error: error.message }, status: 422
   end

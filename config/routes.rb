@@ -4,8 +4,8 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks" }
   use_doorkeeper
 
-  root 'welcome#login'
-  get '/welcome/index' => "welcome#index"
+  root 'welcome#index'
+  get '/welcome/login' => "welcome#login"
   get '/welcome/search' => "welcome#search"
 
   post '/tokensignin' => "google_sign_in#tokensignin"

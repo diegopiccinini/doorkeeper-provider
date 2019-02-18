@@ -1,12 +1,3 @@
-<script>
-  function signOut() {
-    var auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut().then(function () {
-      console.log('User signed out.');
-    });
-  }
-</script>
-
 
 <div class="container-fluid">
   <div class="row">
@@ -17,7 +8,7 @@
     </div>
     <div class="col-sm-2">
       <p class="text-right">
-      <%= link_to('Logout', destroy_user_session_path, method: :get, class: 'btn btn-sm btn-info', onclick: "signOut()" ) %>
+      <%= link_to('Logout', destroy_user_session_path, method: :get, class: 'btn btn-sm btn-info') %>
       </p>
     </div>
   </div>
