@@ -15,3 +15,14 @@ body
 {
   color: #5ca1b8 !important;
 }
+
+.error {
+  margin: 2em auto 0;
+}
+.error p {
+  color: red;
+  font-weight: bold;
+  padding: 1em;
+  background-color: #ff120033;
+  border-radius: 5px;
+}

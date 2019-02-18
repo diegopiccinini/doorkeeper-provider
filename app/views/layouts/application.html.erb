@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title><%= first_domain %> Authentication Server</title>
-  <%= stylesheet_link_tag "doorkeeper/admin/application" %>
-  <%= stylesheet_link_tag "welcome" %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
-  <meta name="google-signin-client_id" content="529393474094-m8je0g0g5mjhme407depll8p6fv3blhu.apps.googleusercontent.com">
-</head>
-<body>
+  <head>
+    <title><%= first_domain %> Authentication Server</title>
+    <%= stylesheet_link_tag "doorkeeper/admin/application" %>
+    <%= stylesheet_link_tag "welcome" %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+    <meta name="google-signin-client_id" content="<%= ENV['GOOGLE_CLIENT_ID'] %>">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+  </head>
+  <body>
 
-<%= yield %>
+    <%= yield %>
 
-</body>
+  </body>
 </html>
