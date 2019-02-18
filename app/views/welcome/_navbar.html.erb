@@ -7,9 +7,13 @@
       </h5>
     </div>
     <div class="col-sm-2">
-      <p class="text-right">
-      <%= link_to('Logout', destroy_user_session_path, method: :get, class: 'btn btn-sm btn-info') %>
-      </p>
+      <div class="g-signin2" data-onsuccess="onSignIn" data-width="0" data-height="0" data-longtitle="false"></div>
+        <p class="text-right">
+        <%= link_to('Logout', '#', method: :get, class: 'btn btn-sm btn-info', onclick: "signOut('#{destroy_user_session_path}')") %>
+        </p>
     </div>
   </div>
 </div>
+<% content_for :javascript_includes do %>
+  <%= javascript_include_tag "login.js" %>
+<% end %>

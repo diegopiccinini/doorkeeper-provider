@@ -4,13 +4,13 @@
     <title><%= first_domain %> Authentication Server</title>
     <%= stylesheet_link_tag "doorkeeper/admin/application" %>
     <%= stylesheet_link_tag "welcome" %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
     <meta name="google-signin-scope" content="profile email">
     <meta name="google-signin-client_id" content="<%= ENV['GOOGLE_CLIENT_ID'] %>">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
   </head>
   <body>
 
+    <%= javascript_include_tag "login" %>
     <%= yield %>
 
   </body>

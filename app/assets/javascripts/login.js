@@ -41,10 +41,11 @@ function login(id_token) {
 
   }
 }
-function signOut() {
+function signOut(sign_out_path) {
   var auth2 = gapi.auth2.getAuthInstance();
   auth2.signOut().then(function () {
     console.log('User signed out.');
+    window.location.replace(window.location.origin + sign_out_path);
   });
 }
 

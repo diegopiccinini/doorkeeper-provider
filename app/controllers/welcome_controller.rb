@@ -1,7 +1,5 @@
 class WelcomeController < ApplicationController
 
-  layout 'login', only: [:login]
-
   before_action :authenticate_user!, except: [:login]
 
   def index
@@ -56,10 +54,6 @@ class WelcomeController < ApplicationController
 
     redirect_to root_path
 
-  end
-
-  def login
-    redirect_to welcome_index_path if current_user
   end
 
   private
