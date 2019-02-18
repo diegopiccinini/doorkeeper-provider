@@ -28,7 +28,7 @@ class GoogleSignInControllerTest < ActionController::TestCase
 
   test "body has a redirect_uri" do
     body=JSON.parse @response.body
-    assert_match welcome_index_path, body['redirect_uri']
+    assert_match root_path, body['redirect_uri']
   end
 
   test "has a current user" do
