@@ -114,7 +114,7 @@ class User < ActiveRecord::Base
   end
 
   def enabled_sites
-    own_sites.joins(:oauth_applications_sites).where("oauth_applications_sites.status = ? ", OauthApplicationsSite::STATUS_ENABLED)
+    own_sites.enabled_joins
   end
 
   def enabled_applications

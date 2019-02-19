@@ -1,11 +1,9 @@
 <div class="container">
   <%= render partial: 'navbar' %>
   <%= render partial: "form", locals: { environments: @app_environments } %>
-  <h4>( <%= @total_sites %> ) found with your filter </h4>
-  <% if @total_sites>@sites.count %>
-    <h5>The list limit is <%= @limit %>. Please use the filters to find your site. </h5>
-  <% end %>
+  <h4><%= @total_sites %> sites found with your filter.</h4>
   <hr />
+  <%= will_paginate @sites %>
   <div class="table-responsive">
     <table class="table">
       <thead>
@@ -18,14 +16,16 @@
       </thead>
       <tbody>
         <% @sites.each do |site| %>
+          <% site.oauth_applications_sites.each do |app_site| %>
           <tr>
-            <td><%= site[:app_name] %></td>
-            <td class="app"><%= site[:site_name] %></td>
+            <td><%= app_site.oauth_application.name %></td>
+            <td class="app"><%= site.app_uri %></td>
             <td>
-              <%= link_to 'login', site[:uri] , class: 'btn btn-primary', target: '_blank' %>
+              <%= link_to 'login', site.login_url , class: 'btn btn-primary', target: '_blank' %>
             </td>
-            <td><%= site[:environment] %></td>
+            <td><%= app_site.oauth_application.application_environment.name %></td>
           </tr>
+          <% end %>
         <% end %>
       </tbody>
 

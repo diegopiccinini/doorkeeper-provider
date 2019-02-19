@@ -26,6 +26,8 @@ class Site < ActiveRecord::Base
 
   scope :with_app,-> { joins(:oauth_applications_sites) }
 
+  scope :enabled_joins,-> { includes(oauth_applications_sites: {oauth_application: :application_environment}).where('oauth_applications_sites.status': OauthApplicationsSite::STATUS_ENABLED) }
+
   def update_total_oauth_applications
     self.total_oauth_applications= oauth_application_ids.count
   end
@@ -181,6 +183,20 @@ class Site < ActiveRecord::Base
 
   def has_user? user
     users.where(id: user.id).count>0
+  end
+
+  def application
+    oauth_applications.enabled.first
+  end
+
+  def login_url
+    application.sync_excluded? ? url : callback_name
+  end
+
+  def app_uri
+    extra_param=''
+    extra_param="/#{encoded_frontend}" unless url.end_with?('/callback')
+    url[0..(url.index('/callback') - 1 )] + extra_param
   end
 
 end
