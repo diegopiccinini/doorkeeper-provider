@@ -2,7 +2,7 @@ require 'test_helper'
 
 class UpdateGoogleCertificatesJobTest < ActiveJob::TestCase
   def stub_calls
-    cert_json=File.join(Rails.root,'certs','google.json')
+    cert_json=File.join(Rails.root,'test','google.json')
     body= File.read cert_json
     stub_request(:get, "https://www.googleapis.com/oauth2/v1/certs").
       with(  headers: {
