@@ -1,7 +1,7 @@
 class CreateGoogleCertificates < ActiveRecord::Migration
   def change
     create_table :google_certificates do |t|
-      t.string :key
+      t.string :key, index: { unique: true }
       t.text :body
       t.datetime :start_on, index: true
       t.datetime :expire_at, index: true

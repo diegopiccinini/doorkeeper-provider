@@ -72,6 +72,7 @@ ActiveRecord::Schema.define(version: 20190219140057) do
   end
 
   add_index "google_certificates", ["expire_at"], name: "index_google_certificates_on_expire_at", using: :btree
+  add_index "google_certificates", ["key"], name: "index_google_certificates_on_key", unique: true, using: :btree
   add_index "google_certificates", ["start_on"], name: "index_google_certificates_on_start_on", using: :btree
 
   create_table "oauth_access_grants", force: :cascade do |t|

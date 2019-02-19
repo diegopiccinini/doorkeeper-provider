@@ -6,8 +6,9 @@ GOOGLE_CLIENT_SECRET = ENV['GOOGLE_CLIENT_SECRET']
 require 'google_sign_in/validator'
 require 'google_sign_in/identity'
 
+GoogleCertificate.create_test_certificate
 
-if GOOGLE_X509_CERTIFICATE.not_after <= Time.now
+if GoogleCertificate.in_effect.count < 1
   raise "Test certificate is expired."
 end
 

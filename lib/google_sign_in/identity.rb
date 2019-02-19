@@ -72,7 +72,8 @@ module GoogleSignIn
     end
 
     def validator
-      GoogleSignIn::Validator.validator
+      gcert=GoogleCertificate.in_effect.first
+      GoogleSignIn::Validator.validator cert: gcert.cert
     end
   end
 end
