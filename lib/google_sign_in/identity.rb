@@ -49,6 +49,10 @@ module GoogleSignIn
       @payload["family_name"]
     end
 
+    def domain
+      email_address.split('@').last
+    end
+
     private
 
     def client_id

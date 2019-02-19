@@ -45,4 +45,15 @@ class GoogleSignInControllerErrorsTest < ActionController::TestCase
     assert_match body['error'], GoogleSignInController::USER_EXPIRED_ERROR % user.expire_at.to_s
   end
 
+  test "user invalid domain" do
+    user=users(:one)
+    user.email='peter@baddomain.com'
+    user.expire_at=20.day.from_now
+    user.save validate: false
+    user_token=GoogleSignIn::Validator.user_token user
+
+    post :tokensignin, idtoken: user_token
+    assert_equal 422, @response.status
+    assert_match body['error'], GoogleSignInController::DOMAIN_NOT_INCLUDED_ERROR % 'baddomain.com'
+  end
 end

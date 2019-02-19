@@ -81,18 +81,16 @@ class User < ActiveRecord::Base
   end
 
   def self.from_identity identity
-    if ENV['CUSTOM_DOMAIN_FILTER'].split.include?(identity.email_address.split('@').last)
-      user = find_or_create_by email: identity.email_address
-      user.expire_at=6.months.from_now if user.created_at.nil?
+    user = find_or_create_by email: identity.email_address
+    user.expire_at=6.months.from_now if user.created_at.nil?
 
-      user.provider = identity.iss
-      user.uid = identity.uid
-      user.name = identity.name
-      user.first_name = identity.given_name
-      user.last_name = identity.family_name
-      user.save(validate: false)
-      user
-    end
+    user.provider = identity.iss
+    user.uid = identity.uid
+    user.name = identity.name
+    user.first_name = identity.given_name
+    user.last_name = identity.family_name
+    user.save(validate: false)
+    user
   end
 
   def applications
@@ -167,7 +165,7 @@ class User < ActiveRecord::Base
   end
 
   def apps_ids
-   (oauth_applications.ids + tagged_access_ids).uniq
+    (oauth_applications.ids + tagged_access_ids).uniq
   end
 
   def full_access

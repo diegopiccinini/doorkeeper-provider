@@ -4,9 +4,10 @@ class GoogleSignInController < ApplicationController
 
   skip_before_filter :verify_authenticity_token
 
-  IDTOKEN_NOT_PRESENT_ERROR="idtoken param is not present"
+  DOMAIN_NOT_INCLUDED_ERROR="The domain %s is not allowed to login in the Central Auth."
+  IDTOKEN_NOT_PRESENT_ERROR="idtoken param is not present."
   USER_DISABLED_ERROR="The user %s is disabled."
-  USER_EXPIRED_ERROR="Your user had expired at %s"
+  USER_EXPIRED_ERROR="Your user had expired at %s."
 
   def tokensignin
     idtoken
@@ -25,15 +26,16 @@ class GoogleSignInController < ApplicationController
   end
 
   def identity
-    GoogleSignIn::Identity.new params[:idtoken]
+    @identity||=GoogleSignIn::Identity.new params[:idtoken]
   end
 
   def user
+    raise DOMAIN_NOT_INCLUDED_ERROR % identity.domain unless ENV['CUSTOM_DOMAIN_FILTER'].split.include?(identity.domain)
     @user = User.from_identity identity
   end
 
   def check_user
-    raise "Could not create or find a user #{identity.inspect}" if @user.nil?
+    raise "Could not create or find a user with this identity #{identity.inspect}." if @user.nil?
     raise USER_DISABLED_ERROR % @user.email if @user.disabled
     raise USER_EXPIRED_ERROR % @user.expire_at.to_s if @user.expired?
   end
