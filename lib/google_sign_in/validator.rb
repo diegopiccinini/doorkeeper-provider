@@ -3,8 +3,8 @@ module GoogleSignIn
   class Validator
 
     class << self
-      def validator
-        GoogleIDToken::Validator.new(x509_cert: GOOGLE_X509_CERTIFICATE)
+      def validator cert: nil
+        GoogleIDToken::Validator.new(x509_cert: (cert || GOOGLE_X509_CERTIFICATE) )
       end
 
       def client_id
