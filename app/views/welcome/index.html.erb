@@ -21,7 +21,7 @@
             <td><%= app_site.oauth_application.name %></td>
             <td class="app"><%= site.app_uri %></td>
             <td>
-              <%= link_to 'login', site.login_url , class: 'btn btn-primary', target: '_blank' %>
+              <%= link_to 'login', site.app_uri , class: 'btn btn-primary', target: '_blank' %>
             </td>
             <td><%= app_site.oauth_application.application_environment.name %></td>
           </tr>
