@@ -22,7 +22,9 @@ function renderButton() {
 function onSignIn(googleUser) {
   // The ID token you need to pass to your backend:
   var id_token = googleUser.getAuthResponse().id_token;
-  login(id_token);
+  if (window.location.href == window.location.origin + "/users/sign_in") {
+    login(id_token);
+  }
 }
 
 function login(id_token) {
