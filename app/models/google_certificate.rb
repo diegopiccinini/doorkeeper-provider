@@ -1,7 +1,10 @@
 require 'openssl'
 
 class GoogleCertificate < ActiveRecord::Base
-  scope :in_effect,-> { where("start_on <= ? and expire_at > ?", Time.now, Time.now) }
+
+  scope :in_effect,-> { where("start_on <= ? and expire_at > ?", Time.now, Time.now).order(id: :desc) }
+
+  scope :expired,-> { where("expire_at < ?", Time.now) }
 
   def cert
     @cert||= OpenSSL::X509::Certificate.new body

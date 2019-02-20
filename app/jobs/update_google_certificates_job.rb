@@ -4,9 +4,10 @@ class UpdateGoogleCertificatesJob
   def perform
     ActiveRecord::Base.connection_pool.with_connection do
       cert=GoogleCertificate.in_effect.first
-      if cert.nil? or cert.expire_at<2.days.from_now
+      if cert.nil? or cert.expire_at<3.days.from_now
         update_certificates
       end
+      GoogleCertificate.expired.delete_all
     end
   end
 

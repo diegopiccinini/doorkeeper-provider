@@ -19,13 +19,14 @@ class UpdateGoogleCertificatesJobTest < ActiveJob::TestCase
   end
 
   test "has valid keys" do
-    assert_equal @job.get_certificates.keys.count, 3
+    assert_equal 3, @job.get_certificates.keys.count
   end
 
   test "perform" do
     GoogleCertificate.delete_all
     @job.perform
-    assert_equal GoogleCertificate.count , 3
+    assert_equal 1, GoogleCertificate.count
+
     GoogleCertificate.all.each do |gc|
       assert_not_nil gc.key
       assert_not_nil gc.body
