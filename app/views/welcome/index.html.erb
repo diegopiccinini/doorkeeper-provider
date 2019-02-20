@@ -19,7 +19,7 @@
           <% site.oauth_applications_sites.each do |app_site| %>
           <tr>
             <td><%= app_site.oauth_application.name %></td>
-            <td class="app"><%= site.app_uri %></td>
+            <td class="app"><%= site.login_url %></td>
             <td>
               <%= link_to 'login', site.app_uri , class: 'btn btn-primary', target: '_blank' %>
             </td>
