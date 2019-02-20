@@ -4,7 +4,7 @@ ActiveAdmin.register OauthApplication, as: "Applications" do
 
   config.batch_actions = false
 
-  permit_params :name, :enabled, :redirect_uri, :external_id, :sync_excluded, :application_environment_id, :multitenant, tag_ids: [], user_ids: []
+  permit_params :name, :enabled, :redirect_uri, :external_id, :sync_excluded, :enabled_to_everybody, :application_environment_id, :multitenant, tag_ids: [], user_ids: []
 
   index do
     column :name
@@ -32,6 +32,7 @@ ActiveAdmin.register OauthApplication, as: "Applications" do
   filter :application_environment
   filter :sync_excluded
   filter :multitenant
+  filter :enabled_to_everybody
 
   show do |item|
     attributes_table do
@@ -45,6 +46,7 @@ ActiveAdmin.register OauthApplication, as: "Applications" do
       row :application_environment
       row :sync_excluded
       row :multitenant
+      row :enabled_to_everybody
     end
 
     panel 'Users Direct Association' do
@@ -102,6 +104,7 @@ ActiveAdmin.register OauthApplication, as: "Applications" do
       f.input :external_id
       f.input :sync_excluded
       f.input :multitenant
+      f.input :enabled_to_everybody
       f.input :application_environment
       f.input :users, :as => :check_boxes, :multiple => true, :collection => User.order(name: :asc)
     end
