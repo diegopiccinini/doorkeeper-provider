@@ -12,6 +12,7 @@ class OauthApplication < Doorkeeper::Application
   scope :name_ends, -> (name) { where("name LIKE ? ","%#{name.upcase}") }
   scope :name_ends_or, -> (name1,name2) { where("name LIKE ? OR name LIKE ? ","%#{name1.upcase}","%#{name2.downcase}") }
   scope :enabled, -> { where(enabled: true) }
+  scope :enabled_to_everybody, -> { enabled.where(enabled_to_everybody: true) }
 
   def ip
     ips=sites.select('ip').group('ip').count('sites.id')

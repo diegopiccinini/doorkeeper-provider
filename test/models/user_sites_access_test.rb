@@ -25,6 +25,8 @@ class UserSitesAccessTest < ActiveSupport::TestCase
     user.sites<< site_one
     user.save
     ApplicationEnvironment.update_application_stage_type_tags
+    @everybody=oauth_applications :everybody
+    @everybody_site= sites :everybody
   end
 
   test "by default has not access to site" do
@@ -33,6 +35,7 @@ class UserSitesAccessTest < ActiveSupport::TestCase
     assert !user.has_access_to_site?( application: nil, redirect_uri: site_two.url )
     assert !user.has_access_to_site?( application: app_granted, redirect_uri: nil)
     assert !user.has_access_to_site?( application: app_granted, redirect_uri: site_two.url )
+    assert user.has_access_to_site?( application: @everybody, redirect_uri: @everybody_site.url )
   end
 
   test "granted to one application" do

@@ -17,3 +17,13 @@ two:
   redirect_uri: <%= %w(testclient2 testclient3 testclient).map { |x| back_uri x }.join(' ') %> <%= front_uri 'testclient3','aHR0cDovL2xvY2FsaG9zdDo4MDAwIDI5MjgxMDFkOGYwYTU0ZDZlYjJlNTQxMjNiN2MzNTdiMWZlNjE1Y2VlODBm' %> <%= front_uri 'testclient2', 'aHR0cDovL2xvY2FsaG9zdDo4MDAwIDI5MjgxMDFkOGYwYTU0ZDZlYjJlNTQxMjNiN2MzNTdiMWZlNjE1Y2VlODBm' %>
   external_id: testclient_dev
   application_environment: dev
+
+everybody:
+  uid: <%= SecureRandom.hex %>
+  secret: <%= SecureRandom.hex %>
+  name: everybody dev
+  enabled: true
+  redirect_uri: <%= back_uri 'everybody' %>
+  external_id: everybody_dev
+  application_environment: dev
+  enabled_to_everybody: true

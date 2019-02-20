@@ -165,7 +165,7 @@ class User < ActiveRecord::Base
   end
 
   def apps_ids
-    (oauth_applications.ids + tagged_access_ids).uniq
+    (oauth_applications.ids + tagged_access_ids + everybody_access.ids).uniq
   end
 
   def full_access
@@ -175,6 +175,7 @@ class User < ActiveRecord::Base
   def full_site_ids
     (sites.with_app.ids + tagged_sites_access_ids + full_site_access_by_app.ids).uniq
   end
+
   def full_site_access
     Site.where(id: full_site_ids)
   end
@@ -185,6 +186,10 @@ class User < ActiveRecord::Base
 
   def tagged_access_ids
     OauthApplication.any_tag_ids self.tags
+  end
+
+  def everybody_access
+    OauthApplication.enabled_to_everybody
   end
 
   def tagged_sites_access_ids

@@ -39,7 +39,7 @@ class OauthApplicationTest < ActiveSupport::TestCase
     assert_equal 0, OauthApplication.with_tags(tags).count
     tags = ActsAsTaggableOn::Tag.where( name: ['Dev', 'Tag2'] ).all
     assert_equal 0, OauthApplication.with_tags(tags).count
-    assert_equal 1, OauthApplication.with_tags(tags, has_all: false).count
+    assert_equal 2, OauthApplication.with_tags(tags, has_all: false).count
 
     tags = ActsAsTaggableOn::Tag.where( name: 'no_exist' ).all
     assert_equal  OauthApplication.with_tags(tags).count, 0

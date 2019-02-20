@@ -1,0 +1,4 @@
+everybody:
+  site: everybody
+  oauth_application: everybody
+  status: enabled

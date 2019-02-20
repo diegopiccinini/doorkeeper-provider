@@ -9,3 +9,8 @@ two:
   url: <%= back_uri 'test2' %>
   status: 1
   step: MyString
+
+everybody:
+  url: <%= back_uri 'everybody' %>
+  status: 1
+  step: enabled
