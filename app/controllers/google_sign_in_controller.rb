@@ -8,6 +8,7 @@ class GoogleSignInController < ApplicationController
   IDTOKEN_NOT_PRESENT_ERROR="idtoken param is not present."
   USER_DISABLED_ERROR="The user %s is disabled."
   USER_EXPIRED_ERROR="Your user had expired at %s."
+  COULD_NOT_CREATE_USER_ERROR="Could not create or find a user with this identity %s."
 
   def tokensignin
     idtoken
@@ -35,7 +36,7 @@ class GoogleSignInController < ApplicationController
   end
 
   def check_user
-    raise "Could not create or find a user with this identity #{identity.inspect}." if @user.nil?
+    raise COULD_NOT_CREATE_USER_ERROR % identity.inspect if @user.nil?
     raise USER_DISABLED_ERROR % @user.email if @user.disabled
     raise USER_EXPIRED_ERROR % @user.expire_at.to_s if @user.expired?
   end
