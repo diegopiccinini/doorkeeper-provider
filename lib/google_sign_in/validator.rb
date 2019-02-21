@@ -3,7 +3,7 @@ module GoogleSignIn
   class Validator
 
     class << self
-      def validator
+      def validator cert:
         GoogleIDToken::Validator.new(x509_cert: cert )
       end
 
@@ -48,10 +48,6 @@ module GoogleSignIn
 
       def user_token user
         JWT.encode(user_payload(user), key, 'RS256')
-      end
-
-      def cert
-        GoogleCertificate.in_effect.limit(1).first.cert
       end
 
     end

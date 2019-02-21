@@ -65,14 +65,24 @@ module GoogleSignIn
       end
     end
 
+
     def set_extracted_payload(token)
-      @payload = validator.check(token, client_id)
-    rescue GoogleIDToken::ValidationError => error
-      raise ValidationError, error.message
+      @errors=[]
+      success=false
+      GoogleCertificate.in_effect.each do |gcert|
+        begin
+          @payload=validator(gcert.cert).check(token, client_id)
+          success=true
+          break
+        rescue GoogleIDToken::ValidationError => error
+          @errors<< error
+        end
+      end
+      raise ValidationError, @errors.first.message unless success
     end
 
-    def validator
-      GoogleSignIn::Validator.validator
+    def validator cert
+      GoogleSignIn::Validator.validator cert: cert
     end
   end
 end
