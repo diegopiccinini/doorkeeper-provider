@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190220143932) do
+ActiveRecord::Schema.define(version: 20190225153631) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace",     limit: 255
@@ -74,6 +74,14 @@ ActiveRecord::Schema.define(version: 20190220143932) do
   add_index "google_certificates", ["expire_at"], name: "index_google_certificates_on_expire_at", using: :btree
   add_index "google_certificates", ["key"], name: "index_google_certificates_on_key", unique: true, using: :btree
   add_index "google_certificates", ["start_on"], name: "index_google_certificates_on_start_on", using: :btree
+
+  create_table "google_tokens", force: :cascade do |t|
+    t.string   "token",      limit: 1000
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
+
+  add_index "google_tokens", ["token"], name: "index_google_tokens_on_token", unique: true, using: :btree
 
   create_table "oauth_access_grants", force: :cascade do |t|
     t.integer  "resource_owner_id", limit: 4,     null: false

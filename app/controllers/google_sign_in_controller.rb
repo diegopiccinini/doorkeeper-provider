@@ -9,6 +9,7 @@ class GoogleSignInController < ApplicationController
   USER_DISABLED_ERROR="The user %s is disabled."
   USER_EXPIRED_ERROR="Your user had expired at %s."
   COULD_NOT_CREATE_USER_ERROR="Could not create or find a user with this identity %s."
+  TOKEN_USED_ERROR="Security error, token has been used before"
 
   def tokensignin
     idtoken
@@ -24,6 +25,8 @@ class GoogleSignInController < ApplicationController
 
   def idtoken
     raise IDTOKEN_NOT_PRESENT_ERROR unless params.has_key?(:idtoken)
+    raise TOKEN_USED_ERROR if GoogleToken.where( token: params[:idtoken] ).exists?
+    GoogleToken.create token: params[:idtoken]
   end
 
   def identity

@@ -34,8 +34,14 @@ class ActiveSupport::TestCase
     }
   end
 
-  def token
-    JWT.encode(payload, validator.key, 'RS256')
+  def expired_payload
+    expired=payload
+    expired[:exp]=1.second.ago
+    expired
+  end
+
+  def token p: payload
+    JWT.encode(p, validator.key, 'RS256')
   end
 
   def identity

@@ -42,6 +42,8 @@ class GoogleSignInControllerTest < ActionController::TestCase
     user.expire_at=6.months.from_now
     user.save validate: false
 
+    GoogleToken.where( token: @token).delete_all
+
     post :tokensignin , idtoken: @token
     user.reload
     assert_equal user.email, payload[:email]

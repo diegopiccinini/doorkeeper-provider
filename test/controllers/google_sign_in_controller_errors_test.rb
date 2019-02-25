@@ -23,6 +23,21 @@ class GoogleSignInControllerErrorsTest < ActionController::TestCase
     assert body.has_key?('error')
   end
 
+  test "expired token" do
+    post :tokensignin, idtoken: token( p: expired_payload)
+    assert_equal 422, @response.status
+    assert body.has_key?('error')
+  end
+
+  test "token used" do
+    t=token
+    GoogleToken.create token: t
+    post :tokensignin, idtoken: t
+    assert_equal 422, @response.status
+    assert_match GoogleSignInController::TOKEN_USED_ERROR, body['error']
+
+  end
+
   test "user disabled" do
     user=users(:one)
     user.email=payload[:email]
