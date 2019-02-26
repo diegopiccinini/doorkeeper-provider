@@ -1,5 +1,5 @@
 ActiveAdmin.register GoogleCertificate do
-  menu parent: 'Admin', priority: 5
+  menu parent: 'Admin', priority: 6
 
   index do
     column :key
