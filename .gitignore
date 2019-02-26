@@ -15,7 +15,7 @@
 /log/*
 !/log/.keep
 /tmp
-*.swp
+*.sw*
 .byebug_history
 .env
 .env.development

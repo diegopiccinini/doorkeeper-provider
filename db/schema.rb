@@ -81,7 +81,8 @@ ActiveRecord::Schema.define(version: 20190225153631) do
     t.datetime "updated_at",              null: false
   end
 
-  add_index "google_tokens", ["token"], name: "index_google_tokens_on_token", unique: true, using: :btree
+  add_index "google_tokens", ["created_at"], name: "index_google_tokens_on_created_at", using: :btree
+  add_index "google_tokens", ["token"], name: "index_google_tokens_on_token", using: :btree
 
   create_table "oauth_access_grants", force: :cascade do |t|
     t.integer  "resource_owner_id", limit: 4,     null: false
