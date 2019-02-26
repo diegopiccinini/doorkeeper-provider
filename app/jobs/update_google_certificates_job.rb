@@ -5,6 +5,7 @@ class UpdateGoogleCertificatesJob
     ActiveRecord::Base.connection_pool.with_connection do
       update_certificates
       GoogleCertificate.expired.delete_all
+      GoogleToken.where("created_at < ?", 2.hours.ago).delete_all
     end
   end
 
