@@ -2,7 +2,7 @@ require 'google_sign_in/identity'
 
 class GoogleSignInController < ApplicationController
 
-  skip_before_filter :verify_authenticity_token
+  skip_before_action :verify_authenticity_token
 
   DOMAIN_NOT_INCLUDED_ERROR="The domain %s is not allowed to login in the Central Auth."
   IDTOKEN_NOT_PRESENT_ERROR="idtoken param is not present."
