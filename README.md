@@ -40,6 +40,8 @@ So you have to edit .env as the .env.sample to setup the environment vars, (in p
 
   FIRST_CALL_BACKEND_PATH=/backend/path #optional, is the path to start the oauth process in the application site
 
+  SAMSON_LINK=https://your_samson_oauth2_url #optional static button link to samson server
+
 ```
 If you don't have credentials visit to [Google Dev](https://console.developers.google.com) to get your credentials.
 
