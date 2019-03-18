@@ -22,7 +22,7 @@ class Api::V1::OauthApplicationsControllerTest < ActionController::TestCase
 
   test "show" do
     oauth_app=oauth_applications :one
-    get :show, { 'uid' => oauth_app.uid }
+    get :show, params: { 'uid' => oauth_app.uid }
     assert_response :success
 
     data=JSON.parse @response.body
@@ -36,7 +36,7 @@ class Api::V1::OauthApplicationsControllerTest < ActionController::TestCase
   test "update" do
     oauth_app=oauth_applications :one
     body = { 'external_id' => 'testclient_dev', 'application_environment' => 'Dev' }
-    put :update, { 'uid' => oauth_app.uid, 'body' => body.to_json }
+    put :update, params: { 'uid' => oauth_app.uid, 'body' => body.to_json }
     assert_response :success
 
     data=JSON.parse @response.body
@@ -50,7 +50,7 @@ class Api::V1::OauthApplicationsControllerTest < ActionController::TestCase
   test "create" do
 
     body = { 'redirect_uri' => 'https://testclient3.test.com/login/callback', 'external_id' => 'testclient3_web', 'application_environment' => 'Prod' }
-    post :create, { 'body' => body.to_json }
+    post :create, params: { 'body' => body.to_json }
     assert_response :success
 
     data=JSON.parse @response.body

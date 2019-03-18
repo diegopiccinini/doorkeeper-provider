@@ -7,7 +7,7 @@ class GoogleSignInControllerTest < ActionController::TestCase
 
   setup do
     @token=token
-    post :tokensignin , idtoken: @token
+    post :tokensignin , params: { idtoken: @token }
   end
 
   test "#identity" do
@@ -44,7 +44,7 @@ class GoogleSignInControllerTest < ActionController::TestCase
 
     GoogleToken.where( token: @token).delete_all
 
-    post :tokensignin , idtoken: @token
+    post :tokensignin , params: { idtoken: @token }
     user.reload
     assert_equal user.email, payload[:email]
     assert_equal user.uid, payload[:sub]

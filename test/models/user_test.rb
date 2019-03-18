@@ -85,8 +85,9 @@ class UserTest < ActiveSupport::TestCase
     assert_equal 0, User.with_access_to(application).where(id: user.id).count
     assert_equal 0, user.full_access.where(id: application.id).count
 
-    user.tag_list.add ['testtag']
+    user.tag_list.add 'testtag'
     user.save
+    user.reload
     assert user.has_access_to?(application)
     assert_equal 1, User.with_access_to(application).where(id: user.id).count
     assert_equal 1, user.full_access.where(id: application.id).count

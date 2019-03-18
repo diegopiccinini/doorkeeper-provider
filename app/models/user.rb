@@ -185,7 +185,7 @@ class User < ActiveRecord::Base
   end
 
   def tagged_access_ids
-    OauthApplication.any_tag_ids self.tags
+    OauthApplication.any_tag_ids tags
   end
 
   def everybody_access
@@ -193,7 +193,7 @@ class User < ActiveRecord::Base
   end
 
   def tagged_sites_access_ids
-    Site.with_app.any_tag_ids self.tags
+    Site.with_app.any_tag_ids tags
   end
 
   def tagged_sites
@@ -201,11 +201,11 @@ class User < ActiveRecord::Base
   end
 
   def tagged_access_to? application
-    (application.full_tags - self.tag_list).count < application.full_tags.count
+    (application.full_tags - tag_list).count < application.full_tags.count
   end
 
   def tagged_access_to_site? site
-    (site.full_tags - self.tag_list).count < site.full_tags.count
+    (site.full_tags - tag_list).count < site.full_tags.count
   end
 
   def available_tags
