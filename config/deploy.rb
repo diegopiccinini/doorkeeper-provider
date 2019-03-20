@@ -1,11 +1,14 @@
 # config valid only for current version of Capistrano
+require 'dotenv'
+Dotenv.load('.env.production')
+
 lock "3.11.0"
 
 set :application, "auth"
 set :repo_url, "git@github.com:diegopiccinini/doorkeeper-provider.git"
 
 set :rvm_type, :system
-set :rvm_ruby_version, '2.3.1@rails427'
+set :rvm_ruby_version, '2.3.1@rails522'
 
 # Default branch is :master
 ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
@@ -24,7 +27,7 @@ ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 # set :pty, true
 
 # Default value for :linked_files is []
-append :linked_files, "config/database.yml", "config/secrets.yml", ".env.production", ".env", "config/puma.rb"
+append :linked_files, "config/database.yml", "config/secrets.yml", ".env.production", "config/puma.rb"
 
 # Default value for linked_dirs is []
 append :linked_dirs, "log", "tmp"
