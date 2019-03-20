@@ -24,7 +24,7 @@ ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 # set :pty, true
 
 # Default value for :linked_files is []
-append :linked_files, %w{config/database.yml config/secrets.yml .env.production .env config/puma.rb}
+append :linked_files, "config/database.yml", "config/secrets.yml", ".env.production", ".env", "config/puma.rb"
 
 # Default value for linked_dirs is []
 append :linked_dirs, "log", "tmp"
