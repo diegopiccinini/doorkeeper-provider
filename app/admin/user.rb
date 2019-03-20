@@ -15,7 +15,7 @@ ActiveAdmin.register User do
     column :super_login
     actions do |u|
       span ' | '
-      item 'Sites', admin_user_sites_path + "?user_id=#{u.id}"
+      link_to 'Sites', admin_user_sites_path + "?user_id=#{u.id}", class: 'c-button c-button--ghost-success'
     end
   end
 

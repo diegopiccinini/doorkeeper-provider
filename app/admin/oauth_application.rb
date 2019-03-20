@@ -12,14 +12,10 @@ ActiveAdmin.register OauthApplication, as: "Applications" do
     column :external_id
     column :application_environment
     column :updated_at
-    actions defaults: false do |app|
-      item 'Frontend', admin_frontends_path + "?app_id=#{app.id}"
+    actions do |app|
       span ' | '
-      item 'View', admin_application_path(app)
-      span ' | '
-      item 'Edit', edit_admin_application_path(app)
-      span ' | '
-      item 'Update Sites', update_sites_admin_application_path(app)
+      a 'Update Sites', update_sites_admin_application_path(app), class: 'c-button c-button--ghost-success'
+      a 'Frontend', admin_frontends_path + "?app_id=#{app.id}", class: 'c-button c-button--ghost'
     end
   end
 

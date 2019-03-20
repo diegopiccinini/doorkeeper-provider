@@ -14,7 +14,7 @@ ActiveAdmin.register Site do
     column :updated_at
     actions do |site|
       span ' | '
-      item 'Users', admin_site_users_path + "?site_id=#{site.id}"
+      link_to 'Users', admin_site_users_path + "?site_id=#{site.id}", class: 'c-button c-button--ghost-success'
     end
   end
 

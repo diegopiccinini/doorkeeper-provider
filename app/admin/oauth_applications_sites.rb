@@ -20,9 +20,9 @@ ActiveAdmin.register OauthApplicationsSite do
     actions do |app_site|
       span ' | '
       if app_site.status==OauthApplicationsSite::STATUS_ENABLED
-        item 'Disable', disable_admin_oauth_applications_site_path(app_site)
+        link_to 'Disable', disable_admin_oauth_applications_site_path(app_site), class: 'c-button u-small c-button--warning'
       else
-        item 'Enable', enable_admin_oauth_applications_site_path(app_site)
+        link_to 'Enable', enable_admin_oauth_applications_site_path(app_site), class: 'c-button u-small c-button--success'
       end
     end
   end

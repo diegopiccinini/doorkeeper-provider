@@ -36,6 +36,8 @@ GEM
       ransack (>= 1.8.7)
       sass (~> 3.1)
       sprockets (< 4.1)
+    activeadmin_blaze_theme (0.5.12)
+      activeadmin (~> 1.0)
     activejob (5.2.2.1)
       activesupport (= 5.2.2.1)
       globalid (>= 0.3.6)
@@ -336,6 +338,7 @@ PLATFORMS
 
 DEPENDENCIES
   activeadmin (~> 1.4)
+  activeadmin_blaze_theme
   acts-as-taggable-on (~> 6.0)
   bootsnap
   byebug

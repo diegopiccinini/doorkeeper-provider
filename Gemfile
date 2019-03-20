@@ -30,7 +30,7 @@ gem 'doorkeeper', '4.4.0'
 gem 'devise', '~> 4.6.0'
 gem 'omniauth-google-oauth2'
 gem 'dotenv-rails'
-
+gem 'activeadmin_blaze_theme'
 gem 'encryptor'
 gem 'faraday'
 gem 'acts-as-taggable-on', '~> 6.0'
